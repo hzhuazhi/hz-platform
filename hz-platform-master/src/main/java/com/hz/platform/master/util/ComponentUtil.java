@@ -5,7 +5,6 @@ import com.hz.platform.master.core.common.redis.RedisIdService;
 import com.hz.platform.master.core.common.redis.RedisService;
 import com.hz.platform.master.core.common.utils.constant.LoadConstant;
 import com.hz.platform.master.core.service.*;
-import com.hz.platform.master.core.service.*;
 
 /**
  * 工具类
@@ -32,6 +31,7 @@ public class ComponentUtil {
     public static AgentChannelGewayService agentChannelGewayService;
     public static AgentProfitService agentProfitService;
     public static TaskAgentProfitService taskAgentProfitService;
-
+    public static ChannelOutService channelOutService;
+    public static ChannelBalanceDeductService channelBalanceDeductService;
 
 }

@@ -151,13 +151,13 @@ public class RedisIdService {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date();
         String formatDate=sdf.format(date);
-        String key="payKey" + formatDate;
+        String key="platformKey" + formatDate;
         Long incr = getIncr(key, getCurrent2TodayEndMillisTime());
         if(incr==0) {
             incr = getIncr(key, getCurrent2TodayEndMillisTime());//从001开始
         }
 //        DecimalFormat df=new DecimalFormat("000");//三位序列号
-        DecimalFormat df=new DecimalFormat("00000");//5位序列号
+        DecimalFormat df=new DecimalFormat("0");//1位序列号
         return formatDate+df.format(incr);
     }
 

@@ -95,7 +95,11 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskAgentProfitService taskAgentProfitService;
 
+    @Autowired
+    private ChannelOutService channelOutService;
 
+    @Autowired
+    private ChannelBalanceDeductService channelBalanceDeductService;
 
 
 
@@ -128,6 +132,8 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.agentChannelGewayService = agentChannelGewayService;
         ComponentUtil.agentProfitService = agentProfitService;
         ComponentUtil.taskAgentProfitService = taskAgentProfitService;
+        ComponentUtil.channelOutService = channelOutService;
+        ComponentUtil.channelBalanceDeductService = channelBalanceDeductService;
 
         runThread = new RunThread();
         runThread.start();

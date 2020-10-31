@@ -15,7 +15,7 @@ public class CachedKeyUtils {
      */
     public static String getCacheKey(Object... objects) {
         int size = objects.length;
-        StringBuffer key = new StringBuffer(SystemKeysEnum.KEY_PAY.getName());
+        StringBuffer key = new StringBuffer(SystemKeysEnum.KEY_PLATFORM.getName());
         int i = 0;
         for (Object object : objects) {
             if (object != null) {

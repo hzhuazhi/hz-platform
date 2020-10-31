@@ -8,7 +8,7 @@ package com.hz.platform.master.core.common.utils.constant;
  */
 public enum SystemKeysEnum {
 
-    KEY_PAY("pay", "支付"),
+    KEY_PLATFORM("platform", "平台"),
 
 
     ;
