@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hz.pay.master.core.mapper.ReceivingAccountMapper">
+<mapper namespace="com.hz.platform.master.core.mapper.ReceivingAccountMapper">
 
 
 
@@ -58,7 +58,7 @@
     </sql>
 
     <!-- 显示所有数据 -->
-    <select id="findAll" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+    <select id="findAll" resultType="com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account a
@@ -66,7 +66,7 @@
     </select>
 
     <!-- 查询列表 -->
-    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account a
@@ -74,7 +74,7 @@
     </select>
 
     <!-- 根据条件查询信息-->
-    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+    <select id="findByObject" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account a
@@ -83,7 +83,7 @@
     </select>
 
     <!-- 根据id查询信息-->
-    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account a
@@ -100,7 +100,7 @@
     </select>
 
     <!-- 查询分页列表 -->
-    <select id="queryByList" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+    <select id="queryByList" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account a

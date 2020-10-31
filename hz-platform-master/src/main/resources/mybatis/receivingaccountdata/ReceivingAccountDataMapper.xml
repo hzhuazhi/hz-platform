@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hz.pay.master.core.mapper.ReceivingAccountDataMapper">
+<mapper namespace="com.hz.platform.master.core.mapper.ReceivingAccountDataMapper">
 
 
 
@@ -77,7 +77,7 @@
 
 
     <!-- 显示所有数据 -->
-    <select id="findAll" resultType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <select id="findAll" resultType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account_data a
@@ -85,7 +85,7 @@
     </select>
 
     <!-- 查询列表 -->
-    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account_data a
@@ -93,7 +93,7 @@
     </select>
 
     <!-- 根据条件查询信息-->
-    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <select id="findByObject" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account_data a
@@ -102,7 +102,7 @@
     </select>
 
     <!-- 根据id查询信息-->
-    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account_data a
@@ -118,7 +118,7 @@
     </select>
 
     <!-- 查询分页列表 -->
-    <select id="queryByList" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <select id="queryByList" parameterType="Object" resultType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_receiving_account_data a
@@ -131,7 +131,7 @@
 
 
     <!-- 添加基本信息 -->
-    <insert id="add" parameterType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel" >
+    <insert id="add" parameterType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel" >
         <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
         <!--SELECT LAST_INSERT_ID() as id-->
         <!--</selectKey>-->
@@ -236,7 +236,7 @@
     </insert>
 
     <!-- 更新基本信息 -->
-    <update id="update" parameterType="com.hz.pay.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
+    <update id="update" parameterType="com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel">
         UPDATE tb_hz_receiving_account_data a
         <trim prefix="set" suffixOverrides=",">
             <if test="isOk != null and isOk != '' " >

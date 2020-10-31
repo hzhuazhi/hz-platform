@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hz.pay.master.core.mapper.TaskAgentProfitMapper">
+<mapper namespace="com.hz.platform.master.core.mapper.TaskAgentProfitMapper">
 
 
 
@@ -50,7 +50,7 @@
 
 
     <!-- 查询未跑的信息 -->
-    <select id="getDataList" parameterType="Object" resultType="com.hz.pay.master.core.model.agent.AgentProfitModel">
+    <select id="getDataList" parameterType="Object" resultType="com.hz.platform.master.core.model.agent.AgentProfitModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_agent_profit a

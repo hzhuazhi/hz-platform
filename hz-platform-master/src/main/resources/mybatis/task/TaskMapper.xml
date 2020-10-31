@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hz.pay.master.core.mapper.TaskMapper">
+<mapper namespace="com.hz.platform.master.core.mapper.TaskMapper">
 
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
@@ -121,7 +121,7 @@
 
 
     <!-- 查询要填充的数据集合 -->
-    <select id="getWorkTypeList" parameterType="Object" resultType="com.hz.pay.master.core.model.datacore.DataCoreModel">
+    <select id="getWorkTypeList" parameterType="Object" resultType="com.hz.platform.master.core.model.datacore.DataCoreModel">
         select
         <include refid="Base_Column_List_DataCore" />
         from tb_hz_data_core a
@@ -167,7 +167,7 @@
 
 
     <!-- 查询要同步给下游的数据集合 -->
-    <select id="getNotifyList" parameterType="Object" resultType="com.hz.pay.master.core.model.datacore.DataCoreModel">
+    <select id="getNotifyList" parameterType="Object" resultType="com.hz.platform.master.core.model.datacore.DataCoreModel">
         select
         <include refid="Base_Column_List_DataCore" />
         from tb_hz_data_core a
@@ -193,7 +193,7 @@
 
 
     <!-- 查询要提现的数据集合 -->
-    <select id="getWithdrawList" parameterType="Object" resultType="com.hz.pay.master.core.model.withdraw.WithdrawModel">
+    <select id="getWithdrawList" parameterType="Object" resultType="com.hz.platform.master.core.model.withdraw.WithdrawModel">
         select
         <include refid="Base_Column_List_Withdraw" />
         from tb_hz_withdraw a
@@ -249,7 +249,7 @@
 
 
     <!-- 根据条件查询阿里订单同步数据需要跑task的数据：runStatus属于初始化值 -->
-    <select id="getTaskAlipayNotify" parameterType="Object" resultType="com.hz.pay.master.core.model.task.TaskAlipayNotifyModel">
+    <select id="getTaskAlipayNotify" parameterType="Object" resultType="com.hz.platform.master.core.model.task.TaskAlipayNotifyModel">
         select
         <include refid="Base_Column_List_Notify" />
         from tb_hz_alipay_notify a left join tb_hz_alipay b on a.out_trade_no = b.out_trade_no

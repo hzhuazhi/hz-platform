@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.hz.pay.master.core.mapper.GewayMapper">
+<mapper namespace="com.hz.platform.master.core.mapper.GewayMapper">
 
 
 
@@ -57,7 +57,7 @@
     </sql>
 
     <!-- 显示所有数据 -->
-    <select id="findAll" resultType="com.hz.pay.master.core.model.geway.GewayModel">
+    <select id="findAll" resultType="com.hz.platform.master.core.model.geway.GewayModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_geway a
@@ -65,7 +65,7 @@
     </select>
 
     <!-- 查询列表 -->
-    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.geway.GewayModel">
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.platform.master.core.model.geway.GewayModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_geway a
@@ -73,7 +73,7 @@
     </select>
 
     <!-- 根据条件查询信息-->
-    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.geway.GewayModel">
+    <select id="findByObject" parameterType="Object" resultType="com.hz.platform.master.core.model.geway.GewayModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_geway a
@@ -82,7 +82,7 @@
     </select>
 
     <!-- 根据id查询信息-->
-    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.geway.GewayModel">
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.platform.master.core.model.geway.GewayModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_geway a
@@ -99,7 +99,7 @@
     </select>
 
     <!-- 查询分页列表 -->
-    <select id="queryByList" parameterType="Object" resultType="com.hz.pay.master.core.model.geway.GewayModel">
+    <select id="queryByList" parameterType="Object" resultType="com.hz.platform.master.core.model.geway.GewayModel">
         select
         <include refid="Base_Column_List" />
         from tb_hz_geway a
@@ -112,7 +112,7 @@
 
 
     <!-- 添加基本信息 -->
-    <insert id="add" parameterType="com.hz.pay.master.core.model.geway.GewayModel" >
+    <insert id="add" parameterType="com.hz.platform.master.core.model.geway.GewayModel" >
         <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
         <!--SELECT LAST_INSERT_ID() as id-->
         <!--</selectKey>-->
@@ -163,7 +163,7 @@
     </insert>
 
     <!-- 更新基本信息 -->
-    <update id="update" parameterType="com.hz.pay.master.core.model.geway.GewayModel">
+    <update id="update" parameterType="com.hz.platform.master.core.model.geway.GewayModel">
         UPDATE tb_hz_geway a
         <trim prefix="set" suffixOverrides=",">
             <if test="interface_adsName != null and interface_adsName != '' " >
