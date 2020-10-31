@@ -93,6 +93,21 @@ public class ChannelModel extends BasePage implements Serializable {
      */
     private Integer yn;
 
+    /**
+     * 余额加
+     */
+    private String addBalance;
+
+    /**
+     * 余额减
+     */
+    private String subtractBalance;
+
+    /**
+     * 要进行更改的金额
+     */
+    private String orderMoney;
+
 
     public Long getId() {
         return id;
@@ -220,5 +235,29 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setIsSynchro(Integer isSynchro) {
         this.isSynchro = isSynchro;
+    }
+
+    public String getAddBalance() {
+        return addBalance;
+    }
+
+    public void setAddBalance(String addBalance) {
+        this.addBalance = addBalance;
+    }
+
+    public String getSubtractBalance() {
+        return subtractBalance;
+    }
+
+    public void setSubtractBalance(String subtractBalance) {
+        this.subtractBalance = subtractBalance;
+    }
+
+    public String getOrderMoney() {
+        return orderMoney;
+    }
+
+    public void setOrderMoney(String orderMoney) {
+        this.orderMoney = orderMoney;
     }
 }

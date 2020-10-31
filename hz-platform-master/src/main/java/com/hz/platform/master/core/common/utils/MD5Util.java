@@ -217,6 +217,23 @@ public class MD5Util {
         tb_sign = MD5Util.encryption(tb_sign);
         System.out.println("tb_sign:" + tb_sign);
 
+
+
+        // 校验代付签名
+        String df_channel = "channel_2";
+        String df_trade_type = "200001";
+        String df_total_amount = "500.00";
+        String df_out_trade_no = "df_out_trade_no_1";
+        String df_bank_name = "中国银行";
+        String df_bank_card = "银行卡卡号";
+        String df_account_name = "开户人";
+        String df_key = "c4ca4238a0b923820dcc509a6f75849b";
+        String dfCheckSign = "channel=" + df_channel + "&" + "trade_type=" + df_trade_type + "&" + "total_amount=" + df_total_amount
+                + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name + "&"
+                + "&" + "bank_card=" + df_bank_card + "&" + "account_name=" + df_account_name
+                + "key=" + df_key;
+        dfCheckSign = MD5Util.encryption(dfCheckSign);
+        System.out.println("dfCheckSign:" + dfCheckSign);
     }
 
 //    public static void main(String[] args) throws IOException {

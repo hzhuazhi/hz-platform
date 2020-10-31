@@ -1,6 +1,7 @@
 package com.hz.platform.master.util;
 
 import com.alibaba.fastjson.JSON;
+import com.hz.platform.master.core.common.exception.ServiceException;
 import com.hz.platform.master.core.common.utils.DateUtil;
 import com.hz.platform.master.core.common.utils.StringUtil;
 import com.hz.platform.master.core.common.utils.constant.ServerConstant;
@@ -9,8 +10,11 @@ import com.hz.platform.master.core.model.alipay.AlipayH5Model;
 import com.hz.platform.master.core.model.alipay.AlipayModel;
 import com.hz.platform.master.core.model.alipay.AlipayNotifyModel;
 import com.hz.platform.master.core.model.bufpay.BufpayModel;
+import com.hz.platform.master.core.model.channel.ChannelModel;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
+import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
@@ -23,6 +27,7 @@ import com.hz.platform.master.core.protocol.request.notify.RequestFine;
 import com.hz.platform.master.core.protocol.request.notify.RequestJt;
 import com.hz.platform.master.core.protocol.request.notify.RequestWn;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
+import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -946,6 +951,177 @@ public class HodgepodgeMethod {
         resBean.setMoney(bd);
         return resBean;
     }
+
+
+    /**
+     * @Description: 校验余额是否大于订单金额
+     * @param balance - 余额
+     * @param orderMoney - 订单金额
+     * @return void
+     * @author yoko
+     * @date 2020/10/31 19:29
+     */
+    public static void checkMoney(String balance, String orderMoney) throws Exception{
+        if (orderMoney.indexOf("-") > -1){
+            throw new ServiceException("1001", "金额填写有误!");
+        }
+        if (StringUtils.isBlank(balance)){
+            throw new ServiceException("1002", "您的余额不足,请稍后在重试!");
+        }
+        double d_balance = Double.parseDouble(balance);
+        double d_orderMoney = Double.parseDouble(orderMoney);
+        if (d_balance < d_orderMoney){
+            throw new ServiceException("1003", "您的余额不足,请稍后在重试!");
+        }
+    }
+
+
+    /**
+     * @Description: 组装扣减渠道余额
+     * @param id - 主键ID
+     * @param orderMoney - 订单金额
+     * @param serviceCharge - 手续费
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/10/31 19:40
+     */
+    public static ChannelModel assembleChannelBalance(long id, String orderMoney, String serviceCharge){
+        ChannelModel resBean = new ChannelModel();
+        resBean.setId(id);
+        // 计算要扣的金额
+        String resMoney = StringUtil.getMultiply(orderMoney, serviceCharge);
+        String money = StringUtil.getBigDecimalAdd(resMoney, orderMoney);
+        resBean.setSubtractBalance("1");
+        resBean.setOrderMoney(money);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装添加流水或查询流水的方法
+     * @param id - 主键ID
+     * @param channelId - 渠道ID
+     * @param orderNo - 订单号
+     * @param orderType - 订单类型：1代收，2代付
+     * @param money - 订单金额
+     * @param orderStatus - 订单状态：1初始化，2超时/失败，3有质疑，4成功，5表示订单超时且操作状态属于初始化的
+     * @param delayTime - 延迟运行时间：当订单属于超时状态：则系统时间需要大于此时间才能进行逻辑操作
+     * @param lockTime - 锁定时间
+     * @param type - 操作类型：1查询，2添加数据
+     * @return com.hz.cake.master.core.model.merchant.MerchantBalanceDeductModel
+     * @author yoko
+     * @date 2020/10/30 20:21
+     */
+    public static ChannelBalanceDeductModel assembleChannelBalanceDeduct(long id, long channelId, String orderNo, int orderType, String money, int orderStatus,
+                                                                         String delayTime, String lockTime, int type){
+        ChannelBalanceDeductModel resBean = new ChannelBalanceDeductModel();
+        if (id > 0){
+            resBean.setId(id);
+        }
+        if (channelId > 0){
+            resBean.setChannelId(channelId);
+        }
+        if (!StringUtils.isBlank(orderNo)){
+            resBean.setOrderNo(orderNo);
+        }
+        if (orderType > 0){
+            resBean.setOrderType(orderType);
+        }
+        if (!StringUtils.isBlank(money)){
+            resBean.setMoney(money);
+        }
+        if (!StringUtils.isBlank(delayTime)){
+            resBean.setDelayTime(delayTime);
+        }else {
+            String delayTimeStr = DateUtil.addDateMinute(30);
+            resBean.setDelayTime(delayTimeStr);
+        }
+        if (!StringUtils.isBlank(lockTime)){
+            resBean.setLockTime(lockTime);
+        }
+        if (type > 0){
+            if (type == 2){
+                resBean.setCurday(DateUtil.getDayNumber(new Date()));
+                resBean.setCurhour(DateUtil.getHour(new Date()));
+                resBean.setCurminute(DateUtil.getCurminute(new Date()));
+            }
+        }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装渠道代付订单数据
+     * @param requestData - 请求的基础数据
+     * @param myTradeNo - 我方订单号
+     * @param channelId - 渠道主键ID
+     * @param gewayId - 通道主键ID
+     * @param channelGewayId - 渠道与通道的关联关系的ID：对应表tb_hz_channel_geway的主键ID
+     * @param profitType - 收益类型：1普通收益类型，2多人分配收益类型
+     * @param nowTime - 现在时间
+     * @param serviceCharge - 手续费
+     * @param sendFlag - false表示请求失败，true表示请求成功
+     * @return ChannelDataModel
+     * @author yoko
+     * @date 2020/3/24 21:41
+     */
+    public static ChannelOutModel assembleChannelOutData(RequestPayOut requestData, String myTradeNo, long channelId, long gewayId,
+                                                         long channelGewayId, int profitType, String nowTime, String my_notify_url, String serviceCharge, String actualMoney, boolean sendFlag){
+        ChannelOutModel resBean = new ChannelOutModel();
+        resBean.setMyTradeNo(myTradeNo);
+        resBean.setChannelId(channelId);
+        resBean.setGewayId(gewayId);
+        resBean.setChannel(requestData.channel);
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+        resBean.setTradeType(requestData.trade_type);
+        resBean.setTotalAmount(requestData.total_amount);
+        resBean.setServiceCharge(serviceCharge);
+        if (!StringUtils.isBlank(actualMoney)){
+            resBean.setActualMoney(actualMoney);
+        }
+        resBean.setOutTradeNo(requestData.out_trade_no);
+        resBean.setBankName(requestData.bank_name);
+        resBean.setBankCard(requestData.bank_card);
+        resBean.setAccountName(requestData.account_name);
+        if (!StringUtils.isBlank(requestData.notify_url)){
+            resBean.setNotifyUrl(requestData.notify_url);
+        }
+        resBean.setMyNotifyUrl(my_notify_url);
+        if (!StringUtils.isBlank(requestData.interface_ver)){
+            resBean.setInterfaceVer(requestData.interface_ver);
+        }
+        if (!StringUtils.isBlank(requestData.return_url)){
+            resBean.setReturnUrl(requestData.return_url);
+        }
+        if (!StringUtils.isBlank(requestData.extra_return_param)){
+            resBean.setExtraReturnParam(requestData.extra_return_param);
+        }
+        if (!StringUtils.isBlank(requestData.client_ip)){
+            resBean.setClientIp(requestData.client_ip);
+        }
+        resBean.setSign(requestData.sign);
+        resBean.setSubTime(nowTime);
+        if (!StringUtils.isBlank(requestData.product_name)){
+            resBean.setProductName(requestData.product_name);
+        }
+        if (!StringUtils.isBlank(requestData.product_code)){
+            resBean.setProductCode(requestData.product_code);
+        }
+        if (sendFlag){
+            resBean.setSendOk(1);
+        }else {
+            resBean.setSendOk(2);
+        }
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
+
+
 
 
     public static void main(String [] args){

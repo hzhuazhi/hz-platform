@@ -3,6 +3,7 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.ChannelMapper;
+import com.hz.platform.master.core.model.channel.ChannelModel;
 import com.hz.platform.master.core.service.ChannelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ChannelServiceImpl<T> extends BaseServiceImpl<T> implements Channel
 
     public BaseDao<T> getDao() {
         return channelMapper;
+    }
+
+    @Override
+    public int updateBalance(ChannelModel model){
+        return channelMapper.updateBalance(model);
     }
 }

@@ -80,7 +80,7 @@ public class PayController extends BaseController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/25 22:58
-     * local:http://localhost:8082/pay/action/dataCore
+     * local:http://localhost:8093/platform/action/dataCore
      * 请求的属性类:RequestAppeal
      * 必填字段:{"agtVer":1,"clientVer":1,"clientType":1,"ctime":201911071802959,"cctime":201911071802959,"sign":"abcdefg","token":"111111"}
      * 客户端加密字段:token+ctime+秘钥=sign

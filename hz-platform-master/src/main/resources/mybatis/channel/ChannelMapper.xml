@@ -204,5 +204,21 @@
         <include refid="Example_Where_Clause_id"/>
     </update>
 
+    <!-- 更新渠道的余额 -->
+    <update id="updateBalance" parameterType="com.hz.platform.master.core.model.channel.ChannelModel">
+        UPDATE tb_hz_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="addBalance != null and addBalance != '' " >
+                a.balance = a.balance + #{orderMoney},
+            </if>
+            <if test="subtractBalance != null and subtractBalance != '' " >
+                a.balance = a.balance - #{orderMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
 
 </mapper>
