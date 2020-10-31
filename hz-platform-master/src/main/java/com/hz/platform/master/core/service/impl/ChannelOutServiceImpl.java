@@ -48,8 +48,8 @@ public class ChannelOutServiceImpl<T> extends BaseServiceImpl<T> implements Chan
     public boolean handleChannelOut(ChannelModel channelModel, ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception {
         int num1 = channelMapper.updateBalance(channelModel);
         int num2 = channelBalanceDeductMapper.add(channelBalanceDeductModel);
-        int num3 = 0;
-        int num4 = channelOutMapper.add(channelOutModel);
+        int num3 = channelOutMapper.add(channelOutModel);
+//        int num4 =
 
         if (num1 > 0 && num2 > 0 && num3 > 0){
             return true;

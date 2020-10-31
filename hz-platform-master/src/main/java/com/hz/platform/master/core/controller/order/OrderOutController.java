@@ -87,7 +87,7 @@ public class OrderOutController extends BaseController {
      * 请求的属性类:RequestAppeal
      * 必填字段:{"channel":"channel_2","bank_name":"bank_name1","bank_card":"bank_card1","account_name":"account_name1","trade_type":"200001","total_amount":"500.00","out_trade_no":"df_out_trade_no_1","notify_url":"http://www.baidu.com/sb","interface_ver":"V5.0","extra_return_param":"extra_return_param_1","client_ip":"192.168.0.1","sign":"c414e730be7d93bec15408b83dd69281","sub_time":"2020-03-24 17:52:13","product_name":"product_name_1","product_code":"product_code_1","return_url":"http://www.baidu.com/return_url"}
      *
-     * {"channel":"channel_2","bank_name":"中国银行","bank_card":"银行卡卡号","account_name":"开户人","trade_type":"200001","total_amount":"500.00","out_trade_no":"df_out_trade_no_1","notify_url":"http://www.baidu.com/sb","interface_ver":"V5.0","extra_return_param":"extra_return_param_1","client_ip":"192.168.0.1","sign":"c414e730be7d93bec15408b83dd69281","sub_time":"2020-03-24 17:52:13","product_name":"product_name_1","product_code":"product_code_1","return_url":"http://www.baidu.com/return_url"}
+     * {"channel":"channel_3","bank_name":"中国银行","bank_card":"银行卡卡号","account_name":"开户人","trade_type":"200001","total_amount":"500.00","out_trade_no":"df_out_trade_no_1","notify_url":"http://www.baidu.com/sb","interface_ver":"V5.0","extra_return_param":"extra_return_param_1","client_ip":"192.168.0.1","sign":"bb2beddaf8aaccbe134616236e1dc429","sub_time":"2020-03-24 17:52:13","product_name":"product_name_1","product_code":"product_code_1","return_url":"http://www.baidu.com/return_url"}
      * 客户端加密字段:token+ctime+秘钥=sign
      * 返回加密字段:stime+秘钥=sign
      *
@@ -262,14 +262,22 @@ public class OrderOutController extends BaseController {
                         // 组装渠道请求的代付订单信息
                         ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
                                 channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, updateBalance.getOrderMoney(), sendFlag);
-
-                        // 正式处理逻辑
-                        flag = ComponentUtil.channelOutService.handleChannelOut(updateBalance, channelBalanceDeductModel, channelOutModel);
-                        if (flag){
+                        try {
+                            // 正式处理逻辑
+                            flag = ComponentUtil.channelOutService.handleChannelOut(updateBalance, channelBalanceDeductModel, channelOutModel);
+                            if (flag){
+                                // 解锁
+                                ComponentUtil.redisIdService.delLock(lockKey);
+                                break;
+                            }
+                        }catch (Exception e){
                             // 解锁
                             ComponentUtil.redisIdService.delLock(lockKey);
+                            log.error(String.format("this handleChannelOut is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+                            e.printStackTrace();
                             break;
                         }
+
                     }else {
                         count ++;
                     }
