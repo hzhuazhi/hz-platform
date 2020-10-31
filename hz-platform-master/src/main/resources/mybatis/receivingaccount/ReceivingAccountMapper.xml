@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.pay.master.core.mapper.ReceivingAccountMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.buf_pay_id,a.account_name,a.qr_code,a.account_type,a.qr_time,a.gm_type,
+        a.limit_money,a.limit_day_money,a.limit_month_money,a.limit_year_money,
+        a.limit_day_num,a.limit_month_num,a.limit_year_num,
+        a.remark,a.is_enable,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="bufPayId != null and bufPayId != '' " >
+                and a.buf_pay_id = #{bufPayId}
+            </if>
+            <if test="accountName != null and accountName != '' " >
+                and a.account_name = #{accountName}
+            </if>
+            <if test="accountType != null and accountType != '' " >
+                and a.account_type = #{accountType}
+            </if>
+            <if test="gmType != null and gmType != '' " >
+                and a.gm_type = #{gmType}
+            </if>
+            and a.is_enable = 2
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 排序条件 -->
+    <sql id="Example_Order_By">
+        order by a.create_time asc
+    </sql>
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+
+    <!-- 查询总数-->
+    <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+        select count(1)
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询分页列表 -->
+    <select id="queryByList" parameterType="Object" resultType="com.hz.pay.master.core.model.receivingaccount.ReceivingAccountModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_receiving_account a
+        <include refid="Example_Where_Clause"/>
+        <include refid="Example_Order_By"/>
+        <if test="pageNumber != null and pageNumber != ''" >
+            limit #{start},#{end}
+        </if>
+    </select>
+
+
+</mapper>

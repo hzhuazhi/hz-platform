@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.pay.master.core.mapper.TaskMapper">
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List_DataCore">
+        a.id,a.my_trade_no,a.trade_no,a.out_trade_no,a.total_amount,a.service_charge,a.actual_money,
+        a.pay_amount,a.pay_actual_money,a.trade_status,a.extra_return_param,a.trade_time,
+        a.`sign`,a.channel_id,a.geway_id,a.notify_url,a.notify_suc,a.xy_extra_return_param,a.deduct_ratio,
+        a.channel_geway_id,a.profit_type,a.replenish_type,a.money_fit_type,a.work_type,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+
+    <sql id="Base_Column_List_Withdraw">
+        a.id,a.link_id,a.money,a.service_charge,a.bank_id,a.withdraw_status,a.withdraw_explain,a.role_id,a.remark,a.run_num,a.run_status,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+
+    <!-- 定义数据库基本列,只适用代替单表的-阿里数据同步*-->
+    <sql id="Base_Column_List_Notify">
+        a.id,a.app_id,a.auth_app_id,a.body,a.buyer_id,a.buyer_logon_id,a.buyer_pay_amount,a.data_charset,a.fund_bill_list,a.gmt_create,
+        a.gmt_payment,a.invoice_amount,a.notify_id,a.notify_time,a.notify_type,a.out_trade_no,a.point_amount,a.receipt_amount,a.seller_email,
+        a.seller_id,a.subject,a.total_amount,a.trade_no,a.trade_status,a.data_version,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
+        a.create_time,a.update_time,a.yn,
+        b.member_id
+    </sql>
+
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause_DataCore">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+            </if>
+            <if test="workType != null and workType != '' " >
+                and a.work_type = #{workType}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
+            and a.trade_status = 1
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause_Withdraw">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件-阿里数据同步 -->
+    <sql id="Example_Where_Clause_Notify">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
+            and a.trade_status = 'TRADE_SUCCESS'
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <!--and a.yn =  0-->
+        </trim>
+    </sql>
+
+
+
+    <!-- 查询要填充的数据集合 -->
+    <select id="getWorkTypeList" parameterType="Object" resultType="com.hz.pay.master.core.model.datacore.DataCoreModel">
+        select
+        <include refid="Base_Column_List_DataCore" />
+        from tb_hz_data_core a
+        where 1=1
+        and a.work_type = 0
+        and a.trade_status = 1
+        and a.yn=0
+        limit #{limitNum}
+    </select>
+
+
+    <!-- 更新填充数据的状态 -->
+    <update id="updateWorkType" parameterType="Object">
+        UPDATE tb_hz_data_core a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="workType != null and workType != '' " >
+                a.work_type = #{workType},
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                a.run_status = #{runStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+    <!-- 更新渠道的总账以及余额 -->
+    <update id="updateChannelMoney" parameterType="Object">
+        UPDATE tb_hz_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="money != null and money != '' " >
+                a.total_money = a.total_money + #{money},
+            </if>
+            <if test="money != null and money != '' " >
+                a.balance = a.balance + #{money},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+
+    <!-- 查询要同步给下游的数据集合 -->
+    <select id="getNotifyList" parameterType="Object" resultType="com.hz.pay.master.core.model.datacore.DataCoreModel">
+        select
+        <include refid="Base_Column_List_DataCore" />
+        from tb_hz_data_core a
+        <include refid="Example_Where_Clause_DataCore"/>
+        limit #{limitNum}
+    </select>
+
+    <!-- 更新同步数据的状态成功、失败的结果 -->
+    <update id="updateNotifyStatus" parameterType="Object">
+        UPDATE tb_hz_data_core a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="runNum != null and runNum != '' " >
+                a.run_num = a.run_num + #{runNum},
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                a.run_status = #{runStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+
+    <!-- 查询要提现的数据集合 -->
+    <select id="getWithdrawList" parameterType="Object" resultType="com.hz.pay.master.core.model.withdraw.WithdrawModel">
+        select
+        <include refid="Base_Column_List_Withdraw" />
+        from tb_hz_withdraw a
+        <include refid="Example_Where_Clause_Withdraw"/>
+        limit #{limitNum}
+    </select>
+
+    <!-- 更新提现数据的状态成功、失败的结果 -->
+    <update id="updateWithdrawStatus" parameterType="Object">
+        UPDATE tb_hz_withdraw a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="runNum != null and runNum != '' " >
+                a.run_num = a.run_num + #{runNum},
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                a.run_status = #{runStatus},
+            </if>
+            <if test="money != null and money != '' " >
+                a.withdraw_explain = #{money},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+    <!-- 更新渠道的余额-提现：减法 -->
+    <update id="updateChannelReduceMoney" parameterType="Object">
+        UPDATE tb_hz_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="money != null and money != '' " >
+                a.balance = a.balance - #{money},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+
+    <!-- 更新代理的余额-提现：减法 -->
+    <update id="updateAgentReduceMoney" parameterType="Object">
+        UPDATE tb_hz_agent a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="money != null and money != '' " >
+                a.balance = a.balance - #{money},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
+
+    <!-- 根据条件查询阿里订单同步数据需要跑task的数据：runStatus属于初始化值 -->
+    <select id="getTaskAlipayNotify" parameterType="Object" resultType="com.hz.pay.master.core.model.task.TaskAlipayNotifyModel">
+        select
+        <include refid="Base_Column_List_Notify" />
+        from tb_hz_alipay_notify a left join tb_hz_alipay b on a.out_trade_no = b.out_trade_no
+        <include refid="Example_Where_Clause_Notify"/>
+        limit #{limitNum}
+    </select>
+
+
+
+    <!-- 更新基本信息 -->
+    <update id="updateTaskAlipayNotifyStatus" parameterType="Object">
+        UPDATE tb_hz_alipay_notify a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="runNum != null and runNum != '' " >
+                a.run_num = a.run_num + #{runNum},
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                a.run_status = #{runStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+
+
+
+
+
+
+
+</mapper>

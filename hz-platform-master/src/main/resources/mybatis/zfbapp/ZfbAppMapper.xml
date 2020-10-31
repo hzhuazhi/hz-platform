@@ -1,0 +1,236 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.pay.master.core.mapper.ZfbAppMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.app_name,a.app_id,a.app_private_key,a.app_public_key,a.app_type,a.limit_money,a.limit_day,a.limit_month,a.ratio,
+        a.remark,a.is_enable,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="appName != null and appName != '' " >
+                and a.app_name = #{appName}
+            </if>
+            <if test="appId != null and appId != '' " >
+                and a.app_id = #{appId}
+            </if>
+            <if test="appType != null and appType != '' " >
+                and a.app_type = #{appType}
+            </if>
+            and a.is_enable = 2
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 排序条件 -->
+    <sql id="Example_Order_By">
+        order by a.create_time asc
+    </sql>
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+
+    <!-- 查询总数-->
+    <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+        select count(1)
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询分页列表 -->
+    <select id="queryByList" parameterType="Object" resultType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_zfb_app a
+        <include refid="Example_Where_Clause"/>
+        <include refid="Example_Order_By"/>
+        <if test="pageNumber != null and pageNumber != ''" >
+            limit #{start},#{end}
+        </if>
+    </select>
+
+
+    <!-- 添加基本信息 -->
+    <insert id="add" parameterType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_hz_zfb_app
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appName != null and appName != '' " >
+                app_name,
+            </if>
+            <if test="appId != null and appId != '' " >
+                app_id,
+            </if>
+            <if test="appPrivateKey != null and appPrivateKey != '' " >
+                app_private_key,
+            </if>
+            <if test="appPublicKey != null and appPublicKey != '' " >
+                app_public_key,
+            </if>
+            <if test="appType != null and appType != '' " >
+                app_type,
+            </if>
+            <if test="limitMoney != null and limitMoney != '' " >
+                limit_money,
+            </if>
+            <if test="limitDay != null and limitDay != '' " >
+                limit_day,
+            </if>
+            <if test="limitMonth != null and limitMonth != '' " >
+                limit_month,
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                ratio,
+            </if>
+            <if test="remark != null and remark != '' " >
+                remark,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appName != null and appName != '' " >
+                <![CDATA[  #{appName}, ]]>
+            </if>
+            <if test="appId != null and appId != '' " >
+                <![CDATA[  #{appId}, ]]>
+            </if>
+            <if test="appPrivateKey != null and appPrivateKey != '' " >
+                <![CDATA[  #{appPrivateKey}, ]]>
+            </if>
+            <if test="appPublicKey != null and appPublicKey != '' " >
+                <![CDATA[  #{appPublicKey}, ]]>
+            </if>
+            <if test="appType != null and appType != '' " >
+                <![CDATA[  #{appType}, ]]>
+            </if>
+            <if test="limitMoney != null and limitMoney != '' " >
+                <![CDATA[  #{limitMoney}, ]]>
+            </if>
+            <if test="limitDay != null and limitDay != '' " >
+                <![CDATA[  #{limitDay}, ]]>
+            </if>
+            <if test="limitMonth != null and limitMonth != '' " >
+                <![CDATA[  #{limitMonth}, ]]>
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                <![CDATA[  #{ratio}, ]]>
+            </if>
+            <if test="remark != null and remark != '' " >
+                <![CDATA[  #{remark}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <!-- 更新基本信息 -->
+    <update id="update" parameterType="com.hz.pay.master.core.model.zfbapp.ZfbAppModel">
+        UPDATE tb_hz_zfb_app a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="appName != null and appName != '' " >
+                a.app_name = #{appName},
+            </if>
+            <if test="appId != null and appId != '' " >
+                a.app_id = #{appId},
+            </if>
+            <if test="appPrivateKey != null and appPrivateKey != '' " >
+                a.app_private_key = #{appPrivateKey},
+            </if>
+            <if test="appPublicKey != null and appPublicKey != '' " >
+                a.app_public_key = #{appPublicKey},
+            </if>
+            <if test="appType != null and appType != '' " >
+                a.app_type = #{appType},
+            </if>
+            <if test="limitMoney != null and limitMoney != '' " >
+                a.limit_money = #{limitMoney},
+            </if>
+            <if test="limitDay != null and limitDay != '' " >
+                a.limit_day = #{limitDay},
+            </if>
+            <if test="limitMonth != null and limitMonth != '' " >
+                a.limit_month = #{limitMonth},
+            </if>
+            <if test="ratio != null and ratio != '' " >
+                a.ratio = #{ratio},
+            </if>
+            <if test="remark != null and remark != '' " >
+                a.remark = #{remark},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        <include refid="Example_Where_Clause"/>
+    </update>
+
+    <!-- 主要作用1.逻辑删除，2更新状态 -->
+    <update id="manyOperation" parameterType="Object">
+        update tb_hz_zfb_app a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yn != 0 and yn >0 " >
+                a.yn = #{yn},
+            </if>
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+</mapper>

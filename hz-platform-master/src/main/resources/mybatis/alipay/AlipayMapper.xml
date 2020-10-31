@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.pay.master.core.mapper.AlipayMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.member_id,a.body,a.subject,a.out_trade_no,a.timeout_express,a.total_amount,a.product_code,a.ali_order,a.out_trade_status,a.curday,a.curhour,a.curminute,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                and a.out_trade_no = #{outTradeNo}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num &lt; #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status &lt; #{runStatus}
+            </if>
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.hz.pay.master.core.model.alipay.AlipayModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_alipay a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.pay.master.core.model.alipay.AlipayModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_alipay a
+        <include refid="Example_Where_Clause"/>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.hz.pay.master.core.model.alipay.AlipayModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_alipay a
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.pay.master.core.model.alipay.AlipayModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_alipay a
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+    <!-- 添加基本信息 -->
+    <insert id="add" parameterType="com.hz.pay.master.core.model.alipay.AlipayModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_hz_alipay
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="memberId != null and memberId != '' " >
+                member_id,
+            </if>
+            <if test="body != null and body != '' " >
+                body,
+            </if>
+            <if test="subject != null and subject != '' " >
+                `subject`,
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                out_trade_no,
+            </if>
+            <if test="timeoutExpress != null and timeoutExpress != '' " >
+                timeout_express,
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                total_amount,
+            </if>
+            <if test="productCode != null and productCode != '' " >
+                product_code,
+            </if>
+            <if test="aliOrder != null and aliOrder != '' " >
+                ali_order,
+            </if>
+            <if test="outTradeStatus != null and outTradeStatus != '' " >
+                out_trade_status,
+            </if>
+            <if test="dataType != null and dataType != '' " >
+                data_type,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="memberId != null and memberId != '' " >
+                <![CDATA[  #{memberId}, ]]>
+            </if>
+            <if test="body != null and body != '' " >
+                <![CDATA[  #{body}, ]]>
+            </if>
+            <if test="subject != null and subject != '' " >
+                <![CDATA[  #{subject}, ]]>
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                <![CDATA[  #{outTradeNo}, ]]>
+            </if>
+            <if test="timeoutExpress != null and timeoutExpress != '' " >
+                <![CDATA[  #{timeoutExpress}, ]]>
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                <![CDATA[  #{totalAmount}, ]]>
+            </if>
+            <if test="productCode != null and productCode != '' " >
+                <![CDATA[  #{productCode}, ]]>
+            </if>
+            <if test="aliOrder != null and aliOrder != '' " >
+                <![CDATA[  #{aliOrder}, ]]>
+            </if>
+            <if test="outTradeStatus != null and outTradeStatus != '' " >
+                <![CDATA[  #{outTradeStatus}, ]]>
+            </if>
+            <if test="dataType != null and dataType != '' " >
+                <![CDATA[  #{dataType}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <!-- 更新基本信息 -->
+    <update id="update" parameterType="com.hz.pay.master.core.model.alipay.AlipayModel">
+        UPDATE tb_hz_alipay a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="body != null and body != '' " >
+                a.body = #{body},
+            </if>
+            <if test="subject != null and subject != '' " >
+                a.subject = #{subject},
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                a.out_trade_no = #{outTradeNo},
+            </if>
+            <if test="timeoutExpress != null and timeoutExpress != '' " >
+                a.timeout_express = #{timeoutExpress},
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                a.total_amount = #{totalAmount},
+            </if>
+            <if test="productCode != null and productCode != '' " >
+                a.product_code = #{productCode},
+            </if>
+            <if test="outTradeStatus != null and outTradeStatus != '' " >
+                a.out_trade_status = #{outTradeStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+    <!-- 主要作用1.逻辑删除，2更新状态 -->
+    <update id="manyOperation" parameterType="Object">
+        update tb_hz_alipay a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yn != 0 and yn >0 " >
+                a.yn = #{yn},
+            </if>
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+
+
+    <!-- 添加阿里支付宝订单结果数据 -->
+    <insert id="addAlipayNotify" parameterType="com.hz.pay.master.core.model.alipay.AlipayNotifyModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_hz_alipay_notify
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appId != null and appId != '' " >
+                app_id,
+            </if>
+            <if test="authAppId != null and authAppId != '' " >
+                auth_app_id,
+            </if>
+            <if test="body != null and body != '' " >
+                body,
+            </if>
+            <if test="buyerId != null and buyerId != '' " >
+                buyer_id,
+            </if>
+            <if test="buyerLogonId != null and buyerLogonId != '' " >
+                buyer_logon_id,
+            </if>
+            <if test="buyerPayAmount != null and buyerPayAmount != '' " >
+                buyer_pay_amount,
+            </if>
+            <if test="dataCharset != null and dataCharset != '' " >
+                data_charset,
+            </if>
+            <if test="fundBillList != null and fundBillList != '' " >
+                fund_bill_list,
+            </if>
+            <if test="gmtCreate != null and gmtCreate != '' " >
+                gmt_create,
+            </if>
+            <if test="gmtPayment != null and gmtPayment != '' " >
+                gmt_payment,
+            </if>
+            <if test="invoiceAmount != null and invoiceAmount != '' " >
+                invoice_amount,
+            </if>
+            <if test="notifyId != null and notifyId != '' " >
+                notify_id,
+            </if>
+            <if test="notifyTime != null and notifyTime != '' " >
+                notify_time,
+            </if>
+            <if test="notifyType != null and notifyType != '' " >
+                notify_type,
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                out_trade_no,
+            </if>
+            <if test="pointAmount != null and pointAmount != '' " >
+                point_amount,
+            </if>
+            <if test="receiptAmount != null and receiptAmount != '' " >
+                receipt_amount,
+            </if>
+            <if test="sellerEmail != null and sellerEmail != '' " >
+                seller_email,
+            </if>
+            <if test="sellerId != null and sellerId != '' " >
+                seller_id,
+            </if>
+            <if test="subject != null and subject != '' " >
+                `subject`,
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                total_amount,
+            </if>
+            <if test="tradeNo != null and tradeNo != '' " >
+                trade_no,
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                trade_status,
+            </if>
+            <if test="dataVersion != null and dataVersion != '' " >
+                data_version,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="appId != null and appId != '' " >
+                <![CDATA[  #{appId}, ]]>
+            </if>
+            <if test="authAppId != null and authAppId != '' " >
+                <![CDATA[  #{authAppId}, ]]>
+            </if>
+            <if test="body != null and body != '' " >
+                <![CDATA[  #{body}, ]]>
+            </if>
+            <if test="buyerId != null and buyerId != '' " >
+                <![CDATA[  #{buyerId}, ]]>
+            </if>
+            <if test="buyerLogonId != null and buyerLogonId != '' " >
+                <![CDATA[  #{buyerLogonId}, ]]>
+            </if>
+            <if test="buyerPayAmount != null and buyerPayAmount != '' " >
+                <![CDATA[  #{buyerPayAmount}, ]]>
+            </if>
+            <if test="dataCharset != null and dataCharset != '' " >
+                <![CDATA[  #{dataCharset}, ]]>
+            </if>
+            <if test="fundBillList != null and fundBillList != '' " >
+                <![CDATA[  #{fundBillList}, ]]>
+            </if>
+            <if test="gmtCreate != null and gmtCreate != '' " >
+                <![CDATA[  #{gmtCreate}, ]]>
+            </if>
+            <if test="gmtPayment != null and gmtPayment != '' " >
+                <![CDATA[  #{gmtPayment}, ]]>
+            </if>
+            <if test="invoiceAmount != null and invoiceAmount != '' " >
+                <![CDATA[  #{invoiceAmount}, ]]>
+            </if>
+            <if test="notifyId != null and notifyId != '' " >
+                <![CDATA[  #{notifyId}, ]]>
+            </if>
+            <if test="notifyTime != null and notifyTime != '' " >
+                <![CDATA[  #{notifyTime}, ]]>
+            </if>
+            <if test="notifyType != null and notifyType != '' " >
+                <![CDATA[  #{notifyType}, ]]>
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                <![CDATA[  #{outTradeNo}, ]]>
+            </if>
+            <if test="pointAmount != null and pointAmount != '' " >
+                <![CDATA[  #{pointAmount}, ]]>
+            </if>
+            <if test="receiptAmount != null and receiptAmount != '' " >
+                <![CDATA[  #{receiptAmount}, ]]>
+            </if>
+            <if test="sellerEmail != null and sellerEmail != '' " >
+                <![CDATA[  #{sellerEmail}, ]]>
+            </if>
+            <if test="sellerId != null and sellerId != '' " >
+                <![CDATA[  #{sellerId}, ]]>
+            </if>
+            <if test="subject != null and subject != '' " >
+                <![CDATA[  #{subject}, ]]>
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                <![CDATA[  #{totalAmount}, ]]>
+            </if>
+            <if test="tradeNo != null and tradeNo != '' " >
+                <![CDATA[  #{tradeNo}, ]]>
+            </if>
+            <if test="tradeStatus != null and tradeStatus != '' " >
+                <![CDATA[  #{tradeStatus}, ]]>
+            </if>
+            <if test="dataVersion != null and dataVersion != '' " >
+                <![CDATA[  #{dataVersion}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+
+
+
+
+</mapper>
