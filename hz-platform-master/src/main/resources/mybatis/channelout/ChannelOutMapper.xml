@@ -1,0 +1,409 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.platform.master.core.mapper.ChannelOutMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.my_trade_no,a.channel_id,a.geway_id,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.order_status,a.out_trade_no,
+        a.bank_name,a.bank_card,a.account_name,a.picture_ads,a.fail_info,a.notify_url,a.my_notify_url,
+        a.interface_ver,a.return_url,a.extra_return_param,a.client_ip,a.`sign`,a.`sub_time`,a.product_name,a.product_code,a.channel_geway_id,a.profit_type,
+        a.send_ok,a.check_status,a.check_info,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.send_num,a.send_status,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="myTradeNo != null and myTradeNo != '' " >
+                and a.my_trade_no = #{myTradeNo}
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                and a.out_trade_no = #{outTradeNo}
+            </if>
+            <if test="orderStatus != null and orderStatus != '' " >
+                and a.order_status = #{orderStatus}
+            </if>
+            <!--<if test="idList != null and idList.size()>0">-->
+            <!--and a.did in-->
+            <!--<foreach item="item" index="index" collection="idList" open="(" separator="," close=")">-->
+            <!--#{item}-->
+            <!--</foreach>-->
+            <!--</if>-->
+
+            <if test="checkStatus != null and checkStatus != '' " >
+                and a.check_status = #{checkStatus}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+                and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num = #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status = #{runStatus}
+            </if>
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+    <!-- 排序条件 -->
+    <sql id="Example_Order_By">
+        order by a.create_time desc
+    </sql>
+
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+    <!-- 查询总数-->
+    <select id="queryByCount" resultType="java.lang.Integer"  parameterType="Object">
+        select count(1)
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询分页列表 -->
+    <select id="queryByList" parameterType="Object" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+        <include refid="Example_Order_By"/>
+        <if test="pageNumber != null and pageNumber != ''" >
+            limit #{start},#{end}
+        </if>
+    </select>
+
+
+    <!-- 添加基本信息 -->
+    <insert id="add" parameterType="com.hz.platform.master.core.model.channelout.ChannelOutModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_hz_channel_out
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="myTradeNo != null and myTradeNo != '' " >
+                my_trade_no,
+            </if>
+            <if test="channelId != null and channelId != '' " >
+                channel_id,
+            </if>
+            <if test="gewayId != null and gewayId != '' " >
+                geway_id,
+            </if>
+            <if test="channel != null and channel != '' " >
+                channel,
+            </if>
+            <if test="tradeType != null and tradeType != '' " >
+                trade_type,
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                total_amount,
+            </if>
+            <if test="serviceCharge != null and serviceCharge != '' " >
+                service_charge,
+            </if>
+            <if test="actualMoney != null and actualMoney != '' " >
+                actual_money,
+            </if>
+            <if test="orderStatus != null and orderStatus != '' " >
+                order_status,
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                out_trade_no,
+            </if>
+            <if test="bankName != null and bankName != '' " >
+                bank_name,
+            </if>
+            <if test="bankCard != null and bankCard != '' " >
+                bank_card,
+            </if>
+            <if test="accountName != null and accountName != '' " >
+                account_name,
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                picture_ads,
+            </if>
+            <if test="failInfo != null and failInfo != '' " >
+                fail_info,
+            </if>
+            <if test="notifyUrl != null and notifyUrl != '' " >
+                notify_url,
+            </if>
+            <if test="myNotifyUrl != null and myNotifyUrl != '' " >
+                my_notify_url,
+            </if>
+            <if test="interfaceVer != null and interfaceVer != '' " >
+                interface_ver,
+            </if>
+            <if test="returnUrl != null and returnUrl != '' " >
+                return_url,
+            </if>
+            <if test="extraReturnParam != null and extraReturnParam != '' " >
+                extra_return_param,
+            </if>
+            <if test="clientIp != null and clientIp != '' " >
+                client_ip,
+            </if>
+            <if test="sign != null and sign != '' " >
+                `sign`,
+            </if>
+            <if test="subTime != null and subTime != '' " >
+                `sub_time`,
+            </if>
+            <if test="productName != null and productName != '' " >
+                product_name,
+            </if>
+            <if test="productCode != null and productCode != '' " >
+                product_code,
+            </if>
+            <if test="channelGewayId != null and channelGewayId != '' " >
+                channel_geway_id,
+            </if>
+            <if test="profitType != null and profitType != '' " >
+                profit_type,
+            </if>
+            <if test="sendOk != null and sendOk != '' " >
+                send_ok,
+            </if>
+            <if test="checkStatus != null and checkStatus != '' " >
+                check_status,
+            </if>
+            <if test="checkInfo != null and checkInfo != '' " >
+                check_info,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                run_num,
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                run_status,
+            </if>
+            <if test="sendNum != null and sendNum != '' " >
+                send_num,
+            </if>
+            <if test="sendStatus != null and sendStatus != '' " >
+                send_status,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="myTradeNo != null and myTradeNo != '' " >
+                <![CDATA[  #{myTradeNo}, ]]>
+            </if>
+            <if test="channelId != null and channelId != '' " >
+                <![CDATA[  #{channelId}, ]]>
+            </if>
+            <if test="gewayId != null and gewayId != '' " >
+                <![CDATA[  #{gewayId}, ]]>
+            </if>
+            <if test="channel != null and channel != '' " >
+                <![CDATA[  #{channel}, ]]>
+            </if>
+            <if test="tradeType != null and tradeType != '' " >
+                <![CDATA[  #{tradeType}, ]]>
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                <![CDATA[  #{totalAmount}, ]]>
+            </if>
+            <if test="serviceCharge != null and serviceCharge != '' " >
+                <![CDATA[  #{serviceCharge}, ]]>
+            </if>
+            <if test="actualMoney != null and actualMoney != '' " >
+                <![CDATA[  #{actualMoney}, ]]>
+            </if>
+            <if test="orderStatus != null and orderStatus != '' " >
+                <![CDATA[  #{orderStatus}, ]]>
+            </if>
+            <if test="outTradeNo != null and outTradeNo != '' " >
+                <![CDATA[  #{outTradeNo}, ]]>
+            </if>
+            <if test="bankName != null and bankName != '' " >
+                <![CDATA[  #{bankName}, ]]>
+            </if>
+            <if test="bankCard != null and bankCard != '' " >
+                <![CDATA[  #{bankCard}, ]]>
+            </if>
+            <if test="accountName != null and accountName != '' " >
+                <![CDATA[  #{accountName}, ]]>
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                <![CDATA[  #{pictureAds}, ]]>
+            </if>
+            <if test="failInfo != null and failInfo != '' " >
+                <![CDATA[  #{failInfo}, ]]>
+            </if>
+            <if test="notifyUrl != null and notifyUrl != '' " >
+                <![CDATA[  #{notifyUrl}, ]]>
+            </if>
+            <if test="myNotifyUrl != null and myNotifyUrl != '' " >
+                <![CDATA[  #{myNotifyUrl}, ]]>
+            </if>
+            <if test="interfaceVer != null and interfaceVer != '' " >
+                <![CDATA[  #{interfaceVer}, ]]>
+            </if>
+            <if test="returnUrl != null and returnUrl != '' " >
+                <![CDATA[  #{returnUrl}, ]]>
+            </if>
+            <if test="extraReturnParam != null and extraReturnParam != '' " >
+                <![CDATA[  #{extraReturnParam}, ]]>
+            </if>
+            <if test="clientIp != null and clientIp != '' " >
+                <![CDATA[  #{clientIp}, ]]>
+            </if>
+            <if test="sign != null and sign != '' " >
+                <![CDATA[  #{sign}, ]]>
+            </if>
+            <if test="subTime != null and subTime != '' " >
+                <![CDATA[  #{subTime}, ]]>
+            </if>
+            <if test="productName != null and productName != '' " >
+                <![CDATA[  #{productName}, ]]>
+            </if>
+            <if test="productCode != null and productCode != '' " >
+                <![CDATA[  #{productCode}, ]]>
+            </if>
+            <if test="channelGewayId != null and channelGewayId != '' " >
+                <![CDATA[  #{channelGewayId}, ]]>
+            </if>
+            <if test="profitType != null and profitType != '' " >
+                <![CDATA[  #{profitType}, ]]>
+            </if>
+            <if test="sendOk != null and sendOk != '' " >
+                <![CDATA[  #{sendOk}, ]]>
+            </if>
+            <if test="checkStatus != null and checkStatus != '' " >
+                <![CDATA[  #{checkStatus}, ]]>
+            </if>
+            <if test="checkInfo != null and checkInfo != '' " >
+                <![CDATA[  #{checkInfo}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            <if test="runNum != null and runNum != '' " >
+                <![CDATA[  #{runNum}, ]]>
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                <![CDATA[  #{runStatus}, ]]>
+            </if>
+            <if test="sendNum != null and sendNum != '' " >
+                <![CDATA[  #{sendNum}, ]]>
+            </if>
+            <if test="sendStatus != null and sendStatus != '' " >
+                <![CDATA[  #{sendStatus}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <!-- 更新基本信息 -->
+    <update id="update" parameterType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        UPDATE tb_hz_channel_out a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderStatus != null and orderStatus != '' " >
+                a.order_status = #{orderStatus},
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+            </if>
+            <if test="failInfo != null and failInfo != '' " >
+                a.fail_info = #{failInfo},
+            </if>
+            <if test="checkStatus != null and checkStatus != '' " >
+                a.check_status = #{checkStatus},
+            </if>
+            <if test="checkInfo != null and checkInfo != '' " >
+                a.check_info = #{checkInfo},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+    <!-- 主要作用1.逻辑删除，2更新状态 -->
+    <update id="manyOperation" parameterType="Object">
+        update tb_hz_channel_out a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yn != 0 and yn >0 " >
+                a.yn = #{yn},
+            </if>
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+
+
+</mapper>
