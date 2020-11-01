@@ -110,6 +110,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskChannelBalanceDeductService taskChannelBalanceDeductService;
 
+    @Autowired
+    private TaskChannelOutService taskChannelOutService;
+
 
 
 
@@ -146,6 +149,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.dataCoreOutService = dataCoreOutService;
         ComponentUtil.taskDataCoreOutService = taskDataCoreOutService;
         ComponentUtil.taskChannelBalanceDeductService = taskChannelBalanceDeductService;
+        ComponentUtil.taskChannelOutService = taskChannelOutService;
 
         runThread = new RunThread();
         runThread.start();

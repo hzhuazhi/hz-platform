@@ -1,0 +1,146 @@
+package com.hz.platform.master.core.runner;
+
+import com.hz.platform.master.core.common.utils.HttpSendUtils;
+import com.hz.platform.master.core.common.utils.MD5Util;
+import com.hz.platform.master.core.common.utils.constant.CacheKey;
+import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
+import com.hz.platform.master.core.common.utils.constant.ServerConstant;
+import com.hz.platform.master.core.model.channel.ChannelModel;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
+import com.hz.platform.master.core.model.channelout.ChannelOutModel;
+import com.hz.platform.master.core.model.task.base.StatusModel;
+import com.hz.platform.master.util.ComponentUtil;
+import com.hz.platform.master.util.HodgepodgeMethod;
+import com.hz.platform.master.util.TaskMethod;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
+
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.List;
+
+/**
+ * @Description task：渠道数据代付订单
+ * @Author yoko
+ * @Date 2020/11/1 18:29
+ * @Version 1.0
+ */
+@Component
+@EnableScheduling
+public class TaskChannelOut {
+
+    private final static Logger log = LoggerFactory.getLogger(TaskChannelOut.class);
+
+    @Value("${task.limit.num}")
+    private int limitNum;
+
+
+
+    /**
+     * 10分钟
+     */
+    public long TEN_MIN = 10;
+
+
+    /**
+     * @Description: 执行代付成功订单的数据同步
+     * <p>
+     *     每2秒执行运行一次
+     *     1.查询出已成功的代付订单数据数据。
+     *     2.根据同步地址进行数据同步。
+     * </p>
+     * @author yoko
+     * @date 2019/12/6 20:25
+     */
+    @Scheduled(fixedDelay = 2000) // 每2秒执行
+    public void orderNotify() throws Exception {
+//        log.info("----------------------------------TaskChannelOut.orderNotify()----start");
+        // 获取未跑的数据
+        StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 0, 0, 0, 0, 1, 4);
+        List<ChannelOutModel> synchroList = ComponentUtil.taskChannelOutService.getDataList(statusQuery);
+        for (ChannelOutModel data : synchroList) {
+            StatusModel statusModel = null;
+            try {
+                // 锁住这个数据流水
+                String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_CHANNEL_OUT_SEND, data.getId());
+                boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
+                if (flagLock) {
+
+                    // 查询渠道信息
+                    ChannelModel channelModel = (ChannelModel) ComponentUtil.channelService.findById(data.getChannelId());
+
+
+                    // 判断渠道是否需要数据同步
+                    if (channelModel.getIsSynchro() == 2){
+                        // 无需同步
+
+                        // 更新任务状态：更新成功的
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 3, 0, null);
+                    }else{
+                        // 需要同步
+
+                        String notify_suc = "";
+                        if (!StringUtils.isBlank(channelModel.getLowerSuc())){
+                            notify_suc = channelModel.getLowerSuc();
+                        }else {
+                            notify_suc = "OK";
+                        }
+
+                        int tradeStatus = 2;// 交易状态：1表示成功，2表示失败
+                        if (data.getOrderStatus() == 4){
+                            tradeStatus = 1;
+                        }
+
+                        String picture_ads = "";// 转账凭证地址
+                        if (!StringUtils.isBlank(data.getPictureAds())){
+                            picture_ads = data.getPictureAds();
+//                            picture_ads = URLEncoder.encode(picture_ads,"UTF-8");
+                        }
+
+                        // 执行发送数据
+                        String sign = "total_amount=" + data.getTotalAmount() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + tradeStatus
+                                + "&" + "key=" + channelModel.getSecretKey();
+                        sign = MD5Util.encryption(sign);
+                        String sendUrl = data.getNotifyUrl();// 需要发送给下游的接口
+                        String sendData = "?total_amount=" + data.getTotalAmount() + "&" + "actual_money=" + data.getActualMoney() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + tradeStatus
+                                + "&" + "trade_no=" + data.getMyTradeNo() + "&" + "extra_return_param=" + data.getExtraReturnParam() + "&" + "sign=" + sign
+                                + "&" + "trade_time=" + System.currentTimeMillis() + "&" + "picture_ads=" + picture_ads;
+//                        String resp = HttpSendUtils.sendGet(sendUrl + URLEncoder.encode(sendData,"UTF-8"), null, null);
+                        log.info("sendUrl + sendData :" + sendUrl + sendData);
+                        String resp = HttpSendUtils.sendGet(sendUrl + sendData, null, null);
+                        if (resp.equals(notify_suc)){
+                            // 成功
+                            // 组装更改运行状态的数据：更新成成功
+                            // 更新任务状态：更新成功的
+                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 3, 0, null);
+                        }else {
+                            // 组装更改运行状态的数据：更新成失败
+                            // 更新任务状态：更新成功的
+                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 2, 0, null);
+                        }
+
+                    }
+
+                    // 更新状态
+                    ComponentUtil.taskChannelOutService.updateStatus(statusModel);
+
+                    // 解锁
+                    ComponentUtil.redisIdService.delLock(lockKey);
+                }
+
+//                log.info("----------------------------------TaskChannelOut.orderNotify()----end");
+            } catch (Exception e) {
+                log.error(String.format("this TaskChannelOut.orderNotify() is error , the dataId=%s !", data));
+                e.printStackTrace();
+                // 更新此次task的状态：更新成失败
+                statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 2, 0, "异常失败try!");
+                ComponentUtil.taskChannelOutService.updateStatus(statusModel);
+            }
+        }
+    }
+}

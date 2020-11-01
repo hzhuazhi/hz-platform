@@ -67,5 +67,13 @@ public interface CacheKey {
      */
     String LOCK_CHANNEL_BALANCE_DEDUCT_BY_ORDER_STATUS = "-10";
 
+    /**
+     * LOCK-代付订单数据同步给渠道
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_CHANNEL_OUT_SEND = "-11";
+
 
 }
