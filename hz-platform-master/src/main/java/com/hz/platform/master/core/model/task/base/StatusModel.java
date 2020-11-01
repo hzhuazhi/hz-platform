@@ -49,6 +49,16 @@ public class StatusModel implements Serializable {
     private Integer runStatusWhere;
 
     /**
+     * 发送次数
+     */
+    private Integer sendNum;
+
+    /**
+     * 发送状态：0初始化，1锁定，2计算失败，3计算成功
+     */
+    private Integer sendStatus;
+
+    /**
      * 查询多少条数据
      */
     private Integer limitNum;
@@ -59,6 +69,34 @@ public class StatusModel implements Serializable {
     private Integer curday;
     private Integer curdayStart;
     private Integer curdayEnd;
+
+
+    /**
+     * 订单状态：1初始化，2超时/失败，3成功
+     */
+    private Integer orderStatus;
+
+    /**
+     * 原因：task跑时，可能的一些失败原因的存储
+     */
+    private String info;
+
+    /**
+     * 订单状态：1成功，2失败，3其它
+     */
+    private Integer tradeStatus;
+
+    /**
+     * 大于
+     */
+    private Integer greaterThan;
+
+    /**
+     * 小于
+     */
+    private Integer lessThan;
+
+
 
 
 
@@ -148,5 +186,61 @@ public class StatusModel implements Serializable {
 
     public void setMoney(String money) {
         this.money = money;
+    }
+
+    public Integer getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(Integer sendNum) {
+        this.sendNum = sendNum;
+    }
+
+    public Integer getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(Integer sendStatus) {
+        this.sendStatus = sendStatus;
+    }
+
+    public Integer getOrderStatus() {
+        return orderStatus;
+    }
+
+    public void setOrderStatus(Integer orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
+    public String getInfo() {
+        return info;
+    }
+
+    public void setInfo(String info) {
+        this.info = info;
+    }
+
+    public Integer getTradeStatus() {
+        return tradeStatus;
+    }
+
+    public void setTradeStatus(Integer tradeStatus) {
+        this.tradeStatus = tradeStatus;
+    }
+
+    public Integer getGreaterThan() {
+        return greaterThan;
+    }
+
+    public void setGreaterThan(Integer greaterThan) {
+        this.greaterThan = greaterThan;
+    }
+
+    public Integer getLessThan() {
+        return lessThan;
+    }
+
+    public void setLessThan(Integer lessThan) {
+        this.lessThan = lessThan;
     }
 }

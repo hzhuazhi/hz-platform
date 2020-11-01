@@ -43,4 +43,13 @@ public interface CacheKey {
      */
     String LOCK_AGENT_PROFIT = "-7";
 
+    /**
+     * LOCK-代付订单数据回传
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_DATA_CORE_OUT = "-8";
+
+
 }

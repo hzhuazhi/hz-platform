@@ -6,13 +6,14 @@ package com.hz.platform.master.core.common.utils.constant;
  * @Date 2019/11/21 16:03
  * @Version 1.0
  */
-public interface PfCacheKey {
+public interface TkCacheKey {
 
     /**
-     * 用户在操作他的钻石，需要对其进行锁定
-     * 所以在变量名称前加了lock
+     * LOCK-卡商充值-订单类型：下发订单
+     * <p>
+     *     只同步下发
+     * </p>
      */
-
-    String LOCK_CONSUMER = "-1";
+    String LOCK_MERCHANT_RECHARGE_ISSUE = "-18";
 
 }
