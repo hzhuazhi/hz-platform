@@ -243,5 +243,20 @@
     </update>
 
 
+    <!-- 根据订单号更新渠道扣款流水的订单状态 -->
+    <update id="updateOrderStatusByOrderNo" parameterType="com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel">
+        UPDATE tb_hz_channel_balance_deduct a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderStatus != null and orderStatus != '' " >
+                a.order_status = #{orderStatus},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.order_no = #{orderNo}
+        and a.yn = 0
+    </update>
+
+
 
 </mapper>

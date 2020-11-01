@@ -405,5 +405,33 @@
 
 
 
+    <!-- 根据订单号更新代付订单的订单信息 -->
+    <update id="updateOrderStatusByOrderNo" parameterType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        UPDATE tb_hz_channel_out a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderStatus != null and orderStatus != '' " >
+                a.order_status = #{orderStatus},
+            </if>
+            <if test="pictureAds != null and pictureAds != '' " >
+                a.picture_ads = #{pictureAds},
+            </if>
+            <if test="failInfo != null and failInfo != '' " >
+                a.fail_info = #{failInfo},
+            </if>
+            <if test="checkStatus != null and checkStatus != '' " >
+                a.check_status = #{checkStatus},
+            </if>
+            <if test="checkInfo != null and checkInfo != '' " >
+                a.check_info = #{checkInfo},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.my_trade_no = #{myTradeNo}
+        and a.yn = 0
+    </update>
+
+
+
 
 </mapper>

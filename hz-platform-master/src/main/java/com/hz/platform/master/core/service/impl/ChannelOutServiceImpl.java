@@ -57,4 +57,9 @@ public class ChannelOutServiceImpl<T> extends BaseServiceImpl<T> implements Chan
             throw new ServiceException("handleChannelOut", "三个执行更新SQL其中有一个或者多个响应行为0");
         }
     }
+
+    @Override
+    public int updateOrderStatusByOrderNo(ChannelOutModel model) {
+        return channelOutMapper.updateOrderStatusByOrderNo(model);
+    }
 }

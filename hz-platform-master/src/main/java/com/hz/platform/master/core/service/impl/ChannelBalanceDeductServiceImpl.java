@@ -3,6 +3,7 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.ChannelBalanceDeductMapper;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.service.ChannelBalanceDeductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ChannelBalanceDeductServiceImpl<T> extends BaseServiceImpl<T> imple
 
     public BaseDao<T> getDao() {
         return channelBalanceDeductMapper;
+    }
+
+    @Override
+    public int updateOrderStatusByOrderNo(ChannelBalanceDeductModel model) {
+        return channelBalanceDeductMapper.updateOrderStatusByOrderNo(model);
     }
 }

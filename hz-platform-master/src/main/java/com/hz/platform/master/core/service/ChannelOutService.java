@@ -29,4 +29,14 @@ public interface ChannelOutService<T> extends BaseService<T> {
      */
     public boolean handleChannelOut(ChannelModel channelModel, ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception;
 
+
+    /**
+     * @Description: 根据订单号更新代付订单的订单信息
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2020/11/1 16:23
+     */
+    public int updateOrderStatusByOrderNo(ChannelOutModel model);
+
 }

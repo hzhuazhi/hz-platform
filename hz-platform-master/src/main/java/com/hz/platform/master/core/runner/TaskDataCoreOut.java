@@ -2,9 +2,12 @@ package com.hz.platform.master.core.runner;
 
 import com.hz.platform.master.core.common.utils.constant.CacheKey;
 import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
+import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.task.base.StatusModel;
 import com.hz.platform.master.util.ComponentUtil;
+import com.hz.platform.master.util.HodgepodgeMethod;
 import com.hz.platform.master.util.TaskMethod;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -56,7 +59,7 @@ public class TaskDataCoreOut {
     public void tradeStatus() throws Exception{
 //        log.info("----------------------------------TaskDataCoreOut.tradeStatus()----start");
         // 获取未跑的数据
-        StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 0, 0, 0, 0, 0, 0);
+        StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 1, 0, 0, 0, 0, 0);
         List<DataCoreOutModel> synchroList = ComponentUtil.taskDataCoreOutService.getDataList(statusQuery);
         for (DataCoreOutModel data : synchroList){
             StatusModel statusModel = null;
@@ -65,11 +68,25 @@ public class TaskDataCoreOut {
                 String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_DATA_CORE_OUT, data.getId());
                 boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
                 if (flagLock){
+                    int orderStatus = 0;
+                    if (data.getTradeStatus() == 1){
+                        orderStatus = 4;
+                    }else if (data.getTradeStatus() == 2){
+                        orderStatus = 2;
+                    }
 
-                    statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0,  0,0,null);
 
+                    // 组装更新渠道订单扣款流水的数据
+                    ChannelBalanceDeductModel updateChannelBalanceDeduct = HodgepodgeMethod.assembleChannelBalanceDeduct(0,0, data.getMyTradeNo(),
+                            0, null, orderStatus,null, null, 0);
 
-
+                    ChannelOutModel updateChannelOut = HodgepodgeMethod.assembleChannelOutUpdate(data.getMyTradeNo(), orderStatus, data.getPictureAds(), data.getFailInfo());
+                    boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut);
+                    if (flag){
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0,  0,0,null);
+                    }else {
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 2, 0,  0,0,null);
+                    }
 
                     // 更新状态
                     ComponentUtil.taskDataCoreOutService.updateStatus(statusModel);

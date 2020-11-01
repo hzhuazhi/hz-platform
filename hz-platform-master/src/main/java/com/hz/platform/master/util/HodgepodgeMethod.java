@@ -1028,6 +1028,9 @@ public class HodgepodgeMethod {
         if (!StringUtils.isBlank(money)){
             resBean.setMoney(money);
         }
+        if (orderStatus > 0){
+            resBean.setOrderStatus(orderStatus);
+        }
         if (!StringUtils.isBlank(delayTime)){
             resBean.setDelayTime(delayTime);
         }else {
@@ -1164,6 +1167,33 @@ public class HodgepodgeMethod {
         return resBean;
 
     }
+
+
+    /**
+     * @Description: 组装
+     * @param orderNo - 订单号
+     * @param orderStatus - 订单状态
+     * @param pictureAds - 转账凭证
+     * @param failInfo - 失败缘由
+     * @return com.hz.platform.master.core.model.channelout.ChannelOutModel
+     * @author yoko
+     * @date 2020/11/1 16:53
+     */
+    public static ChannelOutModel assembleChannelOutUpdate(String orderNo, int orderStatus, String pictureAds, String failInfo){
+        ChannelOutModel resBean = new ChannelOutModel();
+        resBean.setMyTradeNo(orderNo);
+        resBean.setOrderStatus(orderStatus);
+        if (!StringUtils.isBlank(pictureAds)){
+            resBean.setPictureAds(pictureAds);
+        }
+        if (!StringUtils.isBlank(failInfo)){
+            resBean.setFailInfo(failInfo);
+        }
+        return resBean;
+    }
+
+
+
 
 
 

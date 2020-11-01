@@ -1,8 +1,13 @@
 package com.hz.platform.master.core.service.impl;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
+import com.hz.platform.master.core.common.exception.ServiceException;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
+import com.hz.platform.master.core.mapper.ChannelBalanceDeductMapper;
+import com.hz.platform.master.core.mapper.ChannelOutMapper;
 import com.hz.platform.master.core.mapper.TaskDataCoreOutMapper;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
+import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.service.TaskDataCoreOutService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +33,11 @@ public class TaskDataCoreOutServiceImpl<T> extends BaseServiceImpl<T> implements
     @Autowired
     private TaskDataCoreOutMapper taskDataCoreOutMapper;
 
+    @Autowired
+    private ChannelBalanceDeductMapper channelBalanceDeductMapper;
+
+    @Autowired
+    private ChannelOutMapper channelOutMapper;
 
     public BaseDao<T> getDao() {
         return taskDataCoreOutMapper;
@@ -41,5 +51,17 @@ public class TaskDataCoreOutServiceImpl<T> extends BaseServiceImpl<T> implements
     @Override
     public int updateStatus(Object obj) {
         return taskDataCoreOutMapper.updateStatus(obj);
+    }
+
+    @Override
+    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception {
+        int num1 = channelBalanceDeductMapper.updateOrderStatusByOrderNo(channelBalanceDeductModel);
+        int num2 = channelOutMapper.updateOrderStatusByOrderNo(channelOutModel);
+
+        if (num1 > 0 && num2 > 0){
+            return true;
+        }else{
+            throw new ServiceException("handleDataCoreOut", "二个执行更新SQL其中有一个或者多个响应行为0");
+        }
     }
 }

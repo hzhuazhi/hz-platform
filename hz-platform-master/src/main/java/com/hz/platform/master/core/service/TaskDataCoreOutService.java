@@ -1,6 +1,8 @@
 package com.hz.platform.master.core.service;
 
 import com.hz.platform.master.core.common.service.BaseService;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
+import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 
 import java.util.List;
@@ -30,4 +32,20 @@ public interface TaskDataCoreOutService<T> extends BaseService<T> {
      * @date 2020/1/11 16:30
      */
     public int updateStatus(Object obj);
+
+
+    /**
+     * @Description: 处理代付订单回调结果的逻辑
+     * <p>
+     *     1.修改渠道扣款流水的流水订单状态。
+     *     2.修改代付订单的订单状态
+     * </p>
+     * @param channelBalanceDeductModel - 渠道扣款流水
+     * @param channelOutModel - 代付订单信息
+     * @return
+     * @author yoko
+     * @date 2020/9/23 21:40
+     */
+    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception;
+
 }

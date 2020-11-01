@@ -1,6 +1,7 @@
 package com.hz.platform.master.core.mapper;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
+import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,4 +12,15 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ChannelBalanceDeductMapper<T> extends BaseDao<T> {
+
+    /**
+     * @Description: 根据订单号更新渠道扣款流水的订单状态
+     * @param model - 基本信息
+     * @return
+     * @author yoko
+     * @date 2020/11/1 15:38
+    */
+    public int updateOrderStatusByOrderNo(ChannelBalanceDeductModel model);
+
+
 }
