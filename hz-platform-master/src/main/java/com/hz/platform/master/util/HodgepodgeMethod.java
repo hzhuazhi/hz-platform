@@ -16,16 +16,14 @@ import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
+import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.region.RegionModel;
 import com.hz.platform.master.core.model.task.TaskAlipayNotifyModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
-import com.hz.platform.master.core.protocol.request.notify.RequestBufPay;
-import com.hz.platform.master.core.protocol.request.notify.RequestFine;
-import com.hz.platform.master.core.protocol.request.notify.RequestJt;
-import com.hz.platform.master.core.protocol.request.notify.RequestWn;
+import com.hz.platform.master.core.protocol.request.notify.*;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
 import org.apache.commons.lang.StringUtils;
@@ -1113,6 +1111,53 @@ public class HodgepodgeMethod {
         }else {
             resBean.setSendOk(2);
         }
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
+
+    /**
+     * @Description: 组装上游同步的数据-蛋糕-代付
+     * @param requestModel - 上游同步的基本数据
+     * @param channelOutModel - 渠道请求的基本数据-代付
+     * @param channelGewayModel - 渠道与通道关联关系
+     * @param tradeStatus - 订单状态：1成功，2失败，3其它
+     * @return DataCoreModel
+     * @author yoko
+     * @date 2020/3/25 14:08
+     */
+    public static DataCoreOutModel assembleDataCoreOutByCake(RequestCakeOut requestModel, ChannelOutModel channelOutModel, ChannelGewayModel channelGewayModel,
+                                                             int tradeStatus, long channelGewayId, int profitType) throws Exception{
+        DataCoreOutModel resBean = new DataCoreOutModel();
+        resBean.setMyTradeNo(requestModel.out_trade_no);
+        resBean.setTradeNo(requestModel.trade_no);
+        resBean.setOutTradeNo(channelOutModel.getOutTradeNo());
+
+        resBean.setTradeStatus(tradeStatus);
+        if (!StringUtils.isBlank(requestModel.picture_ads)){
+            resBean.setPictureAds(requestModel.picture_ads);
+        }
+        if (!StringUtils.isBlank(requestModel.fail_info)){
+            resBean.setFailInfo(requestModel.fail_info);
+        }
+
+        resBean.setTradeTime(DateUtil.getNowPlusTime());
+//        resBean.setSign(requestModel.sign);
+        resBean.setChannelId(channelOutModel.getChannelId());
+        resBean.setGewayId(channelOutModel.getGewayId());
+        resBean.setNotifyUrl(channelOutModel.getNotifyUrl());
+//        resBean.setNotifySuc();
+        if (!StringUtils.isBlank(channelOutModel.getExtraReturnParam())){
+            resBean.setXyExtraReturnParam(channelOutModel.getExtraReturnParam());
+        }
+        resBean.setDeductRatio(channelGewayModel.getDeductRatio());
+
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+
         resBean.setCurday(DateUtil.getDayNumber(new Date()));
         resBean.setCurhour(DateUtil.getHour(new Date()));
         resBean.setCurminute(DateUtil.getCurminute(new Date()));

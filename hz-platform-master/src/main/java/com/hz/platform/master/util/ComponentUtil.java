@@ -33,5 +33,6 @@ public class ComponentUtil {
     public static TaskAgentProfitService taskAgentProfitService;
     public static ChannelOutService channelOutService;
     public static ChannelBalanceDeductService channelBalanceDeductService;
+    public static DataCoreOutService dataCoreOutService;
 
 }
