@@ -51,5 +51,21 @@ public interface CacheKey {
      */
     String LOCK_DATA_CORE_OUT = "-8";
 
+    /**
+     * LOCK-渠道扣款流水超时的任务
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_CHANNEL_BALANCE_DEDUCT_BY_DELAY_TIME = "-9";
+
+    /**
+     * LOCK-渠道扣款流水订单状态不是初始化的任务
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_CHANNEL_BALANCE_DEDUCT_BY_ORDER_STATUS = "-10";
+
 
 }
