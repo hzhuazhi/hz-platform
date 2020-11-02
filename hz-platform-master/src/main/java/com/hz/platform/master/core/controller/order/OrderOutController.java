@@ -83,7 +83,7 @@ public class OrderOutController extends BaseController {
      * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
      * @author yoko
      * @date 2019/11/25 22:58
-     * local:http://localhost:8093/platform/out/order
+     * local:http://localhost:8092/platform/out/order
      * 请求的属性类:RequestAppeal
      * 必填字段:{"channel":"channel_2","bank_name":"bank_name1","bank_card":"bank_card1","account_name":"account_name1","trade_type":"200001","total_amount":"500.00","out_trade_no":"df_out_trade_no_1","notify_url":"http://www.baidu.com/sb","interface_ver":"V5.0","extra_return_param":"extra_return_param_1","client_ip":"192.168.0.1","sign":"c414e730be7d93bec15408b83dd69281","sub_time":"2020-03-24 17:52:13","product_name":"product_name_1","product_code":"product_code_1","return_url":"http://www.baidu.com/return_url"}
      *
