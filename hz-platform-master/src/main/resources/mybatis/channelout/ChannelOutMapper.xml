@@ -172,6 +172,9 @@
             <if test="bankCard != null and bankCard != '' " >
                 bank_card,
             </if>
+            <if test="accountName != null and accountName != '' " >
+                account_name,
+            </if>
             <if test="bankSubbranch != null and bankSubbranch != '' " >
                 bank_subbranch,
             </if>
@@ -180,9 +183,6 @@
             </if>
             <if test="bankCity != null and bankCity != '' " >
                 bank_city,
-            </if>
-            <if test="accountName != null and accountName != '' " >
-                account_name,
             </if>
             <if test="pictureAds != null and pictureAds != '' " >
                 picture_ads,
