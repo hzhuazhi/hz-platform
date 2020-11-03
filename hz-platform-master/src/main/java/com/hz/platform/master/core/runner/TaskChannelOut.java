@@ -17,6 +17,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.net.URLEncoder;
 import java.util.List;
 
 /**
@@ -56,7 +57,7 @@ public class TaskChannelOut {
     public void orderNotify() throws Exception {
 //        log.info("----------------------------------TaskChannelOut.orderNotify()----start");
         // 获取未跑的数据
-        StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 0, 0, 0, 0, 1, 4);
+        StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 0, 0, 1, 0, 1, 0);
         List<ChannelOutModel> synchroList = ComponentUtil.taskChannelOutService.getDataList(statusQuery);
         for (ChannelOutModel data : synchroList) {
             StatusModel statusModel = null;
@@ -96,6 +97,11 @@ public class TaskChannelOut {
                             picture_ads = data.getPictureAds();
 //                            picture_ads = URLEncoder.encode(picture_ads,"UTF-8");
                         }
+                        String fail_info = "";// 失败缘由
+                        if (!StringUtils.isBlank(data.getFailInfo())){
+                            fail_info = data.getFailInfo();
+                            fail_info = URLEncoder.encode(fail_info,"UTF-8");
+                        }
 
                         // 执行发送数据
                         String sign = "total_amount=" + data.getTotalAmount() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + tradeStatus
@@ -104,7 +110,7 @@ public class TaskChannelOut {
                         String sendUrl = data.getNotifyUrl();// 需要发送给下游的接口
                         String sendData = "?total_amount=" + data.getTotalAmount() + "&" + "actual_money=" + data.getActualMoney() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + tradeStatus
                                 + "&" + "trade_no=" + data.getMyTradeNo() + "&" + "extra_return_param=" + data.getExtraReturnParam() + "&" + "sign=" + sign
-                                + "&" + "trade_time=" + System.currentTimeMillis() + "&" + "picture_ads=" + picture_ads;
+                                + "&" + "trade_time=" + System.currentTimeMillis() + "&" + "fail_info=" + fail_info + "&" + "picture_ads=" + picture_ads;
 //                        String resp = HttpSendUtils.sendGet(sendUrl + URLEncoder.encode(sendData,"UTF-8"), null, null);
                         log.info("sendUrl + sendData :" + sendUrl + sendData);
                         String resp = HttpSendUtils.sendGet(sendUrl + sendData, null, null);
