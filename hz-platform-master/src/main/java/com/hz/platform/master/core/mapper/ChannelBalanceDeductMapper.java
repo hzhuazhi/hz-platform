@@ -22,5 +22,14 @@ public interface ChannelBalanceDeductMapper<T> extends BaseDao<T> {
     */
     public int updateOrderStatusByOrderNo(ChannelBalanceDeductModel model);
 
+    /**
+     * @Description: 获取渠道的扣款流水总和
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2020/11/3 11:22
+    */
+    public String sumMoney(ChannelBalanceDeductModel model);
+
 
 }

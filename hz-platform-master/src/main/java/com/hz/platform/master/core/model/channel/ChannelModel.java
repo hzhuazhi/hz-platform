@@ -59,6 +59,11 @@ public class ChannelModel extends BasePage implements Serializable {
     private String balance;
 
     /**
+     * 锁定金额
+     */
+    private String lockMoney;
+
+    /**
      * 秘钥key
      */
     private String secretKey;
@@ -259,5 +264,13 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setOrderMoney(String orderMoney) {
         this.orderMoney = orderMoney;
+    }
+
+    public String getLockMoney() {
+        return lockMoney;
+    }
+
+    public void setLockMoney(String lockMoney) {
+        this.lockMoney = lockMoney;
     }
 }

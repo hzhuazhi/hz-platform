@@ -25,4 +25,13 @@ public interface ChannelService<T> extends BaseService<T> {
      * @date 2020/10/30 17:04
      */
     public int updateBalance(ChannelModel model);
+
+    /**
+     * @Description: 更新渠道的锁定金额
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2020/11/3 11:17
+     */
+    public int updateLockMoney(ChannelModel model);
 }

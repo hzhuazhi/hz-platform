@@ -104,7 +104,7 @@ public class TaskChannelBalanceDeduct {
 
 
     /**
-     * @Description: 检测渠道扣款流水订单状态不是厨师状态的业务逻辑
+     * @Description: 检测渠道扣款流水订单状态不是初始化状态的业务逻辑
      * <p>
      *     每5秒执行运行一次
      *     1.查询未跑的订单状态不是初始化状态的渠道流水数据。
@@ -171,6 +171,42 @@ public class TaskChannelBalanceDeduct {
                 // 更新此次task的状态：更新成失败
                 statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 2, 0, 0,0,"异常失败try!");
                 ComponentUtil.taskChannelBalanceDeductService.updateStatus(statusModel);
+            }
+        }
+    }
+
+
+
+    /**
+     * @Description: 检测渠道扣款流水运行状态属于初始化的总金额
+     * <p>
+     *     每3秒执行运行一次
+     *     1.查询所有渠道信息。
+     *     2.求和渠道扣款流水中run_status=0的金额
+     *     3.更新渠道的锁定金额
+     * </p>
+     * @author yoko
+     * @date 2019/12/6 20:25
+     */
+//    @Scheduled(fixedDelay = 1000) // 每1秒执行
+    @Scheduled(fixedDelay = 3000) // 每3秒执行
+    public void sumMoneyChannelBalanceDeduct() throws Exception{
+//        log.info("----------------------------------TaskChannelBalanceDeduct.sumMoneyChannelBalanceDeduct()----start");
+        // 获取所有渠道的数据
+        List<ChannelModel> synchroList = ComponentUtil.channelService.findByCondition(new ChannelModel());
+        for (ChannelModel data : synchroList){
+            try{
+                ChannelBalanceDeductModel channelBalanceDeductModel = HodgepodgeMethod.assembleChannelBalanceDeduct(0, data.getId(), null, 2, null,
+                        0,null,null,0);
+                String lockMoney = ComponentUtil.channelBalanceDeductService.sumMoney(channelBalanceDeductModel);
+                // 正式更新渠道的锁定金额
+                ChannelModel channelUpdate = HodgepodgeMethod.assembleLockMoneyUpdate(data.getId(), lockMoney);
+                ComponentUtil.channelService.updateLockMoney(channelUpdate);
+
+//                log.info("----------------------------------TaskChannelBalanceDeduct.sumMoneyChannelBalanceDeduct()----end");
+            }catch (Exception e){
+                log.error(String.format("this TaskChannelBalanceDeduct.sumMoneyChannelBalanceDeduct() is error , the dataId=%s !", data));
+                e.printStackTrace();
             }
         }
     }

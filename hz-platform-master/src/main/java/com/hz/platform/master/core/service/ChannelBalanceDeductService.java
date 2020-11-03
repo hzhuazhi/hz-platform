@@ -19,4 +19,13 @@ public interface ChannelBalanceDeductService<T> extends BaseService<T> {
      * @date 2020/11/1 15:38
      */
     public int updateOrderStatusByOrderNo(ChannelBalanceDeductModel model);
+
+    /**
+     * @Description: 获取渠道的扣款流水总和
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2020/11/3 11:22
+     */
+    public String sumMoney(ChannelBalanceDeductModel model);
 }

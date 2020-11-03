@@ -37,6 +37,12 @@
             <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
                 and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
             </if>
+            <if test="runNum != null and runNum != '' " >
+                and a.run_num = #{runNum}
+            </if>
+            <if test="runStatus != null and runStatus != '' " >
+                and a.run_status = #{runStatus}
+            </if>
             and a.yn = 0
         </trim>
     </sql>
@@ -256,6 +262,24 @@
         and a.order_no = #{orderNo}
         and a.yn = 0
     </update>
+
+
+    <!-- 获取渠道的扣款流水总和-->
+    <select id="sumMoney" parameterType="Object" resultType="java.lang.String">
+        select
+        ifnull(sum(a.money), '0.0000') as money
+        from tb_hz_channel_balance_deduct a
+        where 1=1
+        <if test="orderType != null and orderType != '' " >
+            and a.order_type = #{orderType}
+        </if>
+        <if test="orderStatus != null and orderStatus != '' " >
+            and a.order_status = #{orderStatus}
+        </if>
+        and a.channel_id = #{channelId}
+        and a.run_status = 0
+        and a.yn = 0
+    </select>
 
 
 

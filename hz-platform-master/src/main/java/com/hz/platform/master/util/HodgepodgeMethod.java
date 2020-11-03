@@ -1210,6 +1210,25 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: 组装跟新渠道的锁定金额
+     * @param id - 主键ID
+     * @param lockMoney - 锁定金额
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/11/3 11:49
+     */
+    public static ChannelModel assembleLockMoneyUpdate(long id, String lockMoney){
+        ChannelModel resBean = new ChannelModel();
+        resBean.setId(id);
+        if (!StringUtils.isBlank(lockMoney)){
+            resBean.setLockMoney(lockMoney);
+        }
+        return resBean;
+    }
+
+
+
 
 
 

@@ -35,4 +35,9 @@ public class ChannelBalanceDeductServiceImpl<T> extends BaseServiceImpl<T> imple
     public int updateOrderStatusByOrderNo(ChannelBalanceDeductModel model) {
         return channelBalanceDeductMapper.updateOrderStatusByOrderNo(model);
     }
+
+    @Override
+    public String sumMoney(ChannelBalanceDeductModel model) {
+        return channelBalanceDeductMapper.sumMoney(model);
+    }
 }

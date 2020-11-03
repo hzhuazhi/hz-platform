@@ -31,4 +31,5 @@ public interface TaskChannelBalanceDeductService<T> extends BaseService<T> {
      */
     public int updateStatus(Object obj);
 
+
 }

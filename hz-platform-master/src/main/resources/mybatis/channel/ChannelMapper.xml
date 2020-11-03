@@ -7,7 +7,7 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.channel_name,a.channel,a.company_name,a.contacts,a.phone_num,a.pay_type,a.total_money,a.balance,a.secret_key,
+        a.id,a.channel_name,a.channel,a.company_name,a.contacts,a.phone_num,a.pay_type,a.total_money,a.balance,a.lock_money,a.secret_key,
         a.lower_url,a.lower_suc,a.is_synchro,
         a.create_time,a.update_time,a.yn
     </sql>
@@ -218,7 +218,20 @@
         </trim>
         where 1=1
         and a.id = #{id}
+        and a.yn = 0
     </update>
 
+
+    <!-- 更新渠道的锁定金额 -->
+    <update id="updateLockMoney" parameterType="com.hz.platform.master.core.model.channel.ChannelModel">
+        UPDATE tb_hz_channel a
+        <trim prefix="set" suffixOverrides=",">
+            a.lock_money = #{lockMoney},
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
 
 </mapper>
