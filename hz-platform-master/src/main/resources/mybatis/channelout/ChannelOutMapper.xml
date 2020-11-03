@@ -8,7 +8,7 @@
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
         a.id,a.my_trade_no,a.channel_id,a.geway_id,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.order_status,a.out_trade_no,
-        a.bank_name,a.bank_card,a.account_name,a.picture_ads,a.fail_info,a.notify_url,a.my_notify_url,
+        a.bank_name,a.bank_card,a.account_name,a.bank_subbranch,a.bank_province,a.bank_city,a.picture_ads,a.fail_info,a.notify_url,a.my_notify_url,
         a.interface_ver,a.return_url,a.extra_return_param,a.client_ip,a.`sign`,a.`sub_time`,a.product_name,a.product_code,a.channel_geway_id,a.profit_type,
         a.send_ok,a.check_status,a.check_info,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.send_num,a.send_status,
@@ -172,6 +172,15 @@
             <if test="bankCard != null and bankCard != '' " >
                 bank_card,
             </if>
+            <if test="bankSubbranch != null and bankSubbranch != '' " >
+                bank_subbranch,
+            </if>
+            <if test="bankProvince != null and bankProvince != '' " >
+                bank_province,
+            </if>
+            <if test="bankCity != null and bankCity != '' " >
+                bank_city,
+            </if>
             <if test="accountName != null and accountName != '' " >
                 account_name,
             </if>
@@ -289,6 +298,15 @@
             </if>
             <if test="accountName != null and accountName != '' " >
                 <![CDATA[  #{accountName}, ]]>
+            </if>
+            <if test="bankSubbranch != null and bankSubbranch != '' " >
+                <![CDATA[  #{bankSubbranch}, ]]>
+            </if>
+            <if test="bankProvince != null and bankProvince != '' " >
+                <![CDATA[  #{bankProvince}, ]]>
+            </if>
+            <if test="bankCity != null and bankCity != '' " >
+                <![CDATA[  #{bankCity}, ]]>
             </if>
             <if test="pictureAds != null and pictureAds != '' " >
                 <![CDATA[  #{pictureAds}, ]]>

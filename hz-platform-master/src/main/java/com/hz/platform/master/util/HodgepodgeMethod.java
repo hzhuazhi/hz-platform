@@ -1084,6 +1084,16 @@ public class HodgepodgeMethod {
         resBean.setOutTradeNo(requestData.out_trade_no);
         resBean.setBankName(requestData.bank_name);
         resBean.setBankCard(requestData.bank_card);
+
+        if (!StringUtils.isBlank(requestData.bank_subbranch)){
+            resBean.setBankSubbranch(requestData.bank_subbranch);
+        }
+        if (!StringUtils.isBlank(requestData.bank_province)){
+            resBean.setBankProvince(requestData.bank_province);
+        }
+        if (!StringUtils.isBlank(requestData.bank_city)){
+            resBean.setBankCity(requestData.bank_city);
+        }
         resBean.setAccountName(requestData.account_name);
         if (!StringUtils.isBlank(requestData.notify_url)){
             resBean.setNotifyUrl(requestData.notify_url);

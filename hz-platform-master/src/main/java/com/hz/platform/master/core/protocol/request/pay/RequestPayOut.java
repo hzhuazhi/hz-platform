@@ -19,6 +19,9 @@ public class RequestPayOut extends BaseRequest implements Serializable {
     public String bank_name;// 银行名称
     public String bank_card;// 银行卡卡号
     public String account_name;// 开户人
+    public String bank_subbranch;// 银行开户支行
+    public String bank_province;// 银行开户省份
+    public String bank_city;// 银行开户城市
     public String notify_url;// 异步通知地址
     public String interface_ver;// 接口版本
     public String return_url;// 参数名称：页面跳转同步通知地址支付成功后，通过页面跳转的方式跳转到商家网站
@@ -172,5 +175,29 @@ public class RequestPayOut extends BaseRequest implements Serializable {
 
     public void setNoredirect(String noredirect) {
         this.noredirect = noredirect;
+    }
+
+    public String getBank_subbranch() {
+        return bank_subbranch;
+    }
+
+    public void setBank_subbranch(String bank_subbranch) {
+        this.bank_subbranch = bank_subbranch;
+    }
+
+    public String getBank_province() {
+        return bank_province;
+    }
+
+    public void setBank_province(String bank_province) {
+        this.bank_province = bank_province;
+    }
+
+    public String getBank_city() {
+        return bank_city;
+    }
+
+    public void setBank_city(String bank_city) {
+        this.bank_city = bank_city;
     }
 }
