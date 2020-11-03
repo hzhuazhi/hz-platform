@@ -106,7 +106,7 @@ public class OrderOutController extends BaseController {
      */
     @RequestMapping(value = "/order", method = {RequestMethod.POST})
     public JsonResult<Object> order(HttpServletRequest request, HttpServletResponse response, @RequestBody RequestPayOut requestData) throws Exception{
-        String sgid = "DF" + ComponentUtil.redisIdService.getNewId();
+        String sgid = "PDF" + ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String ip = StringUtil.getIpAddress(request);
         String data = "";

@@ -101,7 +101,7 @@ public class PayController extends BaseController {
      */
     @RequestMapping(value = "/dataCore", method = {RequestMethod.POST})
     public String dataCore(HttpServletRequest request, HttpServletResponse response,@RequestBody RequestPay requestData) throws Exception{
-        String sgid = ComponentUtil.redisIdService.getNewId();
+        String sgid = "PDS" + ComponentUtil.redisIdService.getNewId();
         String cgid = "";
         String ip = StringUtil.getIpAddress(request);
         String data = "";
