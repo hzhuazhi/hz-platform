@@ -1220,6 +1220,22 @@ public class HodgepodgeMethod {
 
 
     /**
+     * @Description: 组装渠道余额核减金额
+     * @param id - 主键ID
+     * @param orderMoney - 订单金额
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/10/31 19:40
+     */
+    public static ChannelModel assembleChannelBalanceSubtract(long id, String orderMoney){
+        ChannelModel resBean = new ChannelModel();
+        resBean.setId(id);
+        resBean.setSubtractBalance("1");
+        resBean.setOrderMoney(orderMoney);
+        return resBean;
+    }
+
+    /**
      * @Description: 组装跟新渠道的锁定金额
      * @param id - 主键ID
      * @param lockMoney - 锁定金额

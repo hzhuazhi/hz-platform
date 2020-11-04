@@ -75,5 +75,13 @@ public interface CacheKey {
      */
     String LOCK_CHANNEL_OUT_SEND = "-11";
 
+    /**
+     * LOCK-渠道变更金额的的任务
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_CHANNEL_CHANGE = "-12";
+
 
 }
