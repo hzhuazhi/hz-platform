@@ -176,15 +176,15 @@ public class MD5Util {
         System.out.println(sb);
 
         // 校验sign签名
-        String channel = "10114";
+        String channel = "10101";
 //        String trade_type = "1005";
-        String trade_type = "100001";
-        String total_amount = "400.00";
+        String trade_type = "100002";
+        String total_amount = "3000.00";
         String out_trade_no = "out_trade_no_1";
 //        String out_trade_no = "20200615102453535754";
         String notify_url = "http://www.baidu.com/sb";
 //        String notify_url = "http://ds.di1h.cn/Pay_Gaofang_notifyurl.html";
-        String secretKey = "768dbb341a0f43e635ba3e2107e5eab9";//渠道1:sdfs1，渠道2:gssa1，渠道3:9b4aa7e25780101eeaec6de8039335ce，渠道5:9b4aa7325360101eeaec6de8039335ce，渠道6:9b4aa7325360101eeaec6de8039335c6，渠道7:28b662d883b6d76fd96e4ddc5e9ba780，渠道8:0f4ddb22ff45c7eb1a1a207d0a2e6f00，渠道9:94d87e39f14dcc86f0ca5c40fbd458da，渠道10:94d87e39f14dcc86f0ca5c40fbd45810
+        String secretKey = "d27b23d1e5094611096c519bfffe233f";
         String checkSign = "channel=" + channel + "&" + "trade_type=" + trade_type + "&" + "total_amount=" + total_amount
                 + "&" + "out_trade_no=" + out_trade_no + "&" + "notify_url=" + notify_url + "&" + "key=" + secretKey ;
         checkSign = MD5Util.encryption(checkSign);
@@ -229,14 +229,14 @@ public class MD5Util {
 //        String df_account_name = "开户人";
 //        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
 
-        String df_channel = "2003270117";
-        String df_trade_type = "2003";
-        String df_total_amount = "100.00";
-        String df_out_trade_no = "202003130890";
+        String df_channel = "10101";
+        String df_trade_type = "200001";
+        String df_total_amount = "3000.00";
+        String df_out_trade_no = "df_out_trade_no_1";
         String df_bank_name = "建设银行";
         String df_bank_card = "8888888888";
         String df_account_name = "张三";
-        String df_key = "0688fa7bcb789ae764a801c11a2c21se";
+        String df_key = "d27b23d1e5094611096c519bfffe233f";
         String dfCheckSign = "channel=" + df_channel + "&" + "trade_type=" + df_trade_type + "&" + "total_amount=" + df_total_amount
                 + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name + "&"
                 + "&" + "bank_card=" + df_bank_card + "&" + "account_name=" + df_account_name
