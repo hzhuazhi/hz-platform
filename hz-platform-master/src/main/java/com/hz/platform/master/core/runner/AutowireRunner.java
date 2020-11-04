@@ -116,6 +116,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private ChannelChangeService channelChangeService;
 
+    @Autowired
+    private TaskChannelChangeService taskChannelChangeService;
+
 
 
 
@@ -154,6 +157,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.taskChannelBalanceDeductService = taskChannelBalanceDeductService;
         ComponentUtil.taskChannelOutService = taskChannelOutService;
         ComponentUtil.channelChangeService = channelChangeService;
+        ComponentUtil.taskChannelChangeService = taskChannelChangeService;
 
         runThread = new RunThread();
         runThread.start();
