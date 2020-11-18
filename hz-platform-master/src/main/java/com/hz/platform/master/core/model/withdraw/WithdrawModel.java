@@ -22,6 +22,11 @@ public class WithdrawModel extends BasePage implements Serializable {
     private Long id;
 
     /**
+     * 提现订单号
+     */
+    private String orderNo;
+
+    /**
      * 渠道ID
      */
     private Long linkId;
@@ -80,6 +85,20 @@ public class WithdrawModel extends BasePage implements Serializable {
      * 运行计算状态：：0初始化，1锁定，2计算失败，3计算成功
      */
     private Integer runStatus;
+
+    /**
+     * 发送次数
+     *
+     * @mbggenerated
+     */
+    private Integer sendNum;
+
+    /**
+     * 发送状态：0初始化，1锁定，2计算失败，3计算成功
+     *
+     * @mbggenerated
+     */
+    private Integer sendStatus;
 
     /**
      * 创建时间
@@ -223,5 +242,29 @@ public class WithdrawModel extends BasePage implements Serializable {
 
     public void setServiceCharge(String serviceCharge) {
         this.serviceCharge = serviceCharge;
+    }
+
+    public String getOrderNo() {
+        return orderNo;
+    }
+
+    public void setOrderNo(String orderNo) {
+        this.orderNo = orderNo;
+    }
+
+    public Integer getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(Integer sendNum) {
+        this.sendNum = sendNum;
+    }
+
+    public Integer getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(Integer sendStatus) {
+        this.sendStatus = sendStatus;
     }
 }

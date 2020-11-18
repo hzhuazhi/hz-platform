@@ -176,7 +176,7 @@ public class MD5Util {
         System.out.println(sb);
 
         // 校验sign签名
-        String channel = "10101";
+        String channel = "10102";
 //        String trade_type = "1005";
         String trade_type = "100002";
         String total_amount = "3000.00";
@@ -184,7 +184,7 @@ public class MD5Util {
 //        String out_trade_no = "20200615102453535754";
         String notify_url = "http://www.baidu.com/sb";
 //        String notify_url = "http://ds.di1h.cn/Pay_Gaofang_notifyurl.html";
-        String secretKey = "d27b23d1e5094611096c519bfffe233f";
+        String secretKey = "c77eebfefb9ce2bfcb913c148833f68c";
         String checkSign = "channel=" + channel + "&" + "trade_type=" + trade_type + "&" + "total_amount=" + total_amount
                 + "&" + "out_trade_no=" + out_trade_no + "&" + "notify_url=" + notify_url + "&" + "key=" + secretKey ;
         checkSign = MD5Util.encryption(checkSign);
@@ -229,14 +229,14 @@ public class MD5Util {
 //        String df_account_name = "开户人";
 //        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
 
-        String df_channel = "10101";
+        String df_channel = "10102";
         String df_trade_type = "200001";
         String df_total_amount = "3000.00";
         String df_out_trade_no = "df_out_trade_no_1";
         String df_bank_name = "建设银行";
         String df_bank_card = "8888888888";
         String df_account_name = "张三";
-        String df_key = "d27b23d1e5094611096c519bfffe233f";
+        String df_key = "c77eebfefb9ce2bfcb913c148833f68c";
         String dfCheckSign = "channel=" + df_channel + "&" + "trade_type=" + df_trade_type + "&" + "total_amount=" + df_total_amount
                 + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name + "&"
                 + "&" + "bank_card=" + df_bank_card + "&" + "account_name=" + df_account_name
