@@ -32,4 +32,14 @@ public interface TaskWithdrawMapper<T> extends BaseDao<T> {
      * @date 2020/1/11 16:30
      */
     public int updateStatus(Object obj);
+
+
+    /**
+     * @Description: 添加提现记录到蛋糕平台
+     * @param obj
+     * @return
+     * @author yoko
+     * @date 2020/11/19 13:48
+    */
+    public int addChannelWithdraw(Object obj);
 }

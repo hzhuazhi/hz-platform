@@ -41,4 +41,9 @@ public class TaskWithdrawServiceImpl<T> extends BaseServiceImpl<T> implements Ta
     public int updateStatus(Object obj) {
         return taskWithdrawMapper.updateStatus(obj);
     }
+
+    @Override
+    public int addChannelWithdraw(Object obj) {
+        return taskWithdrawMapper.addChannelWithdraw(obj);
+    }
 }

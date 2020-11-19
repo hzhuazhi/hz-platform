@@ -57,6 +57,11 @@ public class WithdrawModel extends BasePage implements Serializable {
     private String bankCard;
 
     /**
+     * 提现银行名称
+     */
+    private String bankName;
+
+    /**
      * 提现状态:1提现中，2提现失败，3提现成功
      */
     private Integer withdrawStatus;
@@ -266,5 +271,13 @@ public class WithdrawModel extends BasePage implements Serializable {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
+    }
+
+    public String getBankName() {
+        return bankName;
+    }
+
+    public void setBankName(String bankName) {
+        this.bankName = bankName;
     }
 }

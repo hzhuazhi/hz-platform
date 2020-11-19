@@ -15,6 +15,7 @@ import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDedu
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
+import com.hz.platform.master.core.model.channelwithdraw.ChannelWithdrawModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
@@ -22,6 +23,7 @@ import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.region.RegionModel;
 import com.hz.platform.master.core.model.task.TaskAlipayNotifyModel;
+import com.hz.platform.master.core.model.withdraw.WithdrawModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.notify.*;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
@@ -1249,6 +1251,32 @@ public class HodgepodgeMethod {
         if (!StringUtils.isBlank(lockMoney)){
             resBean.setLockMoney(lockMoney);
         }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装添加蛋糕的提现记录的方法
+     * @param withdrawModel - 平台提现记录
+     * @return
+     * @author yoko
+     * @date 2020/11/19 14:02
+    */
+    public static ChannelWithdrawModel assembleChannelWithdraw(WithdrawModel withdrawModel) throws Exception{
+        ChannelWithdrawModel resBean = new ChannelWithdrawModel();
+        resBean.setChannelId(withdrawModel.getId());
+        String orderNo = "QD" + withdrawModel.getId() + DateUtil.getNowPlusTimeMill();
+        resBean.setOrderNo(orderNo);
+        resBean.setOutTradeNo(withdrawModel.getOrderNo());
+        resBean.setMoney(withdrawModel.getMoney());
+        resBean.setWithdrawServiceCharge(withdrawModel.getServiceCharge());
+        resBean.setInBankCard(withdrawModel.getBankCard());
+        resBean.setInBankName(withdrawModel.getBankName());
+        resBean.setInAccountName(withdrawModel.getAccountName());
+        resBean.setDataType(1);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
         return resBean;
     }
 

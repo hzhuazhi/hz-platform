@@ -39,5 +39,6 @@ public class ComponentUtil {
     public static TaskChannelOutService taskChannelOutService;
     public static ChannelChangeService channelChangeService;
     public static TaskChannelChangeService taskChannelChangeService;
+    public static TaskWithdrawService taskWithdrawService;
 
 }

@@ -83,5 +83,13 @@ public interface CacheKey {
      */
     String LOCK_CHANNEL_CHANGE = "-12";
 
+    /**
+     * LOCK-提现数据同步到蛋糕的任务
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_WITHDRAW_SYNCHRO = "-13";
+
 
 }
