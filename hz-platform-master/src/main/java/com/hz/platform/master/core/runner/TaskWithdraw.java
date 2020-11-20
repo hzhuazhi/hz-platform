@@ -69,9 +69,9 @@ public class TaskWithdraw {
                     ChannelWithdrawModel channelWithdrawModel = HodgepodgeMethod.assembleChannelWithdraw(data);
                     int num = ComponentUtil.taskWithdrawService.addChannelWithdraw(channelWithdrawModel);
                     if (num > 0){
-                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0,  0,0,null);
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  3,0,null);
                     }else {
-                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 2, 0,  0,0,null);
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  2,0,null);
                     }
 
                     // 更新状态
@@ -86,7 +86,7 @@ public class TaskWithdraw {
                 log.error(String.format("this TaskWithdraw.synchroWithdraw() is error , the dataId=%s !", data));
                 e.printStackTrace();
                 // 更新此次task的状态：更新成失败
-                statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 2, 0, 0,0,"异常失败try!");
+                statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 2,0,"异常失败try!");
                 ComponentUtil.taskWithdrawService.updateStatus(statusModel);
             }
         }
