@@ -248,6 +248,28 @@ public class OrderOutController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if(gewayModel.getContacts().equals("HF")){
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("uid", gewayModel.getPayId());
+                sendDataMap.put("addtime", String.valueOf(System.currentTimeMillis()));
+                sendDataMap.put("out_trade_id", sgid);
+                sendDataMap.put("amount", requestData.total_amount);
+                sendDataMap.put("bankcode", "unionpay");
+                sendDataMap.put("bankuser", requestData.account_name);
+                sendDataMap.put("bankname", requestData.bank_name);
+                sendDataMap.put("bankno", requestData.bank_card);
+                sendDataMap.put("notifyurl", my_notify_url);
+                String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey());
+                sendDataMap.put("sign", sb);
+                String sendData = JSON.toJSONString(sendDataMap);
+                String resultData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(resultData)) {
+                    resMap = JSON.parseObject(resultData, Map.class);
+                    if (Integer.parseInt(resMap.get("code").toString()) == 1) {
+                        sendFlag = true;
+                    }
+                }
             }
 
             boolean flag = false;// 是否执行成功
@@ -318,5 +340,29 @@ public class OrderOutController extends BaseController {
         }
     }
 
+    public static void main(String [] args){
+        String url = "https://gopay.huafuwg.com/pay/Apply/new";
+        String sign = "";
 
+//        String data = "addtime=1586576409&list=[{\"out_trade_id\":\"2020041111400901\",\"amount\":\"1.00\",\"bankcode\":\"unionpay\",\"addtime\":1586576409,\"method\":\"web\",\"bankname\":\"中国银行\",\"bankuser\":\"张三\",\"bankno\":\"10000000000\",\"bankpro\":\"北京市\",\"bankcity\":\"北京市\",\"bankarea\":\"朝阳区支行\",\"mobile\":\"13800138000\",\"attach\":\"备注\"},{\"out_trade_id\":\"2020041111400902\",\"amount\":\"2.00\",\"bankcode\":\"unionpay\",\"addtime\":1586576409,\"method\":\"web\",\"bankname\":\"中国银行\",\"bankuser\":\"李四\",\"bankno\":\"20000000000\",\"bankpro\":\"北京市\",\"bankcity\":\"北京市\",\"bankarea\":\"朝阳区支行\",\"mobile\":\"13800138009\",\"attach\":\"备注\"}]¬ifyurl=http://www.baidu.com/notify&uid=10002&key=****"
+
+
+        Map<String, Object> infoMap = new HashMap<>();
+        infoMap.put("out_trade_id", System.currentTimeMillis());
+        infoMap.put("amount", "100.00");
+        infoMap.put("bankcode", "unionpay");
+        infoMap.put("bankuser", "测试_收款户名");
+        infoMap.put("bankname", "测试_银行名称");
+        infoMap.put("bankno", "测试_收款账号");
+
+        Map<String ,Object> sendDataMap = new HashMap<>();
+        sendDataMap.put("uid", "13138");
+        sendDataMap.put("addtime", System.currentTimeMillis());
+        sendDataMap.put("list", infoMap);
+        sendDataMap.put("notifyurl", "http://www.baidu.com/notifyurl");
+        sendDataMap.put("sign", sign);
+
+        String sendData = JSON.toJSONString(sendDataMap);
+        String fineData = HttpSendUtils.sendPostAppJson(url, sendData);
+    }
 }

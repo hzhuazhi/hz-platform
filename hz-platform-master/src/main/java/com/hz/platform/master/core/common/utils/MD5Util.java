@@ -229,14 +229,14 @@ public class MD5Util {
 //        String df_account_name = "开户人";
 //        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
 
-        String df_channel = "10102";
-        String df_trade_type = "200001";
-        String df_total_amount = "3000.00";
+        String df_channel = "channel_9";
+        String df_trade_type = "200002";
+        String df_total_amount = "100.00";
         String df_out_trade_no = "df_out_trade_no_1";
         String df_bank_name = "建设银行";
         String df_bank_card = "8888888888";
         String df_account_name = "张三";
-        String df_key = "c77eebfefb9ce2bfcb913c148833f68c";
+        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
         String dfCheckSign = "channel=" + df_channel + "&" + "trade_type=" + df_trade_type + "&" + "total_amount=" + df_total_amount
                 + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name + "&"
                 + "&" + "bank_card=" + df_bank_card + "&" + "account_name=" + df_account_name

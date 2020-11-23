@@ -474,6 +474,29 @@ public class PayGetController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if(gewayModel.getContacts().equals("HF")){
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("uid", gewayModel.getPayId());
+                sendDataMap.put("addtime", String.valueOf(System.currentTimeMillis()));
+                sendDataMap.put("out_trade_id", sgid);
+                sendDataMap.put("amount", requestData.total_amount);
+                sendDataMap.put("bankcode", "unionpay");
+                sendDataMap.put("bankuser", requestData.account_name);
+                sendDataMap.put("bankname", requestData.bank_name);
+                sendDataMap.put("bankno", requestData.bank_card);
+                sendDataMap.put("notifyurl", my_notify_url);
+                log.info("");
+                String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey());
+                sendDataMap.put("sign", sb);
+                String sendData = JSON.toJSONString(sendDataMap);
+                String resultData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(resultData)) {
+                    resMap = JSON.parseObject(resultData, Map.class);
+                    if (Integer.parseInt(resMap.get("code").toString()) == 1) {
+                        sendFlag = true;
+                    }
+                }
             }
 
             boolean flag = false;// 是否执行成功

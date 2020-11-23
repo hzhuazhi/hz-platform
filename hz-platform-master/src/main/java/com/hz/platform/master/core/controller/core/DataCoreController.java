@@ -474,4 +474,103 @@ public class DataCoreController extends BaseController {
 
 
 
+    /**
+     * @Description: 华富-代付
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8092/platform/data/outHf
+     * http://localhost:8092/platform/data/outHf
+     *
+     * {"out_trade_no":"DF202010312034491","trade_status":1,"trade_no":"test_order_no_sl_1","fail_info":"","picture_ads":"https://fruit-file.oss-cn-hangzhou.aliyuncs.com/img/758a84a9f1d3418ba06ff3502f40fe1c.png","trade_time":"2020-10-31 20:10:35"}
+     * {"out_trade_no":"DF202010312034491","trade_status":2,"trade_no":"test_order_no_sl_1","fail_info":"银行卡错误","picture_ads":"","trade_time":"2020-10-31 20:10:35"}
+     *
+     * {"out_trade_no":"DF202011011331131","trade_status":1,"trade_no":"test_order_no_sl_1","fail_info":"","picture_ads":"https://fruit-file.oss-cn-hangzhou.aliyuncs.com/img/758a84a9f1d3418ba06ff3502f40fe1c.png","trade_time":"2020-10-31 20:10:35"}
+     * {"out_trade_no":"DF202011011331131","trade_status":2,"trade_no":"test_order_no_sl_1","fail_info":"银行卡错误","picture_ads":"","trade_time":"2020-10-31 20:10:35"}
+     */
+//    @RequestMapping(value = "/outHf", method = {RequestMethod.GET})
+//    @GetMapping(value = "outHf")
+    @RequestMapping(value = "/outHf", method = {RequestMethod.POST})
+    public String outHf(HttpServletRequest request, HttpServletResponse response, RequestOutHf requestModel) throws Exception{
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        log.info("outHf-allData:" + JSON.toJSONString(requestModel));
+//        RequestFine requestModel = new RequestFine();
+        try{
+            if (requestModel == null){
+                return "no";
+            }
+            if (requestModel.orderid == null){
+                return "no";
+            }
+            if (requestModel.out_trade_id == null){
+                return "no";
+            }
+            if (requestModel.status == null || requestModel.status == 0){
+                return "no";
+            }
+
+
+            log.info("---------------cakeOut:orderid:" + requestModel.orderid + "out_trade_id:" + requestModel.out_trade_id);
+            // 查询此数据属于哪个订单
+            ChannelOutModel channelOutModel = new ChannelOutModel();
+            channelOutModel.setMyTradeNo(requestModel.out_trade_id);
+            channelOutModel = (ChannelOutModel) ComponentUtil.channelOutService.findByObject(channelOutModel);
+            if (channelOutModel == null){
+                return "no";
+            }
+
+            // 查询渠道信息
+            ChannelModel channelModel = (ChannelModel) ComponentUtil.channelService.findById(channelOutModel.getChannelId());
+            if (channelModel == null){
+                return "no";
+            }
+
+            // 查询通道信息
+            GewayModel gewayModel = (GewayModel) ComponentUtil.gewayService.findById(channelOutModel.getGewayId());
+            if (gewayModel == null){
+                return "no";
+            }
+            String secretKey = gewayModel.getSecretKey();
+
+//            // 校验上游下发的数据
+//            String mySign = "memberid=" + requestModel.memberid + "&" + "orderid=" + requestModel.orderid + "&" + "amount=" + requestModel.amount
+//                    + "&" + "transaction_id=" + requestModel.transaction_id + "&" + "datetime=" + requestModel.datetime + "&" + "returncode=" + requestModel.returncode;
+//            mySign = MD5Util.encryption(mySign);
+//            if (!mySign.equals(requestModel.sign)){
+//                return "no";
+//            }
+
+            // 根据渠道号主键ID以及通道ID查询关联关系
+            ChannelGewayModel channelGewayModel = new ChannelGewayModel();
+            channelGewayModel.setChannelId(channelOutModel.getChannelId());
+            channelGewayModel.setGewayId(channelOutModel.getGewayId());
+            channelGewayModel = (ChannelGewayModel) ComponentUtil.channelGewayService.findByObject(channelGewayModel);
+
+            if (requestModel.status == 2){
+                //组装上游数据
+                DataCoreOutModel dataCoreOutModel = HodgepodgeMethod.assembleDataCoreOutByHf(requestModel, channelOutModel, channelGewayModel, 1,
+                        channelOutModel.getChannelGewayId(), channelOutModel.getProfitType());
+                int num = ComponentUtil.dataCoreOutService.add(dataCoreOutModel);
+                if (num > 0){
+                    return "ok";
+                }else {
+                    return "no";
+                }
+            }else{
+                return "no";
+            }
+
+
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+            // #添加异常
+            log.error(String.format("this DataCoreController.cakeOut() is error , the all data=%s!", data));
+            e.printStackTrace();
+            return JSON.toJSONString(map);
+        }
+    }
+
+
 }

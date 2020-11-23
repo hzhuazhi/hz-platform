@@ -1282,6 +1282,47 @@ public class HodgepodgeMethod {
 
 
 
+    /**
+     * @Description: 组装上游同步的数据-华富-代付
+     * @param requestModel - 上游同步的基本数据
+     * @param channelOutModel - 渠道请求的基本数据-代付
+     * @param channelGewayModel - 渠道与通道关联关系
+     * @param tradeStatus - 订单状态：1成功，2失败，3其它
+     * @return DataCoreModel
+     * @author yoko
+     * @date 2020/3/25 14:08
+     */
+    public static DataCoreOutModel assembleDataCoreOutByHf(RequestOutHf requestModel, ChannelOutModel channelOutModel, ChannelGewayModel channelGewayModel,
+                                                             int tradeStatus, long channelGewayId, int profitType) throws Exception{
+        DataCoreOutModel resBean = new DataCoreOutModel();
+        resBean.setMyTradeNo(requestModel.out_trade_id);
+        resBean.setTradeNo(requestModel.orderid);
+        resBean.setOutTradeNo(channelOutModel.getOutTradeNo());
+
+        resBean.setTradeStatus(tradeStatus);
+
+        resBean.setTradeTime(DateUtil.getNowPlusTime());
+//        resBean.setSign(requestModel.sign);
+        resBean.setChannelId(channelOutModel.getChannelId());
+        resBean.setGewayId(channelOutModel.getGewayId());
+        resBean.setNotifyUrl(channelOutModel.getNotifyUrl());
+//        resBean.setNotifySuc();
+        if (!StringUtils.isBlank(channelOutModel.getExtraReturnParam())){
+            resBean.setXyExtraReturnParam(channelOutModel.getExtraReturnParam());
+        }
+        resBean.setDeductRatio(channelGewayModel.getDeductRatio());
+
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
+
 
 
 
