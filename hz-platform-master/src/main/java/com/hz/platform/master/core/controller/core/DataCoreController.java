@@ -554,7 +554,7 @@ public class DataCoreController extends BaseController {
                         channelOutModel.getChannelGewayId(), channelOutModel.getProfitType());
                 int num = ComponentUtil.dataCoreOutService.add(dataCoreOutModel);
                 if (num > 0){
-                    return "ok";
+                    return "success";
                 }else {
                     return "no";
                 }
