@@ -380,9 +380,9 @@ public class PayGetController extends BaseController {
                 if (StringUtils.isBlank(requestData.channel)){
                     throw new ServiceException("0002", "请填写商铺号!");
                 }
-                if (StringUtils.isBlank(requestData.trade_type)){
-                    throw new ServiceException("0003", "请填写交易类型!");
-                }
+//                if (StringUtils.isBlank(requestData.trade_type)){
+//                    throw new ServiceException("0003", "请填写交易类型!");
+//                }
                 if (StringUtils.isBlank(requestData.total_amount)){
                     throw new ServiceException("0004", "请填写订单金额!");
                 }
@@ -410,6 +410,11 @@ public class PayGetController extends BaseController {
                 }
             }
 
+            String trade_type = "";
+            if (!StringUtils.isBlank(requestData.trade_type)){
+                trade_type = requestData.trade_type;
+            }
+
             // 获取渠道的信息
             ChannelModel channelModel = new ChannelModel();
             channelModel.setChannel(requestData.channel);
@@ -421,35 +426,66 @@ public class PayGetController extends BaseController {
             // 判断余额是否大于订单金额
             HodgepodgeMethod.checkMoney(channelModel.getBalance(), requestData.total_amount);
 
+            // 渠道与通道的关联关系
+            ChannelGewayModel channelGewayModel = null;
+
+            // 通道信息
+            GewayModel gewayModel = null;
+
             // 根据交易类型查询通道
+            GewaytradetypeModel gewaytradetypeModel = null;
             GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
-            gewaytradetypeQuery.setMyTradeType(requestData.trade_type);
-            GewaytradetypeModel gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
-            if (gewaytradetypeModel == null || gewaytradetypeModel.getId() ==  null || gewaytradetypeModel.getId() <= 0){
-                throw new ServiceException("0013", "请填写正确的支付类型!");
-            }
+            if (!StringUtils.isBlank(trade_type)){
+                gewaytradetypeQuery.setMyTradeType(requestData.trade_type);
+                log.info("");
+                gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
+                if (gewaytradetypeModel == null || gewaytradetypeModel.getId() ==  null || gewaytradetypeModel.getId() <= 0){
+                    throw new ServiceException("0011", "请填写正确的支付类型!");
+                }
 
+                // 查询通道信息
+                gewayModel = (GewayModel) ComponentUtil.gewayService.findById(gewaytradetypeModel.getGewayId());
+                if (gewayModel == null || gewayModel.getId() <= 0){
+                    throw new ServiceException("0012", "请联系运营人员!");
+                }
 
-            // 查询通道信息
-            GewayModel gewayModel = (GewayModel) ComponentUtil.gewayService.findById(gewaytradetypeModel.getGewayId());
-            if (gewayModel == null || gewayModel.getId() <= 0){
-                throw new ServiceException("0014", "请联系运营人员!");
-            }
+                // 获取渠道与通道的关联关系
+                ChannelGewayModel channelGewayQuery = new ChannelGewayModel();
+                channelGewayQuery.setChannelId(channelModel.getId());
+                channelGewayQuery.setGewayId(gewayModel.getId());
+                channelGewayModel = (ChannelGewayModel) ComponentUtil.channelGewayService.findByObject(channelGewayQuery);
+                if (channelGewayModel == null || channelGewayModel.getId() <= 0){
+                    throw new ServiceException("0013", "请联系运营人员!");
+                }
 
-            // 根据渠道ID加通道ID查询渠道与通道的关联关系
-            ChannelGewayModel channelGewayModel = new ChannelGewayModel();
-            channelGewayModel.setChannelId(channelModel.getId());
-            channelGewayModel.setGewayId(gewayModel.getId());
-            channelGewayModel = (ChannelGewayModel) ComponentUtil.channelGewayService.findByObject(channelGewayModel);
-            if (channelGewayModel == null || channelGewayModel.getId() <= 0){
-                throw new ServiceException("0015", "请联系运营人员!");
+            }else{
+                // 查询此渠道下代收的通道集合
+                ChannelGewayModel channelGewayQuery = HodgepodgeMethod.assembleChannelGewayQuery(0, channelModel.getId(), 0, 3, 1);
+                List<ChannelGewayModel> channelGewayList = ComponentUtil.channelGewayService.findByCondition(channelGewayQuery);
+                if (channelGewayList == null || channelGewayList.size() <= 0){
+                    throw new ServiceException("1001", "请联系运营人员!");
+                }
+                // 从集合中按照比例筛选一个
+                log.info("");
+                channelGewayModel = HodgepodgeMethod.ratioChannelGeway(channelGewayList);
+                if (channelGewayModel == null || channelGewayModel.getId() <= 0){
+                    throw new ServiceException("0013", "请联系运营人员!");
+                }
             }
 
             // 校验sign签名
-            String checkSign = "channel=" + requestData.channel + "&" + "trade_type=" + requestData.trade_type + "&" + "total_amount=" + requestData.total_amount
-                    + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
-                    + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
-                    + "key=" + channelModel.getSecretKey();
+            String checkSign = "";
+            if (!StringUtils.isBlank(requestData.trade_type)){
+                checkSign = "channel=" + requestData.channel + "&" + "trade_type=" + requestData.trade_type + "&" + "total_amount=" + requestData.total_amount
+                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
+                        + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
+                        + "key=" + channelModel.getSecretKey();
+            }else {
+                checkSign = "channel=" + requestData.channel + "&" + "total_amount=" + requestData.total_amount
+                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
+                        + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
+                        + "key=" + channelModel.getSecretKey();
+            }
             checkSign = MD5Util.encryption(checkSign);
             if (!requestData.sign.equals(checkSign)){
                 throw new ServiceException("0016", "签名错误!");
