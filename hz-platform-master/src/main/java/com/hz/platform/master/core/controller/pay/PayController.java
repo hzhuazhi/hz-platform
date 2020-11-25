@@ -158,8 +158,8 @@ public class PayController extends BaseController {
 
             // 根据交易类型查询通道
             GewaytradetypeModel gewaytradetypeModel = null;
-            GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
             if (!StringUtils.isBlank(trade_type)){
+                GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
                 gewaytradetypeQuery.setMyTradeType(requestData.trade_type);
                 gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
                 if (gewaytradetypeModel == null || gewaytradetypeModel.getId() ==  null || gewaytradetypeModel.getId() <= 0){
@@ -206,6 +206,11 @@ public class PayController extends BaseController {
             }else {
                 checkSign = "channel=" + requestData.channel + "&" + "total_amount=" + requestData.total_amount
                         + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "notify_url=" + requestData.notify_url + "&" + "key=" + channelModel.getSecretKey();
+            }
+
+            checkSign = MD5Util.encryption(checkSign);
+            if (!requestData.sign.equals(checkSign)){
+                throw new ServiceException("0014", "签名错误!");
             }
 
 

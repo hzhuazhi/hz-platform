@@ -173,9 +173,9 @@ public class OrderOutController extends BaseController {
 
             // 根据交易类型查询通道
             GewaytradetypeModel gewaytradetypeModel = null;
-            GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
             if (!StringUtils.isBlank(trade_type)){
                 log.info("");
+                GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
                 gewaytradetypeQuery.setMyTradeType(requestData.trade_type);
                 gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
                 if (gewaytradetypeModel == null || gewaytradetypeModel.getId() ==  null || gewaytradetypeModel.getId() <= 0){
