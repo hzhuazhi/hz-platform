@@ -1323,6 +1323,65 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: 组装查询渠道与通道的关联关系的查询方法
+     * @param id - 主键ID
+     * @param channelId - 渠道主键ID
+     * @param gewayId - 通道ID
+     * @param gewayCodeType - 通道代码定性类型：1初始化/无任何属性，2代收，3代付
+     * @param dayLimit - 每日成功金额是否到达上限：1初始化/未到达上限，2已到达上限
+     * @return com.hz.platform.master.core.model.channelgeway.ChannelGewayModel
+     * @author yoko
+     * @date 2020/11/25 16:53
+     */
+    public static ChannelGewayModel assembleChannelGewayQuery(long id, long channelId, long gewayId, int gewayCodeType, int dayLimit){
+        ChannelGewayModel resBean = new ChannelGewayModel();
+        if (id > 0){
+            resBean.setId(id);
+        }
+        if (channelId > 0){
+            resBean.setChannelId(channelId);
+        }
+        if (gewayId > 0){
+            resBean.setGewayId(gewayId);
+        }
+        if (gewayCodeType > 0){
+            resBean.setGewayCodeType(gewayCodeType);
+        }
+        if (dayLimit > 0){
+            resBean.setDayLimit(dayLimit);
+        }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 通过比例筛选出一条关联关系
+     * @param channelGewayList - 渠道与通道的关联关系
+     * @return
+     * @author yoko
+     * @date 2020/11/25 17:08
+    */
+    public static ChannelGewayModel ratioChannelGeway(List<ChannelGewayModel> channelGewayList){
+        int start = 0;
+        int end = 0;
+        for (int i = 0; i < channelGewayList.size(); i++){
+            start = end;
+            end += channelGewayList.get(i).getRatio();
+            channelGewayList.get(i).setStartRatio(start);
+            channelGewayList.get(i).setEndRatio(end);
+        }
+        int random = new Random().nextInt(end);
+        for (ChannelGewayModel channelGewayModel : channelGewayList){
+            log.info("id:"+ channelGewayModel.getId() + ",ratio:" + channelGewayModel.getRatio() + ",start:" + channelGewayModel.getStartRatio() + ",end:" + channelGewayModel.getEndRatio());
+            if (random >= channelGewayModel.getStartRatio() && random < channelGewayModel.getEndRatio()){
+                return channelGewayModel;
+            }
+        }
+        return null;
+
+    }
+
 
 
 

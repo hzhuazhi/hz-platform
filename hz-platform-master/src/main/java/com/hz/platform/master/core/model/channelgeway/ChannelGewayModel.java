@@ -48,6 +48,26 @@ public class ChannelGewayModel extends BasePage implements Serializable {
      */
     private Integer profitType;
 
+    /**
+     * 通道代码定性类型：1初始化/无任何属性，2代收，3代付
+     */
+    private Integer gewayCodeType;
+
+    /**
+     * 每日成功金额是否到达上限：1初始化/未到达上限，2已到达上限
+     */
+    private Integer dayLimit;
+
+    /**
+     * 每日上限的成功金额
+     */
+    private String dayMoney;
+
+    /**
+     * 筛选比例
+     */
+    private Integer ratio;
+
 
     /**
      * 创建时间
@@ -63,6 +83,16 @@ public class ChannelGewayModel extends BasePage implements Serializable {
      * 是否有效：0有效，1无效/删除
      */
     private Integer yn;
+
+    /**
+     * 筛选比例：开始
+     */
+    private int startRatio;
+
+    /**
+     * 筛选比例结束
+     */
+    private int endRatio;
 
     public Long getId() {
         return id;
@@ -142,5 +172,53 @@ public class ChannelGewayModel extends BasePage implements Serializable {
 
     public void setProfitType(Integer profitType) {
         this.profitType = profitType;
+    }
+
+    public Integer getGewayCodeType() {
+        return gewayCodeType;
+    }
+
+    public void setGewayCodeType(Integer gewayCodeType) {
+        this.gewayCodeType = gewayCodeType;
+    }
+
+    public Integer getDayLimit() {
+        return dayLimit;
+    }
+
+    public void setDayLimit(Integer dayLimit) {
+        this.dayLimit = dayLimit;
+    }
+
+    public String getDayMoney() {
+        return dayMoney;
+    }
+
+    public void setDayMoney(String dayMoney) {
+        this.dayMoney = dayMoney;
+    }
+
+    public Integer getRatio() {
+        return ratio;
+    }
+
+    public void setRatio(Integer ratio) {
+        this.ratio = ratio;
+    }
+
+    public int getStartRatio() {
+        return startRatio;
+    }
+
+    public void setStartRatio(int startRatio) {
+        this.startRatio = startRatio;
+    }
+
+    public int getEndRatio() {
+        return endRatio;
+    }
+
+    public void setEndRatio(int endRatio) {
+        this.endRatio = endRatio;
     }
 }
