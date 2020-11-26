@@ -209,6 +209,19 @@ public class OrderOutController extends BaseController {
                 if (channelGewayModel == null || channelGewayModel.getId() <= 0){
                     throw new ServiceException("0013", "请联系运营人员!");
                 }
+
+                GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
+                gewaytradetypeQuery.setGewayId(channelGewayModel.getGewayId());
+                gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
+                if (gewaytradetypeModel == null || gewaytradetypeModel.getId() ==  null || gewaytradetypeModel.getId() <= 0){
+                    throw new ServiceException("0011", "请填写正确的支付类型!");
+                }
+
+                // 查询通道信息
+                gewayModel = (GewayModel) ComponentUtil.gewayService.findById(gewaytradetypeModel.getGewayId());
+                if (gewayModel == null || gewayModel.getId() <= 0){
+                    throw new ServiceException("0012", "请联系运营人员!");
+                }
             }
 
             // 校验sign签名
@@ -223,6 +236,7 @@ public class OrderOutController extends BaseController {
                         + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
                         + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
                         + "key=" + channelModel.getSecretKey();
+                requestData.trade_type = gewaytradetypeModel.getMyTradeType();
             }
 
             checkSign = MD5Util.encryption(checkSign);
