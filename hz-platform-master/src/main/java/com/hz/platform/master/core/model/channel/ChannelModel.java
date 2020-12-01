@@ -19,6 +19,11 @@ public class ChannelModel extends BasePage implements Serializable {
     private Long id;
 
     /**
+     * 账号
+     */
+    private String accountNum;
+
+    /**
      * 渠道名称
      */
     private String channelName;
@@ -69,6 +74,16 @@ public class ChannelModel extends BasePage implements Serializable {
     private String secretKey;
 
     /**
+     * 是否需要谷歌验证：1不需要，2需要
+     */
+    private Integer isGoogle;
+
+    /**
+     * 谷歌唯一码
+     */
+    private String googleKey;
+
+    /**
      * 同步的接口地址
      */
     private String lowerUrl;
@@ -82,6 +97,21 @@ public class ChannelModel extends BasePage implements Serializable {
      * 是否需要数据同步:1需要同步，2不需要同步
      */
     private Integer isSynchro;
+
+    /**
+     * 提现类型：1默认在支付平台操作，2发送下发数据到水果平台
+     */
+    private Integer withdrawType;
+
+    /**
+     * 渠道类型：1代收，2大包，3代付
+     */
+    private Integer channelType;
+
+    /**
+     * 是否启用：0初始化属于暂停状态，1表示暂停使用，2正常状态
+     */
+    private Integer isEnable;
 
     /**
      * 创建时间
@@ -272,5 +302,53 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setLockMoney(String lockMoney) {
         this.lockMoney = lockMoney;
+    }
+
+    public String getAccountNum() {
+        return accountNum;
+    }
+
+    public void setAccountNum(String accountNum) {
+        this.accountNum = accountNum;
+    }
+
+    public Integer getIsGoogle() {
+        return isGoogle;
+    }
+
+    public void setIsGoogle(Integer isGoogle) {
+        this.isGoogle = isGoogle;
+    }
+
+    public String getGoogleKey() {
+        return googleKey;
+    }
+
+    public void setGoogleKey(String googleKey) {
+        this.googleKey = googleKey;
+    }
+
+    public Integer getWithdrawType() {
+        return withdrawType;
+    }
+
+    public void setWithdrawType(Integer withdrawType) {
+        this.withdrawType = withdrawType;
+    }
+
+    public Integer getChannelType() {
+        return channelType;
+    }
+
+    public void setChannelType(Integer channelType) {
+        this.channelType = channelType;
+    }
+
+    public Integer getIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(Integer isEnable) {
+        this.isEnable = isEnable;
     }
 }

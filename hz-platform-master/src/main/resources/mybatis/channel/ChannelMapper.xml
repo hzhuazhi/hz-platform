@@ -8,7 +8,7 @@
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
         a.id,a.channel_name,a.channel,a.company_name,a.contacts,a.phone_num,a.pay_type,a.total_money,a.balance,a.lock_money,a.secret_key,
-        a.lower_url,a.lower_suc,a.is_synchro,
+        a.is_google,a.google_key,a.lower_url,a.lower_suc,a.is_synchro,a.withdraw_type,a.channel_type,
         a.create_time,a.update_time,a.yn
     </sql>
 
@@ -37,6 +37,21 @@
             </if>
             <if test="payType != null and payType != '' " >
                 and a.pay_type = #{payType}
+            </if>
+            <if test="isGoogle != null and isGoogle != '' " >
+                and a.is_google = #{isGoogle}
+            </if>
+            <if test="googleKey != null and googleKey != '' " >
+                and a.google_key = #{googleKey}
+            </if>
+            <if test="isSynchro != null and isSynchro != '' " >
+                and a.is_synchro = #{isSynchro}
+            </if>
+            <if test="withdrawType != null and withdrawType != '' " >
+                and a.withdraw_type = #{withdrawType}
+            </if>
+            <if test="channelType != null and channelType != '' " >
+                and a.channel_type = #{channelType}
             </if>
             and a.yn = 0
         </trim>

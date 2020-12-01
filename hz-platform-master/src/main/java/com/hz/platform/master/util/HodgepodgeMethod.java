@@ -1258,18 +1258,26 @@ public class HodgepodgeMethod {
     /**
      * @Description: 组装添加蛋糕的提现记录的方法
      * @param withdrawModel - 平台提现记录
+     * @param channelType - 渠道类型：0初始化，1代收，2大包，3代付
+     * @param secretKey - 商户秘钥
      * @return
      * @author yoko
      * @date 2020/11/19 14:02
     */
-    public static ChannelWithdrawModel assembleChannelWithdraw(WithdrawModel withdrawModel) throws Exception{
+    public static ChannelWithdrawModel assembleChannelWithdraw(WithdrawModel withdrawModel, int channelType, String secretKey) throws Exception{
         ChannelWithdrawModel resBean = new ChannelWithdrawModel();
-        resBean.setChannelId(withdrawModel.getId());
+//        resBean.setChannelId(withdrawModel.getId());
         String orderNo = "QD" + withdrawModel.getId() + DateUtil.getNowPlusTimeMill();
         resBean.setOrderNo(orderNo);
         resBean.setOutTradeNo(withdrawModel.getOrderNo());
         resBean.setMoney(withdrawModel.getMoney());
         resBean.setWithdrawServiceCharge(withdrawModel.getServiceCharge());
+        if (channelType > 0){
+            resBean.setChannelType(channelType);
+        }
+        if (!StringUtils.isBlank(secretKey)){
+            resBean.setSecretKey(secretKey);
+        }
         resBean.setInBankCard(withdrawModel.getBankCard());
         resBean.setInBankName(withdrawModel.getBankName());
         resBean.setInAccountName(withdrawModel.getAccountName());
@@ -1379,6 +1387,56 @@ public class HodgepodgeMethod {
             }
         }
         return null;
+
+    }
+
+
+    /**
+     * @Description: 组装查询渠道的查询方法
+     * @param id - 主键ID
+     * @param accountNum - 账号
+     * @param channel - 商品编号
+     * @param isGoogle - 是否需要谷歌验证：1不需要，2需要
+     * @param googleKey - 谷歌唯一码
+     * @param isSynchro - 是否需要数据同步:1需要同步，2不需要同步
+     * @param withdrawType - 提现类型：1默认在支付平台操作，2发送下发数据到水果平台
+     * @param channelType - 渠道类型：1代收，2大包，3代付
+     * @param isEnable - 是否启用：0初始化属于暂停状态，1表示暂停使用，2正常状态
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/12/1 15:41
+     */
+    public static ChannelModel assembleChannelQuery(long id, String accountNum, String channel, int isGoogle, String googleKey, int isSynchro,
+                                                    int withdrawType, int channelType, int isEnable){
+        ChannelModel resBean = new ChannelModel();
+        if (id > 0){
+            resBean.setId(id);
+        }
+        if (!StringUtils.isBlank(accountNum)){
+            resBean.setAccountNum(accountNum);
+        }
+        if (!StringUtils.isBlank(channel)){
+            resBean.setChannel(channel);
+        }
+        if (isGoogle > 0){
+            resBean.setIsGoogle(isGoogle);
+        }
+        if (!StringUtils.isBlank(googleKey)){
+            resBean.setGoogleKey(googleKey);
+        }
+        if (isSynchro > 0){
+            resBean.setIsSynchro(isSynchro);
+        }
+        if (withdrawType > 0){
+            resBean.setWithdrawType(withdrawType);
+        }
+        if (channelType > 0){
+            resBean.setChannelType(channelType);
+        }
+        if (isEnable > 0){
+            resBean.setIsEnable(isEnable);
+        }
+        return resBean;
 
     }
 

@@ -120,6 +120,12 @@
             <if test="orderStatus != null and orderStatus != '' " >
                 order_status,
             </if>
+            <if test="channelType != null and channelType != '' " >
+                channel_type,
+            </if>
+            <if test="secretKey != null and secretKey != '' " >
+                secret_key,
+            </if>
             <if test="inBankCard != null and inBankCard != '' " >
                 in_bank_card,
             </if>
@@ -204,6 +210,12 @@
             </if>
             <if test="orderStatus != null and orderStatus != '' " >
                 <![CDATA[  #{orderStatus}, ]]>
+            </if>
+            <if test="channelType != null and channelType != '' " >
+                <![CDATA[  #{channelType}, ]]>
+            </if>
+            <if test="secretKey != null and secretKey != '' " >
+                <![CDATA[  #{secretKey}, ]]>
             </if>
             <if test="inBankCard != null and inBankCard != '' " >
                 <![CDATA[  #{inBankCard}, ]]>

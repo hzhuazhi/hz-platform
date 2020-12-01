@@ -2,6 +2,7 @@ package com.hz.platform.master.core.runner;
 
 import com.hz.platform.master.core.common.utils.constant.CacheKey;
 import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
+import com.hz.platform.master.core.model.channel.ChannelModel;
 import com.hz.platform.master.core.model.channelwithdraw.ChannelWithdrawModel;
 import com.hz.platform.master.core.model.task.base.StatusModel;
 import com.hz.platform.master.core.model.withdraw.WithdrawModel;
@@ -64,9 +65,19 @@ public class TaskWithdraw {
                 String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_WITHDRAW_SYNCHRO, data.getId());
                 boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
                 if (flagLock){
-
+                    int channelType = 0;
+                    String secretKey = "";// 渠道秘钥
+                    if (data.getRoleId() == 2){
+                        // 表示是渠道提现
+                        ChannelModel channelQuery = HodgepodgeMethod.assembleChannelQuery(data.getLinkId(), null, null,0, null, 0,0,0,0);
+                        ChannelModel channelModel = (ChannelModel)ComponentUtil.channelService.findByObject(channelQuery);
+                        if (channelModel != null && channelModel.getId() != null){
+                            channelType = channelModel.getChannelType();
+                            secretKey = channelModel.getSecretKey();
+                        }
+                    }
                     // 数据添加同步到蛋糕平台
-                    ChannelWithdrawModel channelWithdrawModel = HodgepodgeMethod.assembleChannelWithdraw(data);
+                    ChannelWithdrawModel channelWithdrawModel = HodgepodgeMethod.assembleChannelWithdraw(data, channelType, secretKey);
                     int num = ComponentUtil.taskWithdrawService.addChannelWithdraw(channelWithdrawModel);
                     if (num > 0){
                         statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  3,0,null);
