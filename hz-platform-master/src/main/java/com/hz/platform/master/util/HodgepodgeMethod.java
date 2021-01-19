@@ -1476,6 +1476,37 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: check预付款通道是否有足够的金额进行跑量
+     * @param gewayModel - 通道信息
+     * @param orderMoney - 订单金额
+     * @return boolean
+     * @author yoko
+     * @date 2021/1/19 17:05
+     */
+    public static boolean checkGewayMoney(GewayModel gewayModel, String orderMoney){
+        // check余额是否为空
+        if (StringUtils.isBlank(gewayModel.getBalance())){
+            return false;
+        }
+        // check最低保证金是否为空
+        if (StringUtils.isBlank(gewayModel.getLeastMoney())){
+            return false;
+        }
+        // check余额是否小于保证金
+        boolean flag_least = StringUtil.getBigDecimalSubtract(gewayModel.getBalance(), gewayModel.getLeastMoney());
+        if (!flag_least){
+            return false;
+        }
+        // check余额是否小于订单金额
+        boolean flag_order = StringUtil.getBigDecimalSubtract(gewayModel.getBalance(), orderMoney);
+        if (!flag_order){
+            return false;
+        }
+        return true;
+    }
+
+
 
 
 

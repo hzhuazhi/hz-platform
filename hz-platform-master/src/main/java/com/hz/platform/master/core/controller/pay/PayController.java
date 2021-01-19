@@ -208,6 +208,14 @@ public class PayController extends BaseController {
                 }
             }
 
+            if (gewayModel.getGewayType() == 2){
+                // 通道属于预付款类型， 需要对通道金额进行check
+                boolean flag_geway = HodgepodgeMethod.checkGewayMoney(gewayModel, requestData.total_amount);
+                if (!flag_geway){
+                    throw new ServiceException("0015", "请您稍后再试,谢谢!");
+                }
+            }
+
 
 
 
