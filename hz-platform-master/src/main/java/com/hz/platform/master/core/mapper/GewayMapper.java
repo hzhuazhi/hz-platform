@@ -1,7 +1,7 @@
 package com.hz.platform.master.core.mapper;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
-import com.hz.platform.master.core.model.geway.GewayChangeModel;
+import com.hz.platform.master.core.model.geway.GewayModel;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -25,7 +25,7 @@ public interface GewayMapper<T> extends BaseDao<T> {
      * @author yoko
      * @date 2020/10/30 17:04
      */
-    public int updateBalance(GewayChangeModel model);
+    public int updateBalance(GewayModel model);
 
 
     /**
@@ -40,5 +40,5 @@ public interface GewayMapper<T> extends BaseDao<T> {
      * @author yoko
      * @date 2020/10/30 17:04
      */
-    public int updateTotalMoney(GewayChangeModel model);
+    public int updateTotalMoney(GewayModel model);
 }

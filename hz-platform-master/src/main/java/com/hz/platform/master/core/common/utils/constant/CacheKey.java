@@ -91,5 +91,22 @@ public interface CacheKey {
      */
     String LOCK_WITHDRAW_SYNCHRO = "-13";
 
+    /**
+     * LOCK-通道变更金额的的任务
+     * <p>
+     *     task任务锁住
+     * </p>
+     */
+    String LOCK_GEWAY_CHANGE = "-14";
+
+    /**
+     * LOCK-通道变更金额
+     * <p>
+     *     task任务锁住
+     *     锁余额、锁总额都用
+     * </p>
+     */
+    String LOCK_GEWAY_MONEY = "-15";
+
 
 }

@@ -18,6 +18,7 @@ import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.channelwithdraw.ChannelWithdrawModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
+import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
@@ -1438,6 +1439,40 @@ public class HodgepodgeMethod {
         }
         return resBean;
 
+    }
+
+
+
+    /**
+     * @Description: 组装通道余额核减金额
+     * @param id - 主键ID
+     * @param orderMoney - 订单金额
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/10/31 19:40
+     */
+    public static GewayModel assembleGewayBalanceSubtract(long id, String orderMoney){
+        GewayModel resBean = new GewayModel();
+        resBean.setId(id);
+        resBean.setSubtractBalance("1");
+        resBean.setOrderMoney(orderMoney);
+        return resBean;
+    }
+
+    /**
+     * @Description: 组装通道余额加金额
+     * @param id - 主键ID
+     * @param orderMoney - 订单金额
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2020/10/31 19:40
+     */
+    public static GewayModel assembleGewayBalanceAdd(long id, String orderMoney){
+        GewayModel resBean = new GewayModel();
+        resBean.setId(id);
+        resBean.setAddBalance("1");
+        resBean.setOrderMoney(orderMoney);
+        return resBean;
     }
 
 

@@ -1,7 +1,7 @@
 package com.hz.platform.master.core.service;
 
 import com.hz.platform.master.core.common.service.BaseService;
-import com.hz.platform.master.core.model.geway.GewayChangeModel;
+import com.hz.platform.master.core.model.geway.GewayModel;
 
 /**
  * @Description 通道的Service层
@@ -23,7 +23,7 @@ public interface GewayService<T> extends BaseService<T> {
      * @author yoko
      * @date 2020/10/30 17:04
      */
-    public int updateBalance(GewayChangeModel model);
+    public int updateBalance(GewayModel model);
 
 
     /**
@@ -38,5 +38,5 @@ public interface GewayService<T> extends BaseService<T> {
      * @author yoko
      * @date 2020/10/30 17:04
      */
-    public int updateTotalMoney(GewayChangeModel model);
+    public int updateTotalMoney(GewayModel model);
 }

@@ -122,6 +122,8 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskWithdrawService taskWithdrawService;
 
+    @Autowired
+    private TaskGewayChangeService taskGewayChangeService;
 
 
 
@@ -162,6 +164,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.channelChangeService = channelChangeService;
         ComponentUtil.taskChannelChangeService = taskChannelChangeService;
         ComponentUtil.taskWithdrawService = taskWithdrawService;
+        ComponentUtil.taskGewayChangeService = taskGewayChangeService;
 
         runThread = new RunThread();
         runThread.start();
