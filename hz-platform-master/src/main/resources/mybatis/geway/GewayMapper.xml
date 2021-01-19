@@ -7,7 +7,8 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.geway_name,a.interface_ads,a.company_name,a.contacts,a.phone_num,a.pay_type,a.pay_id,a.balance,a.secret_key,a.identify,a.notify_url,
+        a.id,a.account_num,a.pass_wd,a.geway_name,a.interface_ads,a.company_name,a.contacts,a.phone_num,a.pay_type,a.pay_id,
+        a.total_money,a.least_money,a.balance,a.secret_key,a.identify,a.notify_url,a.geway_type,a.role_id,a.is_enable,
         a.create_time,a.update_time,a.yn
     </sql>
 
@@ -34,6 +35,10 @@
             <if test="payType != null and payType != '' " >
                 and a.pay_type = #{payType}
             </if>
+            <if test="gewayType != null and gewayType != '' " >
+                and a.geway_type = #{gewayType}
+            </if>
+
             and a.yn = 0
         </trim>
     </sql>
@@ -198,6 +203,42 @@
             </if>
         </trim>
         <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+    <!-- 更新通道的余额 -->
+    <update id="updateBalance" parameterType="com.hz.platform.master.core.model.geway.GewayModel">
+        UPDATE tb_hz_geway a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="addBalance != null and addBalance != '' " >
+                a.balance = a.balance + #{orderMoney},
+            </if>
+            <if test="subtractBalance != null and subtractBalance != '' " >
+                a.balance = a.balance - #{orderMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+
+    <!-- 更新通道的总额 -->
+    <update id="updateTotalMoney" parameterType="com.hz.platform.master.core.model.geway.GewayModel">
+        UPDATE tb_hz_geway a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="addBalance != null and addBalance != '' " >
+                a.total_money = a.total_money + #{orderMoney},
+            </if>
+            <if test="subtractBalance != null and subtractBalance != '' " >
+                a.total_money = a.total_money - #{orderMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
     </update>
 
 

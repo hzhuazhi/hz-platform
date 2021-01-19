@@ -19,6 +19,16 @@ public class GewayModel extends BasePage implements Serializable {
     private Long id;
 
     /**
+     *登录账号
+     */
+    private String accountNum;
+
+    /**
+     * 账号密码
+     */
+    private String passWd;
+
+    /**
      * 通道名称
      */
     private String gewayName;
@@ -54,6 +64,16 @@ public class GewayModel extends BasePage implements Serializable {
     private String payId;
 
     /**
+     * 总账
+     */
+    private String totalMoney;
+
+    /**
+     * 保底金额：预付款通道，如果余额少于保底金额，就不出码
+     */
+    private String leastMoney;
+
+    /**
      * 余额
      */
     private String balance;
@@ -74,6 +94,21 @@ public class GewayModel extends BasePage implements Serializable {
     private String notifyUrl;
 
     /**
+     * 通道类型：1普通通道，2预付款通道
+     */
+    private Integer gewayType;
+
+    /**
+     * 所属角色ID
+     */
+    private Long roleId;
+
+    /**
+     * 是否启用：0初始化属于暂停状态，1表示暂停使用，2正常状态
+     */
+    private Integer isEnable;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -87,6 +122,21 @@ public class GewayModel extends BasePage implements Serializable {
      * 是否有效：0有效，1无效/删除
      */
     private Integer yn;
+
+    /**
+     * 余额加
+     */
+    private String addBalance;
+
+    /**
+     * 余额减
+     */
+    private String subtractBalance;
+
+    /**
+     * 要进行更改的金额
+     */
+    private String orderMoney;
 
     public Long getId() {
         return id;
@@ -206,5 +256,85 @@ public class GewayModel extends BasePage implements Serializable {
 
     public void setNotifyUrl(String notifyUrl) {
         this.notifyUrl = notifyUrl;
+    }
+
+    public String getAccountNum() {
+        return accountNum;
+    }
+
+    public void setAccountNum(String accountNum) {
+        this.accountNum = accountNum;
+    }
+
+    public String getPassWd() {
+        return passWd;
+    }
+
+    public void setPassWd(String passWd) {
+        this.passWd = passWd;
+    }
+
+    public String getTotalMoney() {
+        return totalMoney;
+    }
+
+    public void setTotalMoney(String totalMoney) {
+        this.totalMoney = totalMoney;
+    }
+
+    public String getLeastMoney() {
+        return leastMoney;
+    }
+
+    public void setLeastMoney(String leastMoney) {
+        this.leastMoney = leastMoney;
+    }
+
+    public Integer getGewayType() {
+        return gewayType;
+    }
+
+    public void setGewayType(Integer gewayType) {
+        this.gewayType = gewayType;
+    }
+
+    public Long getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Long roleId) {
+        this.roleId = roleId;
+    }
+
+    public Integer getIsEnable() {
+        return isEnable;
+    }
+
+    public void setIsEnable(Integer isEnable) {
+        this.isEnable = isEnable;
+    }
+
+    public String getAddBalance() {
+        return addBalance;
+    }
+
+    public void setAddBalance(String addBalance) {
+        this.addBalance = addBalance;
+    }
+
+    public String getSubtractBalance() {
+        return subtractBalance;
+    }
+
+    public void setSubtractBalance(String subtractBalance) {
+        this.subtractBalance = subtractBalance;
+    }
+
+    public String getOrderMoney() {
+        return orderMoney;
+    }
+
+    public void setOrderMoney(String orderMoney) {
+        this.orderMoney = orderMoney;
     }
 }

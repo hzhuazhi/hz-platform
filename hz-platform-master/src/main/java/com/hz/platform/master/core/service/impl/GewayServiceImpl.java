@@ -3,6 +3,7 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.GewayMapper;
+import com.hz.platform.master.core.model.geway.GewayChangeModel;
 import com.hz.platform.master.core.service.GewayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,15 @@ public class GewayServiceImpl<T> extends BaseServiceImpl<T> implements GewayServ
 
     public BaseDao<T> getDao() {
         return gewayMapper;
+    }
+
+    @Override
+    public int updateBalance(GewayChangeModel model) {
+        return gewayMapper.updateBalance(model);
+    }
+
+    @Override
+    public int updateTotalMoney(GewayChangeModel model) {
+        return gewayMapper.updateTotalMoney(model);
     }
 }
