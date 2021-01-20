@@ -2,10 +2,13 @@ package com.hz.platform.master.util;
 
 import com.alibaba.fastjson.JSON;
 import com.hz.platform.master.core.common.exception.ServiceException;
+import com.hz.platform.master.core.common.utils.BeanUtils;
 import com.hz.platform.master.core.common.utils.DateUtil;
 import com.hz.platform.master.core.common.utils.StringUtil;
 import com.hz.platform.master.core.common.utils.constant.ServerConstant;
+import com.hz.platform.master.core.model.agent.AgentChannelGewayModel;
 import com.hz.platform.master.core.model.agent.AgentModel;
+import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import com.hz.platform.master.core.model.alipay.AlipayH5Model;
 import com.hz.platform.master.core.model.alipay.AlipayModel;
 import com.hz.platform.master.core.model.alipay.AlipayNotifyModel;
@@ -1505,6 +1508,33 @@ public class HodgepodgeMethod {
         }
         return true;
     }
+
+
+    /**
+     * @Description: 组装代理收益数据集合
+     * @param agentChannelGewayList - 代理分成的关联关系
+     * @param dataCoreModel - 成功的订单信息
+     * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
+     * @author yoko
+     * @date 2021/1/20 15:19
+     */
+    public static List<AgentProfitModel> assembleAgentProfitList(List<AgentChannelGewayModel> agentChannelGewayList, DataCoreModel dataCoreModel){
+        List<AgentProfitModel> resList = null;
+        for (AgentChannelGewayModel ag_data : agentChannelGewayList){
+            String profit = StringUtil.getMultiply(dataCoreModel.getPayAmount(), ag_data.getServiceCharge());
+            AgentProfitModel agentProfitModel = BeanUtils.copy(dataCoreModel, AgentProfitModel.class);
+            agentProfitModel.setId(null);
+            agentProfitModel.setAgentId(ag_data.getAgentId());
+            agentProfitModel.setProfitRatio(ag_data.getServiceCharge());
+            agentProfitModel.setProfit(profit);
+            agentProfitModel.setRunNum(null);
+            agentProfitModel.setRunStatus(null);
+            resList.add(agentProfitModel);
+        }
+        return resList;
+    }
+
+
 
 
 

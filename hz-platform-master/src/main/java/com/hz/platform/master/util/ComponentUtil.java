@@ -41,5 +41,6 @@ public class ComponentUtil {
     public static TaskChannelChangeService taskChannelChangeService;
     public static TaskWithdrawService taskWithdrawService;
     public static TaskGewayChangeService taskGewayChangeService;
+    public static TaskDataCoreService taskDataCoreService;
 
 }

@@ -3,9 +3,12 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.AgentProfitMapper;
+import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import com.hz.platform.master.core.service.AgentProfitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @Description 代理收益数据的Service层
@@ -28,5 +31,10 @@ public class AgentProfitServiceImpl<T> extends BaseServiceImpl<T> implements Age
 
     public BaseDao<T> getDao() {
         return agentProfitMapper;
+    }
+
+    @Override
+    public int addBatchAgentProfit(List<AgentProfitModel> list) {
+        return agentProfitMapper.addBatchAgentProfit(list);
     }
 }

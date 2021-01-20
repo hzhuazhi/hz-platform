@@ -23,9 +23,24 @@ public class StatusModel implements Serializable {
     private List<Integer> statusList;
 
     /**
+     * 短信内容的类型：1广告短信，2挂失短信，3欠费短信，4普通短信，5手机变更
+     */
+    private Integer dataType;
+
+    /**
      * 值以work形式填充计算,以后数据多起来则这些字段值填充由worker来跑数据：0初始化，1填充完毕，2无需下发数据
      */
     private Integer workType;
+
+    /**
+     * 原因：task跑时，可能的一些失败原因的存储
+     */
+    private String info;
+
+    /**
+     * 失效时间
+     */
+    private String invalidTime;
 
     /**
      * 金额
@@ -76,10 +91,6 @@ public class StatusModel implements Serializable {
      */
     private Integer orderStatus;
 
-    /**
-     * 原因：task跑时，可能的一些失败原因的存储
-     */
-    private String info;
 
     /**
      * 订单状态：1成功，2失败，3其它
@@ -242,5 +253,21 @@ public class StatusModel implements Serializable {
 
     public void setLessThan(Integer lessThan) {
         this.lessThan = lessThan;
+    }
+
+    public Integer getDataType() {
+        return dataType;
+    }
+
+    public void setDataType(Integer dataType) {
+        this.dataType = dataType;
+    }
+
+    public String getInvalidTime() {
+        return invalidTime;
+    }
+
+    public void setInvalidTime(String invalidTime) {
+        this.invalidTime = invalidTime;
     }
 }

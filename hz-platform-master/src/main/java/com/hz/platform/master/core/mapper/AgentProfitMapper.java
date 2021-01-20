@@ -1,7 +1,10 @@
 package com.hz.platform.master.core.mapper;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
+import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import org.apache.ibatis.annotations.Mapper;
+
+import java.util.List;
 
 /**
  * @Description 代理收益数据的Dao层
@@ -11,4 +14,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface AgentProfitMapper<T> extends BaseDao<T> {
+
+    /**
+     * @Description: 批量添加代理的收益信息
+     * @param list - 代理的收益信息集合
+     * @return
+     * @author yoko
+     * @date 2020/11/10 14:31
+     */
+    public int addBatchAgentProfit(List<AgentProfitModel> list);
 }
