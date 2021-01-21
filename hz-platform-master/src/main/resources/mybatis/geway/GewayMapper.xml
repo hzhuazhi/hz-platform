@@ -20,8 +20,8 @@
             <if test="id != null and id != '' " >
                 and a.id = #{id}
             </if>
-            <if test="interface_adsName != null and interface_adsName != '' " >
-                and a.geway_name = #{interface_adsName}
+            <if test="gewayName != null and gewayName != '' " >
+                and a.geway_name = #{gewayName}
             </if>
             <if test="companyName != null and companyName != '' " >
                 and a.company_name = #{companyName}
@@ -171,8 +171,8 @@
     <update id="update" parameterType="com.hz.platform.master.core.model.geway.GewayModel">
         UPDATE tb_hz_geway a
         <trim prefix="set" suffixOverrides=",">
-            <if test="interface_adsName != null and interface_adsName != '' " >
-                a.geway_name = #{interface_adsName},
+            <if test="gewayName != null and gewayName != '' " >
+                a.geway_name = #{gewayName},
             </if>
             <if test="interface_ads != null and interface_ads != '' " >
                 a.interface_ads = #{interface_ads},

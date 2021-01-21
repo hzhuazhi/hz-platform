@@ -14,6 +14,7 @@ import com.hz.platform.master.core.model.alipay.AlipayModel;
 import com.hz.platform.master.core.model.alipay.AlipayNotifyModel;
 import com.hz.platform.master.core.model.bufpay.BufpayModel;
 import com.hz.platform.master.core.model.channel.ChannelModel;
+import com.hz.platform.master.core.model.channel.ChannelProfitModel;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
@@ -22,6 +23,7 @@ import com.hz.platform.master.core.model.channelwithdraw.ChannelWithdrawModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.geway.GewayModel;
+import com.hz.platform.master.core.model.geway.GewayProfitModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
@@ -1519,7 +1521,7 @@ public class HodgepodgeMethod {
      * @date 2021/1/20 15:19
      */
     public static List<AgentProfitModel> assembleAgentProfitList(List<AgentChannelGewayModel> agentChannelGewayList, DataCoreModel dataCoreModel){
-        List<AgentProfitModel> resList = null;
+        List<AgentProfitModel> resList = new ArrayList<>();
         for (AgentChannelGewayModel ag_data : agentChannelGewayList){
             String profit = StringUtil.getMultiply(dataCoreModel.getPayAmount(), ag_data.getServiceCharge());
             AgentProfitModel agentProfitModel = BeanUtils.copy(dataCoreModel, AgentProfitModel.class);
@@ -1536,6 +1538,46 @@ public class HodgepodgeMethod {
 
 
 
+    /**
+     * @Description: 组装通道收益数据集合
+     * @param dataCoreModel - 成功的订单信息
+     * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
+     * @author yoko
+     * @date 2021/1/20 15:19
+     */
+    public static GewayProfitModel assembleGewayProfit(DataCoreModel dataCoreModel){
+        GewayProfitModel resBean = BeanUtils.copy(dataCoreModel, GewayProfitModel.class);
+        String profit = StringUtil.getMultiply(dataCoreModel.getPayAmount(), dataCoreModel.getServiceCharge());
+        resBean.setMoney(dataCoreModel.getTotalAmount());
+        resBean.setProfit(profit);
+        resBean.setId(null);
+        resBean.setProfitRatio(dataCoreModel.getServiceCharge());
+        resBean.setProfit(profit);
+        resBean.setRunNum(null);
+        resBean.setRunStatus(null);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装渠道收益数据集合
+     * @param dataCoreModel - 成功的订单信息
+     * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
+     * @author yoko
+     * @date 2021/1/20 15:19
+     */
+    public static ChannelProfitModel assembleChannelProfit(DataCoreModel dataCoreModel){
+        ChannelProfitModel resBean = BeanUtils.copy(dataCoreModel, ChannelProfitModel.class);
+        String profit = StringUtil.getMultiply(dataCoreModel.getPayAmount(), dataCoreModel.getServiceCharge());
+        resBean.setMoney(dataCoreModel.getActualMoney());
+        resBean.setProfit(profit);
+        resBean.setId(null);
+        resBean.setProfitRatio(dataCoreModel.getServiceCharge());
+        resBean.setProfit(profit);
+        resBean.setRunNum(null);
+        resBean.setRunStatus(null);
+        return resBean;
+    }
 
 
 

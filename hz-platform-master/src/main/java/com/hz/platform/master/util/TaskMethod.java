@@ -254,4 +254,51 @@ public class TaskMethod {
     }
 
 
+
+    /**
+     * @Description: 组装更改运行状态的数据
+     * @param id - 主键ID
+     * @param runStatus - 运行计算状态：：0初始化，1锁定，2计算失败，3计算成功
+     * @param workType - 补充数据的类型：1初始化，2补充数据失败，3补充数据成功
+     * @param dataType - 数据类型
+     * @param sendStatus - 发送状态：0初始化，1锁定，2计算失败，3计算成功
+     * @param orderStatus - 订单状态
+     * @param info - 解析说明
+     * @return StatusModel
+     * @author yoko
+     * @date 2019/12/10 10:42
+     */
+    public static StatusModel assembleTaskUpdateStatus(long id, int runStatus, int workType, int dataType,int sendStatus,int orderStatus, String info){
+        StatusModel resBean = new StatusModel();
+        resBean.setId(id);
+        if (runStatus > 0){
+            resBean.setRunStatus(runStatus);
+            if (runStatus == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+                // 表示失败：失败则需要运行次数加一
+                resBean.setRunNum(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            }
+        }
+        if (workType > 0){
+            resBean.setWorkType(workType);
+        }
+        if (dataType > 0){
+            resBean.setDataType(dataType);
+        }
+        if (sendStatus > 0){
+            resBean.setSendStatus(sendStatus);
+            if (sendStatus == ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO){
+                // 表示失败：失败则需要运行次数加一
+                resBean.setSendNum(ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ONE);
+            }
+        }
+        if (orderStatus > 0){
+            resBean.setOrderStatus(orderStatus);
+        }
+        if (!StringUtils.isBlank(info)){
+            resBean.setInfo(info);
+        }
+        return resBean;
+    }
+
+
 }

@@ -7,7 +7,10 @@ import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
 import com.hz.platform.master.core.model.agent.AgentChannelGewayModel;
 import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import com.hz.platform.master.core.model.channel.ChannelModel;
+import com.hz.platform.master.core.model.channel.ChannelProfitModel;
 import com.hz.platform.master.core.model.datacore.DataCoreModel;
+import com.hz.platform.master.core.model.geway.GewayModel;
+import com.hz.platform.master.core.model.geway.GewayProfitModel;
 import com.hz.platform.master.core.model.task.base.StatusModel;
 import com.hz.platform.master.util.ComponentUtil;
 import com.hz.platform.master.util.HodgepodgeMethod;
@@ -45,17 +48,19 @@ public class TaskDataCore {
 
 
     /**
-     * @Description: task：利益者的收益数据的金额累加
+     * @Description: task：通道回调成功订单的逻辑处理
      * <p>
-     *     每30每秒运行一次
-     *     1.查询未跑的利益者的收益流水信息
-     *     2.给利益者收益金额进行累加
+     *     每10每秒运行一次
+     *     1.查询未跑的成功订单信息
+     *     2.计算添加利益者的利润数据
+     *     3.针对预付款通道进行数据添加
+     *     4.添加渠道金额收益数据
      * </p>
      * @author yoko
      * @date 2019/12/6 20:25
      */
 //    @Scheduled(cron = "1 * * * * ?")
-    @Scheduled(fixedDelay = 30000) // 每30秒执行
+    @Scheduled(fixedDelay = 10000) // 每30秒执行
     public void handle() throws Exception{
 //        log.info("----------------------------------TaskDataCore.handle()----start");
 
@@ -91,19 +96,27 @@ public class TaskDataCore {
                         }
                     }
 
-                    // 组装通道的
-
-                    if (flagLock_interest){
-                        int num = ComponentUtil.interestService.updateAddOrSubtractMoney(interestUpdate);
-                        if (num > 0){
-                            flag = true;
+                    // 组装通道的收益
+                    GewayProfitModel gewayProfitModel = null;
+                    GewayModel gewayQuery = new GewayModel();
+                    gewayQuery.setId(data.getGewayId());
+                    GewayModel gewayModel = (GewayModel)ComponentUtil.gewayService.findByObject(gewayQuery);
+                    if (gewayModel != null && gewayModel.getId() != null && gewayModel.getId() > 0){
+                        if (gewayModel.getGewayType() == 2){
+                            // 表示预付通道
+                            gewayProfitModel = HodgepodgeMethod.assembleGewayProfit(data);
                         }
-                        // 解锁
-                        ComponentUtil.redisIdService.delLock(lockKey_interest);
                     }
+
+                    // 组装渠道的收益
+                    ChannelProfitModel channelProfitModel = HodgepodgeMethod.assembleChannelProfit(data);
+
+                    // 正式处理成功订单逻辑
+                    flag = ComponentUtil.taskDataCoreService.handleSuccessOrder(agentProfitList, gewayProfitModel, channelProfitModel);
+
                     if (flag){
                         // 成功
-                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0, 0, 0,0,null);
+                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, workType, 0, 0,0,null);
                     }else {
                         // 失败
                         statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 2, 0, 0, 0,0,null);

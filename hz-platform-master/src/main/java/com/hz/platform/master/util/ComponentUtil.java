@@ -42,5 +42,7 @@ public class ComponentUtil {
     public static TaskWithdrawService taskWithdrawService;
     public static TaskGewayChangeService taskGewayChangeService;
     public static TaskDataCoreService taskDataCoreService;
+    public static GewayProfitService gewayProfitService;
+    public static ChannelProfitService channelProfitService;
 
 }

@@ -53,7 +53,7 @@ public class Task {
     */
 //    @Scheduled(cron = "0 0 1 * * ?")
 //    @Scheduled(cron = "1 * * * * ?")
-    @Scheduled(fixedDelay = 1000) // 每秒执行
+//    @Scheduled(fixedDelay = 1000) // 每秒执行
     public void deductRatioData(){
         StatusModel statusQuery = TaskMethod.assembleDeductRatioStatusQuery(limitNum, 0);
         List<DataCoreModel> synchroList = ComponentUtil.taskService.getWorkTypeList(statusQuery);
