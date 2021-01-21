@@ -40,4 +40,9 @@ public class GewayServiceImpl<T> extends BaseServiceImpl<T> implements GewayServ
     public int updateTotalMoney(GewayModel model) {
         return gewayMapper.updateTotalMoney(model);
     }
+
+    @Override
+    public int updateMoney(GewayModel model) {
+        return gewayMapper.updateMoney(model);
+    }
 }

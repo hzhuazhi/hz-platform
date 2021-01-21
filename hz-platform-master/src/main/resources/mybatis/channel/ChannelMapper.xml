@@ -249,4 +249,21 @@
         and a.yn = 0
     </update>
 
+
+    <!-- 更新渠道的总账以及余额 -->
+    <update id="updateChannelMoney" parameterType="Object">
+        UPDATE tb_hz_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="orderMoney != null and orderMoney != '' " >
+                a.total_money = a.total_money + #{orderMoney},
+            </if>
+            <if test="orderMoney != null and orderMoney != '' " >
+                a.balance = a.balance + #{orderMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+    </update>
+
 </mapper>

@@ -40,4 +40,9 @@ public class ChannelServiceImpl<T> extends BaseServiceImpl<T> implements Channel
     public int updateLockMoney(ChannelModel model) {
         return channelMapper.updateLockMoney(model);
     }
+
+    @Override
+    public int updateChannelMoney(ChannelModel model) {
+        return channelMapper.updateChannelMoney(model);
+    }
 }

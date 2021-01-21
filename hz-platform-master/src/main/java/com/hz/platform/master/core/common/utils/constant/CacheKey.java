@@ -109,4 +109,15 @@ public interface CacheKey {
     String LOCK_GEWAY_MONEY = "-15";
 
 
+    /**
+     * task跑通道收益，锁住这条任务流水
+     */
+    String LOCK_GEWAY_PROFIT = "-16";
+
+    /**
+     * task跑渠道收益，锁住这条任务流水
+     */
+    String LOCK_CHANNEL_PROFIT = "-17";
+
+
 }

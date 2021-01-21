@@ -242,4 +242,23 @@
     </update>
 
 
+    <!-- 更新通道的金额 -->
+    <update id="updateMoney" parameterType="com.hz.platform.master.core.model.geway.GewayModel">
+        UPDATE tb_hz_geway a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="addBalance != null and addBalance != '' " >
+                a.balance = a.balance + #{orderMoney},
+            </if>
+            <if test="subtractBalance != null and subtractBalance != '' " >
+                a.total_money = a.total_money + #{orderMoney},
+                a.balance = a.balance - #{orderMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+
 </mapper>

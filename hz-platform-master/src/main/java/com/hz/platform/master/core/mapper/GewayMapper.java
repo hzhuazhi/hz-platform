@@ -41,4 +41,18 @@ public interface GewayMapper<T> extends BaseDao<T> {
      * @date 2020/10/30 17:04
      */
     public int updateTotalMoney(GewayModel model);
+
+    /**
+     * @Description: 更新通道的金额
+     * <p>
+     *     主要用作于预付款的通道
+     *     1.更新累加通道总额。
+     *     2.扣减通道余额
+     * </p>
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2021/1/21 15:48
+     */
+    public int updateMoney(GewayModel model);
 }

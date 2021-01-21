@@ -37,5 +37,15 @@ public interface ChannelMapper<T> extends BaseDao<T> {
     public int updateLockMoney(ChannelModel model);
 
 
+    /**
+     * @Description: 更新渠道的总账以及余额
+     * @param model
+     * @return
+     * @author yoko
+     * @date 2020/3/25 16:27
+     */
+    public int updateChannelMoney(ChannelModel model);
+
+
 
 }

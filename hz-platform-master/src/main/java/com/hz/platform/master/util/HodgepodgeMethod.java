@@ -1580,6 +1580,22 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: 组装更新渠道总额以及金额的方法
+     * @param channelId - 渠道ID
+     * @param orderMoney - 订单金额
+     * @return com.hz.platform.master.core.model.channel.ChannelModel
+     * @author yoko
+     * @date 2021/1/21 16:45
+     */
+    public static ChannelModel assembleUpdateChannelMoney(long channelId, String orderMoney){
+        ChannelModel resBean = new ChannelModel();
+        resBean.setId(channelId);
+        resBean.setOrderMoney(orderMoney);
+        return resBean;
+    }
+
+
 
 
 
