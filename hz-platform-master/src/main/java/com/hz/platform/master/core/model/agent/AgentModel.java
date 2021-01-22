@@ -54,6 +54,11 @@ public class AgentModel extends BasePage implements Serializable {
      */
     private String royalty;
 
+    /**
+     * 提现类型：1默认在支付平台操作，2发送下发数据到蛋糕平台
+     */
+    private Integer withdrawType;
+
     private Long roleId; //所属角色ID
 
     /**
@@ -179,5 +184,13 @@ public class AgentModel extends BasePage implements Serializable {
 
     public void setMoney(BigDecimal money) {
         this.money = money;
+    }
+
+    public Integer getWithdrawType() {
+        return withdrawType;
+    }
+
+    public void setWithdrawType(Integer withdrawType) {
+        this.withdrawType = withdrawType;
     }
 }

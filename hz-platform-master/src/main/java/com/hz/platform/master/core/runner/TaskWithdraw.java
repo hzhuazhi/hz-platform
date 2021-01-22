@@ -2,6 +2,7 @@ package com.hz.platform.master.core.runner;
 
 import com.hz.platform.master.core.common.utils.constant.CacheKey;
 import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
+import com.hz.platform.master.core.model.agent.AgentModel;
 import com.hz.platform.master.core.model.channel.ChannelModel;
 import com.hz.platform.master.core.model.channelwithdraw.ChannelWithdrawModel;
 import com.hz.platform.master.core.model.task.base.StatusModel;
@@ -60,6 +61,7 @@ public class TaskWithdraw {
         List<WithdrawModel> synchroList = ComponentUtil.taskWithdrawService.getDataList(statusQuery);
         for (WithdrawModel data : synchroList){
             StatusModel statusModel = null;
+            int withdrawType = 0; //提现类型：1默认在支付平台操作，2发送下发数据到蛋糕平台
             try{
                 // 锁住这个数据流水
                 String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_WITHDRAW_SYNCHRO, data.getId());
@@ -74,17 +76,28 @@ public class TaskWithdraw {
                         if (channelModel != null && channelModel.getId() != null){
                             channelType = channelModel.getChannelType();
                             secretKey = channelModel.getSecretKey();
+                            withdrawType = channelModel.getWithdrawType();
+                        }
+                    }else if (data.getRoleId() == 3){
+                        // 表示代理提现
+                        AgentModel agentQuery = HodgepodgeMethod.assembleAgentQuery(data.getLinkId(), 0);
+                        AgentModel agentModel = (AgentModel)ComponentUtil.agentService.findByObject(agentQuery);
+                        if (agentModel != null && agentModel.getId() != null){
+                            withdrawType = agentModel.getWithdrawType();
                         }
                     }
-                    // 数据添加同步到蛋糕平台
-                    ChannelWithdrawModel channelWithdrawModel = HodgepodgeMethod.assembleChannelWithdraw(data, channelType, secretKey);
-                    int num = ComponentUtil.taskWithdrawService.addChannelWithdraw(channelWithdrawModel);
-                    if (num > 0){
+                    if (withdrawType == 2){
+                        // 数据添加同步到蛋糕平台
+                        ChannelWithdrawModel channelWithdrawModel = HodgepodgeMethod.assembleChannelWithdraw(data, channelType, secretKey);
+                        int num = ComponentUtil.taskWithdrawService.addChannelWithdraw(channelWithdrawModel);
+                        if (num > 0){
+                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  3,0,null);
+                        }else {
+                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  2,0,null);
+                        }
+                    }else{
                         statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  3,0,null);
-                    }else {
-                        statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0,  2,0,null);
                     }
-
                     // 更新状态
                     ComponentUtil.taskWithdrawService.updateStatus(statusModel);
 

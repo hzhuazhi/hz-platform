@@ -1596,6 +1596,24 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: 组装代理查询条件的方法
+     * @param id - 代理主键ID
+     * @param withdrawType - 提现类型：1默认在支付平台操作，2发送下发数据到蛋糕平台
+     * @return com.hz.platform.master.core.model.agent.AgentModel
+     * @author yoko
+     * @date 2021/1/21 18:57
+     */
+    public static AgentModel assembleAgentQuery(long id, int withdrawType){
+        AgentModel resBean = new AgentModel();
+        resBean.setId(id);
+        if (withdrawType > 0){
+            resBean.setWithdrawType(withdrawType);
+        }
+        return resBean;
+    }
+
+
 
 
 

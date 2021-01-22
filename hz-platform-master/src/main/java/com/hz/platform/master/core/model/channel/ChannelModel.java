@@ -99,7 +99,7 @@ public class ChannelModel extends BasePage implements Serializable {
     private Integer isSynchro;
 
     /**
-     * 提现类型：1默认在支付平台操作，2发送下发数据到水果平台
+     * 提现类型：1默认在支付平台操作，2发送下发数据到蛋糕平台
      */
     private Integer withdrawType;
 
