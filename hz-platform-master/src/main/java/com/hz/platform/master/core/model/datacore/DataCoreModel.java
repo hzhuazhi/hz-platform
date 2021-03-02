@@ -144,6 +144,16 @@ public class DataCoreModel extends BasePage implements Serializable {
     private Integer runStatus;
 
     /**
+     *发送次数
+     */
+    private Integer sendNum;
+
+    /**
+     * 发送状态：0初始化，1锁定，2计算失败，3计算成功
+     */
+    private Integer sendStatus;
+
+    /**
      * 创建时间
      */
     private String createTime;
@@ -465,5 +475,21 @@ public class DataCoreModel extends BasePage implements Serializable {
 
     public void setProfitType(Integer profitType) {
         this.profitType = profitType;
+    }
+
+    public Integer getSendNum() {
+        return sendNum;
+    }
+
+    public void setSendNum(Integer sendNum) {
+        this.sendNum = sendNum;
+    }
+
+    public Integer getSendStatus() {
+        return sendStatus;
+    }
+
+    public void setSendStatus(Integer sendStatus) {
+        this.sendStatus = sendStatus;
     }
 }

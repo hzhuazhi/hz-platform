@@ -11,7 +11,7 @@
         a.pay_amount,a.pay_actual_money,a.trade_status,a.extra_return_param,a.trade_time,
         a.`sign`,a.channel_id,a.geway_id,a.notify_url,a.notify_suc,a.xy_extra_return_param,a.deduct_ratio,
         a.channel_geway_id,a.profit_type,a.replenish_type,a.money_fit_type,a.work_type,
-        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
+        a.curday,a.curhour,a.curminute,a.run_num,a.run_status,a.send_num,a.send_status,
         a.create_time,a.update_time,a.yn
     </sql>
 
@@ -36,6 +36,9 @@
             </if>
             <if test="runStatus != null and runStatus != '' " >
                 and a.run_status &lt; #{runStatus}
+            </if>
+            <if test="greaterThan != null and greaterThan != '' " >
+                and a.run_status > #{greaterThan}
             </if>
             <if test="sendNum != null and sendNum != '' " >
                 and a.send_num &lt; #{sendNum}
