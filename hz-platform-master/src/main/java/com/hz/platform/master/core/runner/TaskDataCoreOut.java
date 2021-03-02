@@ -5,6 +5,8 @@ import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
+import com.hz.platform.master.core.model.geway.GewayModel;
+import com.hz.platform.master.core.model.geway.GewayProfitModel;
 import com.hz.platform.master.core.model.task.base.StatusModel;
 import com.hz.platform.master.util.ComponentUtil;
 import com.hz.platform.master.util.HodgepodgeMethod;
@@ -74,13 +76,24 @@ public class TaskDataCoreOut {
                         orderStatus = 2;
                     }
 
+                    // 组装通道收益
+                    GewayProfitModel gewayProfitModel = null;
+                    GewayModel gewayQuery = new GewayModel();
+                    gewayQuery.setId(data.getGewayId());
+                    GewayModel gewayModel = (GewayModel)ComponentUtil.gewayService.findByObject(gewayQuery);
+                    if (gewayModel != null && gewayModel.getId() != null && gewayModel.getId() > 0){
+                        gewayProfitModel = HodgepodgeMethod.assembleGewayProfitByOutOrder(data, 2, gewayModel.getGewayType());
+                    }
+
+
 
                     // 组装更新渠道订单扣款流水的数据
                     ChannelBalanceDeductModel updateChannelBalanceDeduct = HodgepodgeMethod.assembleChannelBalanceDeduct(0,0, data.getMyTradeNo(),
                             0, null, orderStatus,null, null, 0);
 
                     ChannelOutModel updateChannelOut = HodgepodgeMethod.assembleChannelOutUpdate(data.getMyTradeNo(), orderStatus, data.getPictureAds(), data.getFailInfo());
-                    boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut);
+                    boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut, gewayProfitModel);
+//                    段峰
                     if (flag){
                         statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0,  0,0,null);
                     }else {

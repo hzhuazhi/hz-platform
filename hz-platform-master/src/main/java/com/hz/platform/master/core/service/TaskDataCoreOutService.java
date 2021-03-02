@@ -4,6 +4,7 @@ import com.hz.platform.master.core.common.service.BaseService;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
+import com.hz.platform.master.core.model.geway.GewayProfitModel;
 
 import java.util.List;
 
@@ -42,10 +43,11 @@ public interface TaskDataCoreOutService<T> extends BaseService<T> {
      * </p>
      * @param channelBalanceDeductModel - 渠道扣款流水
      * @param channelOutModel - 代付订单信息
+     * @param gewayProfitModel - 通道收益信息
      * @return
      * @author yoko
      * @date 2020/9/23 21:40
      */
-    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception;
+    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel, GewayProfitModel gewayProfitModel) throws Exception;
 
 }

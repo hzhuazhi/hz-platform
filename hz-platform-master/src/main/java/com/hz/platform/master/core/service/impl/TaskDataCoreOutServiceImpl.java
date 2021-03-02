@@ -5,10 +5,12 @@ import com.hz.platform.master.core.common.exception.ServiceException;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.ChannelBalanceDeductMapper;
 import com.hz.platform.master.core.mapper.ChannelOutMapper;
+import com.hz.platform.master.core.mapper.GewayProfitMapper;
 import com.hz.platform.master.core.mapper.TaskDataCoreOutMapper;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
+import com.hz.platform.master.core.model.geway.GewayProfitModel;
 import com.hz.platform.master.core.service.TaskDataCoreOutService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -39,6 +41,9 @@ public class TaskDataCoreOutServiceImpl<T> extends BaseServiceImpl<T> implements
     @Autowired
     private ChannelOutMapper channelOutMapper;
 
+    @Autowired
+    private GewayProfitMapper gewayProfitMapper;
+
     public BaseDao<T> getDao() {
         return taskDataCoreOutMapper;
     }
@@ -54,14 +59,15 @@ public class TaskDataCoreOutServiceImpl<T> extends BaseServiceImpl<T> implements
     }
 
     @Override
-    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception {
+    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel, GewayProfitModel gewayProfitModel) throws Exception {
         int num1 = channelBalanceDeductMapper.updateOrderStatusByOrderNo(channelBalanceDeductModel);
         int num2 = channelOutMapper.updateOrderStatusByOrderNo(channelOutModel);
+        int num3 = gewayProfitMapper.add(gewayProfitModel);
 
-        if (num1 > 0 && num2 > 0){
+        if (num1 > 0 && num2 > 0 && num3 > 0){
             return true;
         }else{
-            throw new ServiceException("handleDataCoreOut", "二个执行更新SQL其中有一个或者多个响应行为0");
+            throw new ServiceException("handleDataCoreOut", "三个执行更新SQL其中有一个或者多个响应行为0");
         }
     }
 }

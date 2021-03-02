@@ -152,6 +152,80 @@ public class Task {
 
 
 
+//    /**
+//     * @Description: 同步数据给下游
+//     * <p>
+//     *     同步字段
+//     * </p>
+//     * @author yoko
+//     * @date 2019/12/27 21:30
+//     */
+////    @Scheduled(cron = "1 * * * * ?")
+//    @Scheduled(fixedDelay = 1000) // 每秒执行
+//    public void notifyData(){
+//        // 查询要跑的数据
+//        StatusModel statusQuery = TaskMethod.assembleNotifyStatusQuery(limitNum, 1);
+//        List<DataCoreModel> dataList = ComponentUtil.taskService.getNotifyList(statusQuery);
+//        if (dataList != null && dataList.size() > 0){
+//            for (DataCoreModel dataModel : dataList){
+//                //锁住这个task
+//                String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_TASK_NOTIFY, dataModel.getId());
+//                boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
+//                if (flagLock){
+//                    try {
+//                        // 查询渠道信息
+//                        ChannelModel channelModel = (ChannelModel) ComponentUtil.channelService.findById(dataModel.getChannelId());
+//                        String notify_suc = "";
+//                        if (!StringUtils.isBlank(channelModel.getLowerSuc())){
+//                            notify_suc = channelModel.getLowerSuc();
+//                        }else {
+//                            notify_suc = "OK";
+//                        }
+//                        String pay_amount = "";
+//                        if (!StringUtils.isBlank(dataModel.getPayAmount())){
+//                            pay_amount = dataModel.getPayAmount();
+//                        }
+//                        // 执行发送数据
+//                        String sign = "total_amount=" + dataModel.getTotalAmount() + "&" + "out_trade_no=" + dataModel.getOutTradeNo() + "&" + "trade_status=" + dataModel.getTradeStatus()
+//                                + "&" + "key=" + channelModel.getSecretKey();
+//                        sign = MD5Util.encryption(sign);
+//                        String sendUrl = dataModel.getNotifyUrl();// 需要发送给下游的接口
+//                        String sendData = "?total_amount=" + dataModel.getTotalAmount() + "&" + "pay_amount=" + dataModel.getPayAmount() + "&" + "out_trade_no=" + dataModel.getOutTradeNo() + "&" + "trade_status=" + dataModel.getTradeStatus()
+//                                + "&" + "trade_no=" + dataModel.getMyTradeNo() + "&" + "extra_return_param=" + dataModel.getXyExtraReturnParam() + "&" + "sign=" + sign
+//                                + "&" + "trade_time=" + System.currentTimeMillis();
+////                        String resp = HttpSendUtils.sendGet(sendUrl + URLEncoder.encode(sendData,"UTF-8"), null, null);
+//                        String resp = HttpSendUtils.sendGet(sendUrl + sendData, null, null);
+//                        if (resp.equals(notify_suc)){
+//                            // 成功
+//                            // 组装更改运行状态的数据：更新成成功
+//                            StatusModel statusModel = TaskMethod.assembleUpdateStatusModel(dataModel.getId(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_THREE);
+//                            ComponentUtil.taskService.updateNotifyStatus(statusModel);
+//                        }else {
+//                            // 组装更改运行状态的数据：更新成失败
+//                            StatusModel statusModel = TaskMethod.assembleUpdateStatusModel(dataModel.getId(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+//                            ComponentUtil.taskService.updateNotifyStatus(statusModel);
+//                        }
+//
+//
+//                    }catch (Exception e){
+//                        // 组装更改运行状态的数据：更新成失败
+//                        StatusModel statusModel = TaskMethod.assembleUpdateStatusModel(dataModel.getId(), ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+//                        ComponentUtil.taskService.updateNotifyStatus(statusModel);
+//                        log.error(String.format("this Task.notifyData() is error , the dataId=%s !", dataModel.getId()));
+//                        e.printStackTrace();
+//                    }finally {
+//                        // 解锁
+//                        ComponentUtil.redisIdService.delLock(lockKey);
+//                    }
+//                }
+//
+//            }
+//        }
+//    }
+
+
+
+
     /**
      * @Description: 同步数据给下游
      * <p>

@@ -1541,12 +1541,16 @@ public class HodgepodgeMethod {
     /**
      * @Description: 组装通道收益数据集合
      * @param dataCoreModel - 成功的订单信息
+     * @param orderType - 订单类型：1代收，2代付
+     * @param gewayType - 通道类型：1普通通道，2预付款通道
      * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
      * @author yoko
      * @date 2021/1/20 15:19
      */
-    public static GewayProfitModel assembleGewayProfit(DataCoreModel dataCoreModel){
+    public static GewayProfitModel assembleGewayProfit(DataCoreModel dataCoreModel, int orderType, int gewayType){
         GewayProfitModel resBean = BeanUtils.copy(dataCoreModel, GewayProfitModel.class);
+        resBean.setOrderType(orderType);
+        resBean.setGewayType(gewayType);
         String profit = StringUtil.getMultiply(dataCoreModel.getPayAmount(), dataCoreModel.getServiceCharge());
         resBean.setMoney(dataCoreModel.getTotalAmount());
         resBean.setProfit(profit);
@@ -1555,6 +1559,33 @@ public class HodgepodgeMethod {
         resBean.setProfit(profit);
         resBean.setRunNum(null);
         resBean.setRunStatus(null);
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装通道收益数据集合-根据代付订单
+     * @param dataCoreOutModel - 成功的代付订单信息
+     * @param orderType - 订单类型：1代收，2代付
+     * @param gewayType - 通道类型：1普通通道，2预付款通道
+     * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
+     * @author yoko
+     * @date 2021/1/20 15:19
+     */
+    public static GewayProfitModel assembleGewayProfitByOutOrder(DataCoreOutModel dataCoreOutModel, int orderType, int gewayType){
+
+        GewayProfitModel resBean = BeanUtils.copy(dataCoreOutModel, GewayProfitModel.class);
+        resBean.setOrderType(orderType);
+        resBean.setGewayType(gewayType);
+        String profit = StringUtil.getMultiply(dataCoreOutModel.getPayAmount(), dataCoreOutModel.getServiceCharge());
+        resBean.setMoney(dataCoreOutModel.getTotalAmount());
+        resBean.setProfit(profit);
+        resBean.setId(null);
+        resBean.setProfitRatio(dataCoreOutModel.getServiceCharge());
+        resBean.setProfit(profit);
+        resBean.setRunNum(null);
+        resBean.setRunStatus(null);
+//        段峰
         return resBean;
     }
 

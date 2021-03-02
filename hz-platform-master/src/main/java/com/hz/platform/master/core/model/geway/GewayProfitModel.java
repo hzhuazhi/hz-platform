@@ -38,6 +38,11 @@ public class GewayProfitModel extends BasePage implements Serializable {
     private String outTradeNo;
 
     /**
+     * 订单类型：1代收，2代付
+     */
+    private Integer orderType;
+
+    /**
      * 实际要操作的金额
      */
     private String money;
@@ -79,6 +84,11 @@ public class GewayProfitModel extends BasePage implements Serializable {
      * 通道的主键ID
      */
     private Long gewayId;
+
+    /**
+     * 通道类型：1普通通道，2预付款通道
+     */
+    private Integer gewayType;
 
     /**
      * 代理的主键ID
@@ -378,5 +388,21 @@ public class GewayProfitModel extends BasePage implements Serializable {
 
     public void setCurdayEnd(Integer curdayEnd) {
         this.curdayEnd = curdayEnd;
+    }
+
+    public Integer getOrderType() {
+        return orderType;
+    }
+
+    public void setOrderType(Integer orderType) {
+        this.orderType = orderType;
+    }
+
+    public Integer getGewayType() {
+        return gewayType;
+    }
+
+    public void setGewayType(Integer gewayType) {
+        this.gewayType = gewayType;
     }
 }

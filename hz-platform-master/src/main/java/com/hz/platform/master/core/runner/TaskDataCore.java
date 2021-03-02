@@ -104,7 +104,7 @@ public class TaskDataCore {
                     if (gewayModel != null && gewayModel.getId() != null && gewayModel.getId() > 0){
                         if (gewayModel.getGewayType() == 2){
                             // 表示预付通道
-                            gewayProfitModel = HodgepodgeMethod.assembleGewayProfit(data);
+                            gewayProfitModel = HodgepodgeMethod.assembleGewayProfit(data, 1, 2);
                         }
                     }
 

@@ -7,8 +7,8 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.my_trade_no,a.trade_no,a.out_trade_no,a.money,a.total_amount,a.service_charge,a.actual_money,
-        a.pay_amount,a.pay_actual_money,a.channel_id,a.geway_id,a.agent_id,
+        a.id,a.my_trade_no,a.trade_no,a.out_trade_no,a.order_type,a.money,a.total_amount,a.service_charge,a.actual_money,
+        a.pay_amount,a.pay_actual_money,a.channel_id,a.geway_id,a.geway_type,a.agent_id,
         a.channel_geway_id,a.replenish_type,a.money_fit_type,a.profit_ratio,a.profit,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
         a.create_time,a.update_time,a.yn
@@ -131,6 +131,9 @@
             <if test="outTradeNo != null and outTradeNo != '' " >
                 out_trade_no,
             </if>
+            <if test="orderType != null and orderType != '' " >
+                order_type,
+            </if>
             <if test="money != null and money != '' " >
                 money,
             </if>
@@ -154,6 +157,9 @@
             </if>
             <if test="gewayId != null and gewayId != '' " >
                 geway_id,
+            </if>
+            <if test="gewayType != null and gewayType != '' " >
+                geway_type,
             </if>
             <if test="agentId != null and agentId != '' " >
                 agent_id,
@@ -201,6 +207,9 @@
             <if test="outTradeNo != null and outTradeNo != '' " >
                 <![CDATA[  #{outTradeNo}, ]]>
             </if>
+            <if test="orderType != null and orderType != '' " >
+                <![CDATA[  #{orderType}, ]]>
+            </if>
             <if test="money != null and money != '' " >
                 <![CDATA[  #{money}, ]]>
             </if>
@@ -224,6 +233,9 @@
             </if>
             <if test="gewayId != null and gewayId != '' " >
                 <![CDATA[  #{gewayId}, ]]>
+            </if>
+            <if test="gewayType != null and gewayType != '' " >
+                <![CDATA[  #{gewayType}, ]]>
             </if>
             <if test="agentId != null and agentId != '' " >
                 <![CDATA[  #{agentId}, ]]>
