@@ -17,12 +17,14 @@ import com.hz.platform.master.core.model.bufpay.BufpayModel;
 import com.hz.platform.master.core.model.channel.ChannelModel;
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
+import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
+import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
 import com.hz.platform.master.util.ComponentUtil;
 import com.hz.platform.master.util.HodgepodgeMethod;
 import org.apache.commons.lang.StringUtils;
@@ -702,6 +704,86 @@ public class PayController extends BaseController {
                 qrCodeUrl = (String) orderMap.get("qrCodeUrl");
                 System.out.println(qrCodeUrl);
             }
+        }
+    }
+
+
+
+
+    /**
+     * @Description: 查询网关
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8092/platform/action/queryDataCore
+     * 请求的属性类:RequestPay
+     * 必填字段:{"channel":"channel_2","out_trade_no":"out_trade_no_1","sign":"c414e730be7d93bec15408b83dd69281"}
+     * 客户端加密字段:token+ctime+秘钥=sign
+     * 返回加密字段:stime+秘钥=sign
+     *
+     * {
+     *     "resultCode": "0",
+     *     "message": "success",
+     *     "data": {
+     *         "trade_no": "trade2021012003",
+     *         "out_trade_no": "out2021012003",
+     *         "trade_status": 1,
+     *         "send_status": 1,
+     *         "notify_url": "http://www.baidu.com",
+     *         "trade_time": "2021-01-20 19:23:40"
+     *     }
+     * }
+     *
+     */
+    @RequestMapping(value = "/queryDataCore", method = {RequestMethod.POST})
+    public JsonResult<Object> queryDataCore(HttpServletRequest request, HttpServletResponse response,@RequestBody RequestPay requestData) throws Exception{
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        RequestPay requestModel = new RequestPay();
+        try{
+            if (StringUtils.isBlank(requestData.channel)){
+                throw new ServiceException("0001", "请填写商铺号!");
+            }
+            if (StringUtils.isBlank(requestData.out_trade_no)){
+                throw new ServiceException("0002", "请填写商家订单号!");
+            }
+            if (StringUtils.isBlank(requestData.sign)){
+                throw new ServiceException("0003", "请填写签名!");
+            }
+
+
+            // 获取渠道的信息
+            ChannelModel channelModel = new ChannelModel();
+            channelModel.setChannel(requestData.channel);
+            channelModel = (ChannelModel) ComponentUtil.channelService.findByObject(channelModel);
+            if (channelModel == null || channelModel.getId() <= 0){
+                throw new ServiceException("0004", "请填写正确的商铺号!");
+            }
+
+            // 校验sign签名
+            String checkSign = "channel=" + requestData.channel + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "key=" + channelModel.getSecretKey();
+
+            checkSign = MD5Util.encryption(checkSign);
+            if (!requestData.sign.equals(checkSign)){
+                throw new ServiceException("0005", "签名错误!");
+            }
+
+            DataCoreModel dataCoreQuery = new DataCoreModel();
+            dataCoreQuery.setChannelId(channelModel.getId());
+            dataCoreQuery.setOutTradeNo(requestData.out_trade_no);
+            DataCoreModel dataCoreModel = (DataCoreModel)ComponentUtil.dataCoreService.findByObject(dataCoreQuery);
+
+            ResponseDataCore responseDataCore = HodgepodgeMethod.assembleResponseDataCoreResult(dataCoreModel, requestData.out_trade_no);
+
+            // 返回数据给客户端
+            return JsonResult.successResult(responseDataCore);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+            // #添加异常
+            log.error(String.format("this PayController.queryDataCore() is error , the data=%s!", data));
+            e.printStackTrace();
+            return JsonResult.failedResult(map.get("message"), map.get("code"));
         }
     }
 

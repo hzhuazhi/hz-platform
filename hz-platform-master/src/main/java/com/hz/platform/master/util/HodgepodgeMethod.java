@@ -34,6 +34,7 @@ import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.notify.*;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
+import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -1640,6 +1641,37 @@ public class HodgepodgeMethod {
         resBean.setId(id);
         if (withdrawType > 0){
             resBean.setWithdrawType(withdrawType);
+        }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: 组装查询网关的数据
+     * @param dataCoreModel - 成功数据
+     * @param out_trade_no - 渠道订单号
+     * @return com.hz.platform.master.core.protocol.response.pay.ResponseDataCore
+     * @author yoko
+     * @date 2021/4/26 17:34
+     */
+    public static ResponseDataCore assembleResponseDataCoreResult(DataCoreModel dataCoreModel, String out_trade_no){
+        ResponseDataCore resBean = new ResponseDataCore();
+        if (dataCoreModel != null && dataCoreModel.getId() != null && dataCoreModel.getId() > 0){
+            resBean.setTrade_no(dataCoreModel.getTradeNo());
+            resBean.setOut_trade_no(dataCoreModel.getOutTradeNo());
+            resBean.setTrade_status(dataCoreModel.getTradeStatus());
+            if (dataCoreModel.getSendStatus() == 3){
+                resBean.setSend_status(1);
+            }else {
+                resBean.setSend_status(2);
+            }
+            if (!StringUtils.isBlank(dataCoreModel.getNotifyUrl())){
+                resBean.setNotify_url(dataCoreModel.getNotifyUrl());
+            }
+            resBean.setTrade_time(dataCoreModel.getCreateTime());
+        }else {
+            resBean.setOut_trade_no(out_trade_no);
+            resBean.setTrade_status(2);
         }
         return resBean;
     }
