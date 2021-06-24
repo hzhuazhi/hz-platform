@@ -320,6 +320,17 @@ public class PayGetController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if(gewayModel.getContacts().equals("WP")){
+                String api_url = gewayModel.getInterfaceAds();
+                String api_key = gewayModel.getSecretKey();
+                String callback_url = requestData.return_url;
+                String out_trade_no = sgid;
+                String total_fee = requestData.total_amount;
+                String res = WPayHelper.getPayUrl(api_url, api_key, callback_url, my_notify_url, out_trade_no, total_fee);
+                if (!StringUtils.isBlank(res)){
+                    qrCodeUrl = res;
+                    resData = "ok";
+                }
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
