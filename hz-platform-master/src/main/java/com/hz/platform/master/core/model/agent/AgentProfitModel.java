@@ -105,6 +105,11 @@ public class AgentProfitModel extends BasePage implements Serializable {
      */
     private String profit;
 
+    /**
+     * 收益类型：1订单手续费的收益，2固定每单收取的收益：比如每单收取1元。。。（固定分成，额外分成）
+     */
+    private Integer profitType;
+
 
 
 
@@ -366,5 +371,13 @@ public class AgentProfitModel extends BasePage implements Serializable {
 
     public void setCurdayEnd(Integer curdayEnd) {
         this.curdayEnd = curdayEnd;
+    }
+
+    public Integer getProfitType() {
+        return profitType;
+    }
+
+    public void setProfitType(Integer profitType) {
+        this.profitType = profitType;
     }
 }

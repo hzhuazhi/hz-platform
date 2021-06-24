@@ -7,7 +7,7 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.agent_id,a.channel_geway_id,a.link_name,a.service_charge,a.deduct_ratio,a.remark,
+        a.id,a.agent_id,a.channel_geway_id,a.link_name,a.service_charge,a.service_charge_type,a.extra_service_charge,a.deduct_ratio,a.remark,
         a.create_time,a.update_time,a.yn
     </sql>
 
@@ -24,6 +24,9 @@
             </if>
             <if test="channelGewayId != null and channelGewayId != '' " >
                 and a.channel_geway_id = #{channelGewayId}
+            </if>
+            <if test="serviceChargeType != null and serviceChargeType != '' " >
+                and a.service_charge_type = #{serviceChargeType}
             </if>
             and a.yn = 0
         </trim>

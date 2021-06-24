@@ -9,7 +9,7 @@
     <sql id="Base_Column_List">
         a.id,a.my_trade_no,a.trade_no,a.out_trade_no,a.total_amount,a.service_charge,a.actual_money,
         a.pay_amount,a.pay_actual_money,a.channel_id,a.geway_id,a.agent_id,
-        a.channel_geway_id,a.replenish_type,a.money_fit_type,a.profit_ratio,a.profit,
+        a.channel_geway_id,a.replenish_type,a.money_fit_type,a.profit_ratio,a.profit,a.profit_type,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
         a.create_time,a.update_time,a.yn
     </sql>
@@ -170,6 +170,9 @@
             <if test="profit != null and profit != '' " >
                 profit,
             </if>
+            <if test="profitType != null and profitType != '' " >
+                profit_type,
+            </if>
             <if test="curday != null and curday != '' " >
                 curday,
             </if>
@@ -237,6 +240,9 @@
             <if test="profit != null and profit != '' " >
                 <![CDATA[  #{profit}, ]]>
             </if>
+            <if test="profitType != null and profitType != '' " >
+                <![CDATA[  #{profitType}, ]]>
+            </if>
             <if test="curday != null and curday != '' " >
                 <![CDATA[  #{curday}, ]]>
             </if>
@@ -285,12 +291,12 @@
         </selectKey>
         insert into tb_hz_agent_profit
         (my_trade_no, trade_no, out_trade_no, total_amount, service_charge, actual_money, pay_amount, pay_actual_money, channel_id, geway_id, agent_id, channel_geway_id,
-        replenish_type, money_fit_type, profit_ratio, profit, curday, curhour, curminute, create_time)
+        replenish_type, money_fit_type, profit_ratio, profit, profit_type, curday, curhour, curminute, create_time)
         values
         <foreach item="item" index="index" collection="list" separator=",">
             (
             #{item.myTradeNo}, #{item.tradeNo},#{item.outTradeNo},#{item.totalAmount},#{item.serviceCharge},#{item.actualMoney},#{item.payAmount},#{item.payActualMoney},#{item.channelId},#{item.gewayId},#{item.agentId},#{item.channelGewayId},
-            #{item.replenishType},#{item.moneyFitType},#{item.profitRatio},#{item.profit},#{item.curday},#{item.curhour},#{item.curminute},now()
+            #{item.replenishType},#{item.moneyFitType},#{item.profitRatio},#{item.profit},#{item.profitType},#{item.curday},#{item.curhour},#{item.curminute},now()
             )
         </foreach>
     </insert>

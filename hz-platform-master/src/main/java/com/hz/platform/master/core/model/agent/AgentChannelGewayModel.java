@@ -39,6 +39,16 @@ public class AgentChannelGewayModel extends BasePage implements Serializable {
     private String serviceCharge;
 
     /**
+     * 手续费类型：1固定值的手续费，2除了固定的手续费每单额外要收取手续费（额外手续费）
+     */
+    private Integer serviceChargeType;
+
+    /**
+     * 额外手续费值：每单还要收取额外的手续费；当字段service_charge_type等于2时，则要用到此字段
+     */
+    private String extraServiceCharge;
+
+    /**
      * 扣量比例
      */
     private Integer deductRatio;
@@ -141,5 +151,21 @@ public class AgentChannelGewayModel extends BasePage implements Serializable {
 
     public void setYn(Integer yn) {
         this.yn = yn;
+    }
+
+    public Integer getServiceChargeType() {
+        return serviceChargeType;
+    }
+
+    public void setServiceChargeType(Integer serviceChargeType) {
+        this.serviceChargeType = serviceChargeType;
+    }
+
+    public String getExtraServiceCharge() {
+        return extraServiceCharge;
+    }
+
+    public void setExtraServiceCharge(String extraServiceCharge) {
+        this.extraServiceCharge = extraServiceCharge;
     }
 }

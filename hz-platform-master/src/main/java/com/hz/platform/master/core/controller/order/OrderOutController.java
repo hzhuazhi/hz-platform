@@ -249,12 +249,18 @@ public class OrderOutController extends BaseController {
 
             // 计算手续费
             String serviceCharge = "";
+            String extraServiceCharge = "";// 额外手续费
             // 使用上游手续费
 //            Map<String, String> map = HodgepodgeMethod.getPayCode(requestData.trade_type);
             String payCode = gewaytradetypeModel.getOutTradeType();
             if(!StringUtils.isBlank(channelGewayModel.getServiceCharge())){
                 // 使用统一手续费
                 serviceCharge = channelGewayModel.getServiceCharge();
+                if (channelGewayModel.getServiceChargeType() == 2){
+                    if (!StringUtils.isBlank(channelGewayModel.getExtraServiceCharge())){
+                        extraServiceCharge = channelGewayModel.getExtraServiceCharge();
+                    }
+                }
             }else{
                 // 硬编码手续费
                 if (!StringUtils.isBlank(gewaytradetypeModel.getServiceCharge())){
@@ -332,7 +338,7 @@ public class OrderOutController extends BaseController {
                     boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
                     if (flagLock){
                         // 组装扣减渠道余额
-                        ChannelModel updateBalance = HodgepodgeMethod.assembleChannelBalance(channelModel.getId(), requestData.total_amount, serviceCharge);
+                        ChannelModel updateBalance = HodgepodgeMethod.assembleChannelBalance(channelModel.getId(), requestData.total_amount, serviceCharge, extraServiceCharge);
                         // 组装添加渠道扣减余额的流水
                         ChannelBalanceDeductModel channelBalanceDeductModel = HodgepodgeMethod.assembleChannelBalanceDeduct(0, channelModel.getId(), sgid, 2, updateBalance.getOrderMoney(),
                                 0, null, null, 2);
