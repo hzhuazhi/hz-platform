@@ -2,6 +2,8 @@ package com.hz.platform.master.core.runner;
 
 import com.hz.platform.master.core.common.utils.constant.CacheKey;
 import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
+import com.hz.platform.master.core.model.agent.AgentChannelGewayModel;
+import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
@@ -92,8 +94,20 @@ public class TaskDataCoreOut {
                             0, null, orderStatus,null, null, 0);
 
                     ChannelOutModel updateChannelOut = HodgepodgeMethod.assembleChannelOutUpdate(data.getMyTradeNo(), orderStatus, data.getPictureAds(), data.getFailInfo());
-                    boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut, gewayProfitModel);
-//                    段峰
+
+
+                    // 判断是否是多人分配利益
+                    List<AgentProfitModel> agentProfitList = null;
+                    if (data.getProfitType() == 2){
+                        AgentChannelGewayModel agentChannelGewayModel = new AgentChannelGewayModel();
+                        agentChannelGewayModel.setChannelGewayId(data.getChannelGewayId());
+                        List<AgentChannelGewayModel> agentChannelGewayList = ComponentUtil.agentChannelGewayService.findByCondition(agentChannelGewayModel);
+                        if (agentChannelGewayList != null && agentChannelGewayList.size() > 0){
+                            agentProfitList = HodgepodgeMethod.assembleAgentProfitByOrderOutList(agentChannelGewayList, data);
+                        }
+                    }
+
+                    boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut, gewayProfitModel, agentProfitList);
                     if (flag){
                         statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 3, 0,  0,0,null);
                     }else {

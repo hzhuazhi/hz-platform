@@ -1595,6 +1595,7 @@ public class HodgepodgeMethod {
             agentProfitModel.setAgentId(ag_data.getAgentId());
             agentProfitModel.setProfitRatio(ag_data.getServiceCharge());
             agentProfitModel.setProfit(profit);
+            agentProfitModel.setProfitType(1);
             agentProfitModel.setRunNum(null);
             agentProfitModel.setRunStatus(null);
             resList.add(agentProfitModel);
@@ -1739,6 +1740,66 @@ public class HodgepodgeMethod {
             resBean.setTrade_status(2);
         }
         return resBean;
+    }
+
+
+
+    /**
+     * @Description: 组装代理收益数据集合 - 代付
+     * @param agentChannelGewayList - 代理分成的关联关系
+     * @param dataCoreOutModel - 成功的代付订单信息
+     * @return java.util.List<com.hz.platform.master.core.model.agent.AgentProfitModel>
+     * @author yoko
+     * @date 2021/1/20 15:19
+     */
+    public static List<AgentProfitModel> assembleAgentProfitByOrderOutList(List<AgentChannelGewayModel> agentChannelGewayList, DataCoreOutModel dataCoreOutModel){
+        List<AgentProfitModel> resList = new ArrayList<>();
+        for (AgentChannelGewayModel ag_data : agentChannelGewayList){
+            if (ag_data.getServiceChargeType() == 1){
+                String profit = StringUtil.getMultiply(dataCoreOutModel.getPayAmount(), ag_data.getServiceCharge());
+                AgentProfitModel agentProfitModel = BeanUtils.copy(dataCoreOutModel, AgentProfitModel.class);
+                agentProfitModel.setId(null);
+                agentProfitModel.setAgentId(ag_data.getAgentId());
+                agentProfitModel.setProfitRatio(ag_data.getServiceCharge());
+                agentProfitModel.setProfit(profit);
+                agentProfitModel.setProfitType(1);
+                agentProfitModel.setRunStatus(null);
+                agentProfitModel.setRunNum(null);
+                resList.add(agentProfitModel);
+            }else if (ag_data.getServiceChargeType() == 2){
+                // 固定分成
+                String profit = StringUtil.getMultiply(dataCoreOutModel.getPayAmount(), ag_data.getServiceCharge());
+                AgentProfitModel agentProfitModel = BeanUtils.copy(dataCoreOutModel, AgentProfitModel.class);
+                agentProfitModel.setId(null);
+                agentProfitModel.setAgentId(ag_data.getAgentId());
+                agentProfitModel.setProfitRatio(ag_data.getServiceCharge());
+                agentProfitModel.setProfitType(1);
+                agentProfitModel.setProfit(profit);
+                agentProfitModel.setRunNum(null);
+                agentProfitModel.setRunStatus(null);
+                resList.add(agentProfitModel);
+
+                // 额外分成
+                AgentProfitModel agentProfitModel1 = BeanUtils.copy(dataCoreOutModel, AgentProfitModel.class);
+                agentProfitModel1.setId(null);
+                agentProfitModel1.setAgentId(ag_data.getAgentId());
+                agentProfitModel1.setProfitRatio(ag_data.getServiceCharge());
+                agentProfitModel1.setTotalAmount(null);
+                agentProfitModel1.setServiceCharge(null);
+                agentProfitModel1.setActualMoney(null);
+                agentProfitModel1.setPayAmount(null);
+                agentProfitModel1.setPayActualMoney(null);
+                agentProfitModel1.setProfitRatio(null);
+                agentProfitModel1.setProfitType(2);
+                agentProfitModel1.setProfit(ag_data.getExtraServiceCharge());
+                agentProfitModel1.setRunNum(null);
+                agentProfitModel1.setRunStatus(null);
+                resList.add(agentProfitModel1);
+
+            }
+
+        }
+        return resList;
     }
 
 

@@ -1,6 +1,7 @@
 package com.hz.platform.master.core.service;
 
 import com.hz.platform.master.core.common.service.BaseService;
+import com.hz.platform.master.core.model.agent.AgentProfitModel;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
 import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
@@ -48,6 +49,6 @@ public interface TaskDataCoreOutService<T> extends BaseService<T> {
      * @author yoko
      * @date 2020/9/23 21:40
      */
-    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel, GewayProfitModel gewayProfitModel) throws Exception;
+    public boolean handleDataCoreOut(ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel, GewayProfitModel gewayProfitModel, List<AgentProfitModel> agentProfitList) throws Exception;
 
 }
