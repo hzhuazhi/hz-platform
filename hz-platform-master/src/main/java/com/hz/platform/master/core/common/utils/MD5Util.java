@@ -176,19 +176,25 @@ public class MD5Util {
         System.out.println(sb);
 
         // 校验sign签名
-        String channel = "10102";
+        String channel = "10113";
 //        String trade_type = "1005";
-        String trade_type = "100002";
-        String total_amount = "3000.00";
-        String out_trade_no = "out_trade_no_1";
+        String trade_type = "100001";
+        String total_amount = "400.00";
+        String out_trade_no = "C35202101080135";
 //        String out_trade_no = "20200615102453535754";
         String notify_url = "http://www.baidu.com/sb";
 //        String notify_url = "http://ds.di1h.cn/Pay_Gaofang_notifyurl.html";
-        String secretKey = "c77eebfefb9ce2bfcb913c148833f68c";
+        String secretKey = "157f62a2be53b56ec76d4abf8d329153";
         String checkSign = "channel=" + channel + "&" + "trade_type=" + trade_type + "&" + "total_amount=" + total_amount
                 + "&" + "out_trade_no=" + out_trade_no + "&" + "notify_url=" + notify_url + "&" + "key=" + secretKey ;
         checkSign = MD5Util.encryption(checkSign);
         System.out.println("checkSign:" + checkSign);
+
+        String checkSignTwo = "channel=" + channel + "&" + "total_amount=" + total_amount
+                + "&" + "out_trade_no=" + out_trade_no + "&" + "notify_url=" + notify_url + "&" + "key=" + secretKey ;
+        checkSignTwo = MD5Util.encryption(checkSignTwo);
+        System.out.println("checkSignTwo:" + checkSignTwo);
+
 
         String sb3 = "channel=2003270117&trade_type=2001&total_amount=100&out_trade_no=202003130890&notify_url=http://www.baidu.com/notify.php&key=0688fa7bcb789ae764a801c11a2c21se";
         sb3 = MD5Util.encryption(sb3);
@@ -243,6 +249,16 @@ public class MD5Util {
                 + "key=" + df_key;
         dfCheckSign = MD5Util.encryption(dfCheckSign);
         System.out.println("dfCheckSign:" + dfCheckSign);
+
+
+
+        String wg_channel = "20119";
+        String wg_out_trade_no = "2021042511203177261691";
+        String wg_key = "17d34d698abe9759ad3284c09ade3542";
+        String wgCheckSign = "channel=" + wg_channel + "&" + "out_trade_no=" + wg_out_trade_no + "&" + "key=" + wg_key;
+        wgCheckSign = MD5Util.encryption(wgCheckSign);
+        System.out.println("wgCheckSign:" + wgCheckSign);
+
     }
 
 //    public static void main(String[] args) throws IOException {

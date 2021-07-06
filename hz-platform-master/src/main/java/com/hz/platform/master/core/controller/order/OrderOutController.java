@@ -316,7 +316,7 @@ public class OrderOutController extends BaseController {
                 sendDataMap.put("bankname", requestData.bank_name);
                 sendDataMap.put("bankno", requestData.bank_card);
                 sendDataMap.put("notifyurl", my_notify_url);
-                String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey());
+                String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey(), 2);
                 sendDataMap.put("sign", sb);
                 String sendData = JSON.toJSONString(sendDataMap);
                 String resultData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);

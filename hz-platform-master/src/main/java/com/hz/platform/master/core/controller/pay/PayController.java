@@ -595,6 +595,81 @@ public class PayController extends BaseController {
                     qrCodeUrl = res;
                     resData = "ok";
                 }
+            }else if (gewayModel.getContacts().equals("SZ")){
+                // 狮子支付
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+
+                sendDataMap.put("merchant_code", gewayModel.getPayId());
+                sendDataMap.put("order_id", sgid);
+                sendDataMap.put("merchant_time", DateUtil.getNowPlusTime());
+                sendDataMap.put("paytype", payCode);
+                sendDataMap.put("subject", "钻石");
+                sendDataMap.put("body", "打赏");
+                sendDataMap.put("amount", requestData.total_amount);
+                sendDataMap.put("returnUrl", requestData.return_url);
+                sendDataMap.put("notify_url", gewayModel.getNotifyUrl());
+
+
+                String mySign = "merchant_code=" + sendDataMap.get("merchant_code") + "&" + "order_id=" + sendDataMap.get("order_id") + "&" + "merchant_time=" + sendDataMap.get("merchant_time") + "&" + "paytype=" + sendDataMap.get("paytype")
+                        + "&" + "subject=" + sendDataMap.get("subject") + "&" + "body=" + sendDataMap.get("body") + "&" + "amount=" + sendDataMap.get("amount") + "&" + "returnUrl=" + sendDataMap.get("returnUrl") + "&" + "notify_url=" + sendDataMap.get("notify_url")
+                        + gewayModel.getSecretKey();
+                log.info("--------sz--------data:" + mySign);
+//                mySign = MD5Util.encryption(mySign).toLowerCase();
+                mySign = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey(), 1);
+                log.info("--------sz--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String szData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), parameter);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(szData)) {
+                    resMap = JSON.parseObject(szData, Map.class);
+                    if (resMap.get("code").equals("0")) {
+                        qrCodeUrl = (String) resMap.get("pay_url");
+                        resData = "ok";
+                    }
+                }
+                log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("MX")){
+                // 木星支付
+
+                String [] checkMoneyArr = requestData.total_amount.split("\\.");
+                if (!checkMoneyArr[1].equals("00")){
+                    throw new ServiceException("A0001", "请按照规定填写整数金额!");
+                }
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+
+                sendDataMap.put("pay_memberid", gewayModel.getPayId());
+                sendDataMap.put("pay_orderid", sgid);
+                String pay_amount = StringUtil.getMultiply(requestData.total_amount, "100.00");// 对方是以分为单位的
+                String [] pay_amountArr = pay_amount.split("\\.");
+                sendDataMap.put("pay_amount", pay_amountArr[0]);
+                sendDataMap.put("pay_callbackurl", gewayModel.getNotifyUrl());
+                sendDataMap.put("pay_turnyurl", requestData.return_url);
+                sendDataMap.put("pay_productname", "zs");
+                sendDataMap.put("pay_tradetype", payCode);
+
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------xm--------mySign:" + mySign);
+                sendDataMap.put("signature", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String szData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("------xm---------szData:" + szData);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(szData)) {
+                    resMap = JSON.parseObject(szData, Map.class);
+                    if (Integer.parseInt(resMap.get("code").toString()) == 11) {
+                        qrCodeUrl = (String) resMap.get("codeUrl");
+                        resData = "ok";
+                    }
+                }
+                log.info("--------------resData:" + resData);
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;

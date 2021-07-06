@@ -22,9 +22,10 @@ public class ASCIISort {
     /**
      * 生成签名
      * @param map
+     * @param changeType - 大小写类型转换：1小写，2大写
      * @return
      */
-    public static String getSign(Map<String, Object> map, String secretKey) {
+    public static String getSign(Map<String, Object> map, String secretKey, int changeType) {
         String result = "";
         try {
             List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(map.entrySet());
@@ -48,10 +49,65 @@ public class ASCIISort {
                 }
 
             }
-            result = sb.toString() + "key=" + secretKey;
+//            result = sb.toString() + "key=" + secretKey;
+            String str = sb.toString().substring(0, sb.toString().length() - 1);
+            result = str + secretKey;
             log.info("result:" + result);
             //进行MD5加密
-            result = DigestUtils.md5Hex(result).toLowerCase();
+            if (changeType == 1){
+                result = DigestUtils.md5Hex(result).toLowerCase();
+            }else if (changeType == 2){
+                result = DigestUtils.md5Hex(result).toUpperCase();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+    }
+
+
+
+
+    /**
+     * 生成签名
+     * @param map
+     * @param changeType - 大小写类型转换：1小写，2大写
+     * @return
+     */
+    public static String getKeySign(Map<String, Object> map, String secretKey, int changeType) {
+        String result = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(map.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).toString().compareTo(o2.getKey());
+                }
+            });
+
+            // 构造签名键值对的格式
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (item.getKey() != null || item.getKey() != "") {
+                    log.info("");
+                    String key = item.getKey();
+                    Object val = item.getValue();
+                    if (!(val == "" || val == null)) {
+                        sb.append(key + "=" + val + "&");
+                    }
+                }
+
+            }
+            result = sb.toString() + "key=" + secretKey;
+//            String str = sb.toString().substring(0, sb.toString().length() - 1);
+            log.info("result:" + result);
+            //进行MD5加密
+            if (changeType == 1){
+                result = DigestUtils.md5Hex(result).toLowerCase();
+            }else if (changeType == 2){
+                result = DigestUtils.md5Hex(result).toUpperCase();
+            }
         } catch (Exception e) {
             return null;
         }
@@ -72,7 +128,7 @@ public class ASCIISort {
         sendDataMap.put("bankname", "测试_银行名称");
         sendDataMap.put("bankno", "测试_收款账号");
         sendDataMap.put("notifyurl", "http://www.baidu.com/notifyurl");
-        String sb = ASCIISort.getSign(sendDataMap, key);
+        String sb = ASCIISort.getSign(sendDataMap, key, 2);
         System.out.println("sb:" + sb);
         sendDataMap.put("sign", sb);
         String sendData = JSON.toJSONString(sendDataMap);

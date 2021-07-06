@@ -1805,6 +1805,120 @@ public class HodgepodgeMethod {
 
 
 
+    /**
+     * @Description: 组装上游同步的数据-狮子支付-sz
+     * @param requestModel - 上游同步的基本数据
+     * @param channelDataModel - 渠道请求的基本数据
+     * @param channelGewayModel - 渠道与通道关联关系
+     * @param total_amount - 总金额
+     * @param serviceCharge - 手续费
+     * @param actualMoney - 实际金额
+     * @param tradeStatus - 订单状态：1成功，2失败，3其它
+     * @param payAmount - 实际支付金额：用户实际支付的金额
+     * @param payActualMoney - 实际支付金额扣手续费后的金额
+     * @param moneyFitType - 订单金额是否与实际支付金额一致：1初始化，2少了，3多了，4一致
+     * @return DataCoreModel
+     * @author yoko
+     * @date 2020/3/25 14:08
+     */
+    public static DataCoreModel assembleDataCoreSz(RequestSz requestModel, ChannelDataModel channelDataModel, ChannelGewayModel channelGewayModel,
+                                                   String total_amount, String serviceCharge, String actualMoney, int tradeStatus, String payAmount,
+                                                   String payActualMoney, int moneyFitType, long channelGewayId, int profitType) throws Exception{
+        DataCoreModel resBean = new DataCoreModel();
+        resBean.setMyTradeNo(requestModel.order_id);
+        resBean.setTradeNo(requestModel.pay_no);
+        resBean.setOutTradeNo(channelDataModel.getOutTradeNo());
+        resBean.setTotalAmount(total_amount);
+        resBean.setServiceCharge(serviceCharge);
+        resBean.setActualMoney(actualMoney);
+        resBean.setPayAmount(payAmount);
+        resBean.setPayActualMoney(payActualMoney);
+        resBean.setTradeStatus(tradeStatus);
+        String priceInfo = "";// 订单金额是否与实际金额相等
+        if (tradeStatus == 2){
+            priceInfo = "订单金额是否与实际金额不匹配";
+        }
+        resBean.setExtraReturnParam(requestModel.amount + priceInfo);// 用户实际支付的金额
+        resBean.setTradeTime(DateUtil.getNowPlusTime());
+//        resBean.setSign(requestModel.sign);
+        resBean.setChannelId(channelDataModel.getChannelId());
+        resBean.setGewayId(channelDataModel.getGewayId());
+        resBean.setNotifyUrl(channelDataModel.getNotifyUrl());
+//        resBean.setNotifySuc();
+        if (!StringUtils.isBlank(channelDataModel.getExtraReturnParam())){
+            resBean.setXyExtraReturnParam(channelDataModel.getExtraReturnParam());
+        }
+        resBean.setDeductRatio(channelGewayModel.getDeductRatio());
+
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+
+        resBean.setMoneyFitType(moneyFitType);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
+
+
+    /**
+     * @Description: 组装上游同步的数据-木星支付-mx
+     * @param requestModel - 上游同步的基本数据
+     * @param channelDataModel - 渠道请求的基本数据
+     * @param channelGewayModel - 渠道与通道关联关系
+     * @param total_amount - 总金额
+     * @param serviceCharge - 手续费
+     * @param actualMoney - 实际金额
+     * @param tradeStatus - 订单状态：1成功，2失败，3其它
+     * @param payAmount - 实际支付金额：用户实际支付的金额
+     * @param payActualMoney - 实际支付金额扣手续费后的金额
+     * @param moneyFitType - 订单金额是否与实际支付金额一致：1初始化，2少了，3多了，4一致
+     * @return DataCoreModel
+     * @author yoko
+     * @date 2020/3/25 14:08
+     */
+    public static DataCoreModel assembleDataCoreMx(RequestMx requestModel, ChannelDataModel channelDataModel, ChannelGewayModel channelGewayModel,
+                                                   String total_amount, String serviceCharge, String actualMoney, int tradeStatus, String payAmount,
+                                                   String payActualMoney, int moneyFitType, long channelGewayId, int profitType) throws Exception{
+        DataCoreModel resBean = new DataCoreModel();
+        resBean.setMyTradeNo(requestModel.orderno);
+        resBean.setTradeNo(requestModel.systemorderid);
+        resBean.setOutTradeNo(channelDataModel.getOutTradeNo());
+        resBean.setTotalAmount(total_amount);
+        resBean.setServiceCharge(serviceCharge);
+        resBean.setActualMoney(actualMoney);
+        resBean.setPayAmount(payAmount);
+        resBean.setPayActualMoney(payActualMoney);
+        resBean.setTradeStatus(tradeStatus);
+        String priceInfo = "";// 订单金额是否与实际金额相等
+        if (tradeStatus == 2){
+            priceInfo = "订单金额是否与实际金额不匹配";
+        }
+        resBean.setExtraReturnParam(payAmount + priceInfo);// 用户实际支付的金额
+        resBean.setTradeTime(DateUtil.getNowPlusTime());
+//        resBean.setSign(requestModel.sign);
+        resBean.setChannelId(channelDataModel.getChannelId());
+        resBean.setGewayId(channelDataModel.getGewayId());
+        resBean.setNotifyUrl(channelDataModel.getNotifyUrl());
+//        resBean.setNotifySuc();
+        if (!StringUtils.isBlank(channelDataModel.getExtraReturnParam())){
+            resBean.setXyExtraReturnParam(channelDataModel.getExtraReturnParam());
+        }
+        resBean.setDeductRatio(channelGewayModel.getDeductRatio());
+
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+
+        resBean.setMoneyFitType(moneyFitType);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
 
 
     public static void main(String [] args){
