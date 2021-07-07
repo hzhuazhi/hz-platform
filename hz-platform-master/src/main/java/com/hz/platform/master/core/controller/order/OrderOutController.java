@@ -344,7 +344,8 @@ public class OrderOutController extends BaseController {
                                 0, null, null, 2);
                         // 组装渠道请求的代付订单信息
                         ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
-                                channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, updateBalance.getOrderMoney(), sendFlag);
+                                channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, updateBalance.getOrderMoney(),
+                                updateBalance.getServiceChargeMoney(), sendFlag);
                         try {
                             // 正式处理逻辑
                             flag = ComponentUtil.channelOutService.handleChannelOut(updateBalance, channelBalanceDeductModel, channelOutModel);
@@ -373,7 +374,7 @@ public class OrderOutController extends BaseController {
             }else {
                 // 请求蛋糕平台失败：纪录请求的纪录，并且请求状态是失败状态
                 ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
-                        channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, null, sendFlag);
+                        channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, null,null, sendFlag);
                 ComponentUtil.channelOutService.add(channelOutModel);
             }
 

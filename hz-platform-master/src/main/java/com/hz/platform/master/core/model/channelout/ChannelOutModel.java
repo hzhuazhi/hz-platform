@@ -63,6 +63,11 @@ public class ChannelOutModel extends BasePage implements Serializable {
     private String actualMoney;
 
     /**
+     * 手续费具体金额
+     */
+    private String serviceChargeMoney;
+
+    /**
      * 订单状态：1初始化，2超时，3质疑，4成功
      */
     private Integer orderStatus;
@@ -621,5 +626,13 @@ public class ChannelOutModel extends BasePage implements Serializable {
 
     public void setBankCity(String bankCity) {
         this.bankCity = bankCity;
+    }
+
+    public String getServiceChargeMoney() {
+        return serviceChargeMoney;
+    }
+
+    public void setServiceChargeMoney(String serviceChargeMoney) {
+        this.serviceChargeMoney = serviceChargeMoney;
     }
 }

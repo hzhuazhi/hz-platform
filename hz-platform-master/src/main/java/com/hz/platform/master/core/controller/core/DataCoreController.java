@@ -417,12 +417,18 @@ public class DataCoreController extends BaseController {
 
 
             log.info("---------------cakeOut:trade_no:" + requestModel.trade_no + "out_trade_no:" + requestModel.out_trade_no);
+
+            String total_amount = null;
+            String pay_amount = null;
             // 查询此数据属于哪个订单
             ChannelOutModel channelOutModel = new ChannelOutModel();
             channelOutModel.setMyTradeNo(requestModel.out_trade_no);
             channelOutModel = (ChannelOutModel) ComponentUtil.channelOutService.findByObject(channelOutModel);
             if (channelOutModel == null){
                 return "no";
+            }else{
+                total_amount = channelOutModel.getTotalAmount();
+                pay_amount = channelOutModel.getTotalAmount();
             }
 
             // 查询渠道信息
@@ -453,10 +459,35 @@ public class DataCoreController extends BaseController {
             channelGewayModel = (ChannelGewayModel) ComponentUtil.channelGewayService.findByObject(channelGewayModel);
 
 
+            String serviceCharge = "";
+            String pay_serviceCharge = "";
+            if (!StringUtils.isBlank(channelOutModel.getServiceCharge())){
+                serviceCharge = channelOutModel.getServiceCharge();
+            }else {
+                serviceCharge = channelGewayModel.getServiceCharge();
+            }
+            pay_serviceCharge = serviceCharge;
+
+
+            serviceCharge = StringUtil.getMultiply(total_amount, serviceCharge);
+            if (channelGewayModel.getServiceChargeType() == 2){
+                serviceCharge = StringUtil.getBigDecimalAdd(serviceCharge, channelGewayModel.getExtraServiceCharge());
+            }
+            String actualMoney = StringUtil.getBigDecimalAdd(total_amount, serviceCharge);
+
+
+            pay_serviceCharge = StringUtil.getMultiply(pay_amount, pay_serviceCharge);
+            if (channelGewayModel.getServiceChargeType() == 2){
+                pay_serviceCharge = StringUtil.getBigDecimalAdd(pay_serviceCharge, channelGewayModel.getExtraServiceCharge());
+            }
+            String payActualMoney = StringUtil.getBigDecimalAdd(pay_amount, pay_serviceCharge);
+
+
 
             //组装上游数据
             DataCoreOutModel dataCoreOutModel = HodgepodgeMethod.assembleDataCoreOutByCake(requestModel, channelOutModel, channelGewayModel, requestModel.trade_status,
-                    channelOutModel.getChannelGewayId(), channelOutModel.getProfitType());
+                    channelOutModel.getChannelGewayId(), channelOutModel.getProfitType(), total_amount, serviceCharge, actualMoney,
+                    pay_amount, payActualMoney);
             int num = ComponentUtil.dataCoreOutService.add(dataCoreOutModel);
             if (num > 0){
                 return "ok";

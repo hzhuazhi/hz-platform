@@ -1065,6 +1065,13 @@ public class HodgepodgeMethod {
         }
         resBean.setSubtractBalance("1");
         resBean.setOrderMoney(money);
+
+        String serviceChargeMoney = "";
+        serviceChargeMoney = StringUtil.getMultiply(orderMoney, serviceCharge);
+        if (!StringUtils.isBlank(extraServiceCharge)){
+            serviceChargeMoney = StringUtil.getBigDecimalAdd(serviceChargeMoney, extraServiceCharge);
+        }
+        resBean.setServiceChargeMoney(serviceChargeMoney);
         return resBean;
     }
 
@@ -1135,13 +1142,15 @@ public class HodgepodgeMethod {
      * @param profitType - 收益类型：1普通收益类型，2多人分配收益类型
      * @param nowTime - 现在时间
      * @param serviceCharge - 手续费
+     * @param serviceChargeMoney - 手续费具体金额
      * @param sendFlag - false表示请求失败，true表示请求成功
      * @return ChannelDataModel
      * @author yoko
      * @date 2020/3/24 21:41
      */
     public static ChannelOutModel assembleChannelOutData(RequestPayOut requestData, String myTradeNo, long channelId, long gewayId,
-                                                         long channelGewayId, int profitType, String nowTime, String my_notify_url, String serviceCharge, String actualMoney, boolean sendFlag){
+                                                         long channelGewayId, int profitType, String nowTime, String my_notify_url, String serviceCharge, String actualMoney,
+                                                         String serviceChargeMoney, boolean sendFlag){
         ChannelOutModel resBean = new ChannelOutModel();
         resBean.setMyTradeNo(myTradeNo);
         resBean.setChannelId(channelId);
@@ -1155,6 +1164,7 @@ public class HodgepodgeMethod {
         if (!StringUtils.isBlank(actualMoney)){
             resBean.setActualMoney(actualMoney);
         }
+        resBean.setServiceChargeMoney(serviceChargeMoney);
         resBean.setOutTradeNo(requestData.out_trade_no);
         resBean.setBankName(requestData.bank_name);
         resBean.setBankCard(requestData.bank_card);
@@ -1216,11 +1226,20 @@ public class HodgepodgeMethod {
      * @date 2020/3/25 14:08
      */
     public static DataCoreOutModel assembleDataCoreOutByCake(RequestCakeOut requestModel, ChannelOutModel channelOutModel, ChannelGewayModel channelGewayModel,
-                                                             int tradeStatus, long channelGewayId, int profitType) throws Exception{
+                                                             int tradeStatus, long channelGewayId, int profitType,
+                                                             String total_amount, String serviceCharge, String actualMoney,
+                                                             String payAmount, String payActualMoney) throws Exception{
         DataCoreOutModel resBean = new DataCoreOutModel();
         resBean.setMyTradeNo(requestModel.out_trade_no);
         resBean.setTradeNo(requestModel.trade_no);
         resBean.setOutTradeNo(channelOutModel.getOutTradeNo());
+
+        resBean.setTotalAmount(total_amount);
+        resBean.setServiceCharge(serviceCharge);
+        resBean.setActualMoney(actualMoney);
+        resBean.setPayAmount(payAmount);
+        resBean.setPayActualMoney(payActualMoney);
+
 
         resBean.setTradeStatus(tradeStatus);
         if (!StringUtils.isBlank(requestModel.picture_ads)){

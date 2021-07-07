@@ -144,6 +144,12 @@ public class ChannelModel extends BasePage implements Serializable {
     private String orderMoney;
 
 
+    /**
+     * 手续费具体金额
+     */
+    private String serviceChargeMoney;
+
+
     public Long getId() {
         return id;
     }
@@ -350,5 +356,13 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setIsEnable(Integer isEnable) {
         this.isEnable = isEnable;
+    }
+
+    public String getServiceChargeMoney() {
+        return serviceChargeMoney;
+    }
+
+    public void setServiceChargeMoney(String serviceChargeMoney) {
+        this.serviceChargeMoney = serviceChargeMoney;
     }
 }

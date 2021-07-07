@@ -99,12 +99,16 @@ public class TaskDataCoreOut {
                     // 判断是否是多人分配利益
                     List<AgentProfitModel> agentProfitList = null;
                     if (data.getProfitType() == 2){
-                        AgentChannelGewayModel agentChannelGewayModel = new AgentChannelGewayModel();
-                        agentChannelGewayModel.setChannelGewayId(data.getChannelGewayId());
-                        List<AgentChannelGewayModel> agentChannelGewayList = ComponentUtil.agentChannelGewayService.findByCondition(agentChannelGewayModel);
-                        if (agentChannelGewayList != null && agentChannelGewayList.size() > 0){
-                            agentProfitList = HodgepodgeMethod.assembleAgentProfitByOrderOutList(agentChannelGewayList, data);
+                        if (orderStatus == 4){
+                            // 只有成功订单才有利益分配
+                            AgentChannelGewayModel agentChannelGewayModel = new AgentChannelGewayModel();
+                            agentChannelGewayModel.setChannelGewayId(data.getChannelGewayId());
+                            List<AgentChannelGewayModel> agentChannelGewayList = ComponentUtil.agentChannelGewayService.findByCondition(agentChannelGewayModel);
+                            if (agentChannelGewayList != null && agentChannelGewayList.size() > 0){
+                                agentProfitList = HodgepodgeMethod.assembleAgentProfitByOrderOutList(agentChannelGewayList, data);
+                            }
                         }
+
                     }
 
                     boolean flag  = ComponentUtil.taskDataCoreOutService.handleDataCoreOut(updateChannelBalanceDeduct, updateChannelOut, gewayProfitModel, agentProfitList);

@@ -7,7 +7,7 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.my_trade_no,a.channel_id,a.geway_id,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.order_status,a.out_trade_no,
+        a.id,a.my_trade_no,a.channel_id,a.geway_id,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.service_charge_money,a.order_status,a.out_trade_no,
         a.bank_name,a.bank_card,a.account_name,a.bank_subbranch,a.bank_province,a.bank_city,a.picture_ads,a.fail_info,a.notify_url,a.my_notify_url,
         a.interface_ver,a.return_url,a.extra_return_param,a.client_ip,a.`sign`,a.`sub_time`,a.product_name,a.product_code,a.channel_geway_id,a.profit_type,
         a.send_ok,a.check_status,a.check_info,
@@ -160,6 +160,9 @@
             <if test="actualMoney != null and actualMoney != '' " >
                 actual_money,
             </if>
+            <if test="serviceChargeMoney != null and serviceChargeMoney != '' " >
+                service_charge_money,
+            </if>
             <if test="orderStatus != null and orderStatus != '' " >
                 order_status,
             </if>
@@ -283,6 +286,9 @@
             </if>
             <if test="actualMoney != null and actualMoney != '' " >
                 <![CDATA[  #{actualMoney}, ]]>
+            </if>
+            <if test="serviceChargeMoney != null and serviceChargeMoney != '' " >
+                <![CDATA[  #{serviceChargeMoney}, ]]>
             </if>
             <if test="orderStatus != null and orderStatus != '' " >
                 <![CDATA[  #{orderStatus}, ]]>
