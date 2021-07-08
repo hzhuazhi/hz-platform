@@ -49,39 +49,67 @@ public class Test {
 //        String resData = HttpSendUtils.sendPostAppJson("http://ff3.nanjintm.com/pay/unifiedorder", parameter);
 //        System.out.println(resData);
 
+//        // 木星支付
+//        Map<String ,Object> sendDataMap = new HashMap<>();
+//        sendDataMap.put("pay_memberid", "10095");
+//        sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
+//        sendDataMap.put("pay_amount", "66700");
+//        sendDataMap.put("pay_callbackurl", "http://www.qidian.com");
+//        sendDataMap.put("pay_turnyurl", "http://www.baidu.com");
+//        sendDataMap.put("pay_productname", "zs");
+//        sendDataMap.put("pay_tradetype", "9001");
+//
+//
+//
+//        String mySign = ASCIISort.getKeySign(sendDataMap, "c3e8fd2d5d3388f5bc0de50735a1bc89", 2);
+//        log.info("--------buf--------mySign:" + mySign);
+//        sendDataMap.put("signature", mySign);
+//        String parameter = JSON.toJSONString(sendDataMap);
+//
+//        String resData = HttpSendUtils.doPostForm("http://kang.uhgincherkgjinga3.top/pay_index.html", sendDataMap);
+//        log.info("--------resData:" + resData);
+//
+//        Map<String, Object> resMap = new HashMap<>();
+//        if (!StringUtils.isBlank(resData)) {
+//            resMap = JSON.parseObject(resData, Map.class);
+//            if (Integer.parseInt(resMap.get("code").toString()) == 11) {
+//                String qrCodeUrl = (String) resMap.get("codeUrl");
+//                log.info("qrCodeUrl:" + qrCodeUrl);
+//            }
+//        }
 
+
+        // 木星支付
         Map<String ,Object> sendDataMap = new HashMap<>();
-        sendDataMap.put("pay_memberid", "10095");
+        sendDataMap.put("pay_memberid", "210736387");
         sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
-        sendDataMap.put("pay_amount", "66700");
+        sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime());
+        sendDataMap.put("pay_bankcode", "932");
+        sendDataMap.put("pay_notifyurl", "http://www.baidu.com");
         sendDataMap.put("pay_callbackurl", "http://www.qidian.com");
-        sendDataMap.put("pay_turnyurl", "http://www.baidu.com");
-        sendDataMap.put("pay_productname", "zs");
-        sendDataMap.put("pay_tradetype", "9001");
+        sendDataMap.put("pay_amount", "100.00");
 
 
 
-        String mySign = ASCIISort.getKeySign(sendDataMap, "c3e8fd2d5d3388f5bc0de50735a1bc89", 2);
+        String mySign = ASCIISort.getKeySign(sendDataMap, "i43mmr6r68eabgh1wbtnpwxh6map8tsk", 2);
         log.info("--------buf--------mySign:" + mySign);
-        sendDataMap.put("signature", mySign);
+        sendDataMap.put("pay_type", "json");
+        sendDataMap.put("pay_md5sign", mySign);
         String parameter = JSON.toJSONString(sendDataMap);
 
-        String resData = HttpSendUtils.doPostForm("http://kang.uhgincherkgjinga3.top/pay_index.html", sendDataMap);
+        String resData = HttpSendUtils.doPostForm("https://www.dxyu.cn/Pay_Index.html", sendDataMap);
         log.info("--------resData:" + resData);
-
         Map<String, Object> resMap = new HashMap<>();
         if (!StringUtils.isBlank(resData)) {
             resMap = JSON.parseObject(resData, Map.class);
-            if (Integer.parseInt(resMap.get("code").toString()) == 11) {
-                String qrCodeUrl = (String) resMap.get("codeUrl");
-                log.info("qrCodeUrl:" + qrCodeUrl);
+            if (resMap.get("data") != null) {
+                if (!StringUtils.isBlank(resMap.get("data").toString())){
+                    String qrCodeUrl = (String) resMap.get("data");
+                    resData = "ok";
+                }
+
             }
         }
-
-        String pay_amount = "100.10";
-        String [] pay_amountArr = pay_amount.split("\\.");
-        log.info("pay_amount:" + pay_amountArr[0]);
-//        String str = "http:\/\/ya.yysgkl.cn\/go\/pay.php?t=cGF5X29yZGVyaWQ9MjAyMTA3MDYxMjAwMjQyMjM3MjgmcGF5X3NpZ249NmQ0NWM3MTliMTYxYjk1YzUyYTlhNzA1MTBmM2E4M2Y=";
 
 
     }

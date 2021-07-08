@@ -7,7 +7,7 @@
 
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
-        a.id,a.my_trade_no,a.channel_id,a.geway_id,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.out_trade_no,a.notify_url,a.my_notify_url,
+        a.id,a.my_trade_no,a.channel_id,a.geway_id,a.geway_name,a.channel,a.trade_type,a.total_amount,a.service_charge,a.actual_money,a.out_trade_no,a.notify_url,a.my_notify_url,
         a.interface_ver,a.return_url,a.extra_return_param,a.client_ip,a.`sign`,a.`sub_time`,a.product_name,a.product_code,a.channel_geway_id,a.profit_type,a.send_ok,
         a.curday,a.curhour,a.curminute,a.run_num,a.run_status,
         a.create_time,a.update_time,a.yn
@@ -137,6 +137,9 @@
             <if test="gewayId != null and gewayId != '' " >
                 geway_id,
             </if>
+            <if test="gewayName != null and gewayName != '' " >
+                geway_name,
+            </if>
             <if test="channel != null and channel != '' " >
                 channel,
             </if>
@@ -221,6 +224,9 @@
             </if>
             <if test="gewayId != null and gewayId != '' " >
                 <![CDATA[  #{gewayId}, ]]>
+            </if>
+            <if test="gewayName != null and gewayName != '' " >
+                <![CDATA[  #{gewayName}, ]]>
             </if>
             <if test="channel != null and channel != '' " >
                 <![CDATA[  #{channel}, ]]>

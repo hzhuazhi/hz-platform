@@ -367,6 +367,43 @@ public class PayGetController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("DXY")){
+                // 大信誉支付
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+
+                sendDataMap.put("pay_memberid", gewayModel.getPayId());
+                sendDataMap.put("pay_orderid", sgid);
+                sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime());
+                sendDataMap.put("pay_bankcode", payCode);
+                sendDataMap.put("pay_notifyurl", gewayModel.getNotifyUrl());
+                sendDataMap.put("pay_callbackurl", requestData.return_url);
+                sendDataMap.put("pay_amount", total_amount);
+
+
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------dxy--------mySign:" + mySign);
+                sendDataMap.put("pay_type", "json");
+                sendDataMap.put("pay_md5sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String szData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("------dxy---------szData:" + szData);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(resData)) {
+                    resMap = JSON.parseObject(resData, Map.class);
+                    if (resMap.get("data") != null) {
+                        if (!StringUtils.isBlank(resMap.get("data").toString())){
+                            qrCodeUrl = (String) resMap.get("data");
+                            resData = "ok";
+                        }
+
+                    }
+                }
+                log.info("--------------resData:" + resData);
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
@@ -377,7 +414,7 @@ public class PayGetController extends BaseController {
                     sendFlag = true;
                 }
             }
-            ChannelDataModel channelDataModel = HodgepodgeMethod.assembleChannelData(requestData, sgid, channelModel.getId(), gewayModel.getId(), channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, sendFlag);
+            ChannelDataModel channelDataModel = HodgepodgeMethod.assembleChannelData(requestData, sgid, channelModel.getId(), gewayModel.getId(), gewayModel.getGewayName(),channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, sendFlag);
             ComponentUtil.channelDataService.add(channelDataModel);
             if (!StringUtils.isBlank(qrCodeUrl)){
 //                qrCodeUrl = "http://www.baidu.com";

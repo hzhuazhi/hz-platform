@@ -38,6 +38,11 @@ public class ChannelDataModel extends BasePage implements Serializable {
     private Long gewayId;
 
     /**
+     * 通道名称
+     */
+    private String gewayName;
+
+    /**
      * 渠道号/商铺号
      */
     private String channel;
@@ -452,5 +457,13 @@ public class ChannelDataModel extends BasePage implements Serializable {
 
     public void setProfitType(Integer profitType) {
         this.profitType = profitType;
+    }
+
+    public String getGewayName() {
+        return gewayName;
+    }
+
+    public void setGewayName(String gewayName) {
+        this.gewayName = gewayName;
     }
 }
