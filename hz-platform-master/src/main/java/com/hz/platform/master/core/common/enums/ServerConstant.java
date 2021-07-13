@@ -45,4 +45,9 @@ public enum ServerConstant {
     public void setResult(String result) {
         this.result = result;
     }
+
+
+
+
+
 }

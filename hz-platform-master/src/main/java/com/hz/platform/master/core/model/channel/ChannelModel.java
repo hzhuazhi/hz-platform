@@ -94,6 +94,11 @@ public class ChannelModel extends BasePage implements Serializable {
     private String lowerSuc;
 
     /**
+     * 白名单IP：多个以英文逗号分割
+     */
+    private String whiteListIp;
+
+    /**
      * 是否需要数据同步:1需要同步，2不需要同步
      */
     private Integer isSynchro;
@@ -364,5 +369,13 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setServiceChargeMoney(String serviceChargeMoney) {
         this.serviceChargeMoney = serviceChargeMoney;
+    }
+
+    public String getWhiteListIp() {
+        return whiteListIp;
+    }
+
+    public void setWhiteListIp(String whiteListIp) {
+        this.whiteListIp = whiteListIp;
     }
 }

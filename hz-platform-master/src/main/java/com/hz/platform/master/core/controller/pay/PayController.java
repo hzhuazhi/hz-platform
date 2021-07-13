@@ -22,6 +22,7 @@ import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
+import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
@@ -137,6 +138,17 @@ public class PayController extends BaseController {
                     throw new ServiceException("0009", "请填写签名!");
                 }
             }
+            log.info("---------all-data-json:" + JSON.toJSONString(requestData));
+
+
+            // 策略数据：出码开关
+            StrategyModel strategyQrCodeSwitchQuery = HodgepodgeMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.QR_CODE_SWITCH.getStgType());
+            StrategyModel strategyQrCodeSwitchModel = ComponentUtil.strategyService.getStrategyModel(strategyQrCodeSwitchQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            HodgepodgeMethod.checkStrategyByQrCodeSwitch(strategyQrCodeSwitchModel);
+
+
+
+
             String trade_type = "";
             if (!StringUtils.isBlank(requestData.trade_type)){
                 trade_type = requestData.trade_type;
@@ -217,6 +229,9 @@ public class PayController extends BaseController {
                     throw new ServiceException("0015", "请您稍后再试,谢谢!");
                 }
             }
+
+            // check校验请求的订单金额是否属于通道金额范围内
+            HodgepodgeMethod.checkGewayMoneyRange(gewayModel.getMoneyType(), gewayModel.getMoneyRange(), requestData.total_amount);
 
 
 

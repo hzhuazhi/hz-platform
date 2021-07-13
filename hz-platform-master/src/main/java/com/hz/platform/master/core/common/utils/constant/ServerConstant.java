@@ -192,31 +192,25 @@ public class ServerConstant {
 
     /**
      * 策略的枚举
-     * 策略类型：1浏览广告次数，2每次浏览广告的收益,3专属客服,4推广分享默认地址，5支付宝提现开关，6充值会员的价格，7购买广告的价格每次，8购买广告的最大次数，9提现的金额列表，10好友提成百分比，11购买广告次数开关
-     * 策略整形值：当stg_type=5时如果值为1则表示开2则表示关，等于11时如果值位1则表示开2则表示关
-     * 策略值：策略值：当stg_type=1时具体写次数，2时则写范围0.4-0.5,3时写QQ或者微信，4时则是推广分享的地址，6时表示会员价格，7购买广告的价格每次，8购买广告的最大次数，9时提现的金额列表，10时好友提成的百分比
+     * 策略类型：1充值金额列表
      */
     public enum StrategyEnum{
-        STG_ADVERT_NUM(1, 0, ""),
-        STG_ADVERT_PROFIT(2, 0, ""),
-        STG_CUSTOMER_SERVICE(3, 0, ""),
-        STG_SPREAD_ADS(4, 0, ""),
-        STG_ALI_SWITCH(5, 0, ""),
-        STG_VIP_PRICE(6, 0, ""),
-        STG_ADVERT_PRICE(7, 0, ""),
-        STG_ADVERT_BUY_NUM(8, 0, ""),
-        STG_WITHDRAW_PRICE_NUM(9, 0, ""),
-        STG_FRIEND_ROYALTY_NUM(10, 0, ""),
-        STG_BUY_ADVERT_SWITCH(11, 0, ""),
+        QR_CODE_SWITCH(1,""),
+        OUT_QR_CODE_SWITCH(2,""),
+
+
+
+
+
+
+
         ;
         private int stgType;
-        private int stgNumValue;
-        private String stgValue;
+        private String stgKey;
 
-        private StrategyEnum(int stgType, int stgNumValue, String stgValue) {
+        private StrategyEnum(int stgType, String stgKey) {
             this.stgType = stgType;
-            this.stgNumValue = stgNumValue;
-            this.stgValue = stgValue;
+            this.stgKey = stgKey;
         }
 
         public int getStgType() {
@@ -227,20 +221,12 @@ public class ServerConstant {
             this.stgType = stgType;
         }
 
-        public int getStgNumValue() {
-            return stgNumValue;
+        public String getStgKey() {
+            return stgKey;
         }
 
-        public void setStgNumValue(int stgNumValue) {
-            this.stgNumValue = stgNumValue;
-        }
-
-        public String getStgValue() {
-            return stgValue;
-        }
-
-        public void setStgValue(String stgValue) {
-            this.stgValue = stgValue;
+        public void setStgKey(String stgKey) {
+            this.stgKey = stgKey;
         }
     }
 

@@ -28,6 +28,7 @@ import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.region.RegionModel;
+import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.task.TaskAlipayNotifyModel;
 import com.hz.platform.master.core.model.withdraw.WithdrawModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
@@ -2002,7 +2003,103 @@ public class HodgepodgeMethod {
 
 
 
-    public static void main(String [] args){
+    /**
+     * @Description: 校验请求拉单是否是在白名单内的IP进行拉单的
+     * @param whiteListIp - 白名单IP：多个以英文逗号分割
+     * @param ip - 访问的IP
+     * @return void
+     * @author yoko
+     * @date 2020/10/31 19:29
+     */
+    public static void checkWhiteListIp(String whiteListIp, String ip) throws Exception{
+        if (!StringUtils.isBlank(whiteListIp)){
+            if (whiteListIp.indexOf(ip) <= -1){
+                throw new ServiceException("1008", ip + "不是白名单IP拉单!");
+            }
+
+        }
+
+    }
+
+
+    /**
+     * @Description: 组装查询策略数据条件的方法
+     * @return com.pf.play.rule.core.model.strategy.StrategyModel
+     * @author yoko
+     * @date 2020/5/19 17:12
+     */
+    public static StrategyModel assembleStrategyQuery(int stgType){
+        StrategyModel resBean = new StrategyModel();
+        resBean.setStgType(stgType);
+        return resBean;
+    }
+
+
+
+    /**
+     * @Description: 校验策略类型数据:出码开关-判断此时是否属于正常出码
+     * @return void
+     * @author yoko
+     * @date 2019/12/2 14:35
+     */
+    public static void checkStrategyByQrCodeSwitch(StrategyModel strategyModel) throws Exception{
+        if (strategyModel == null){
+            throw new ServiceException("S00001", "错误,请重试!");
+        }
+        if (strategyModel.getStgNumValue() == 1){
+            throw new ServiceException("S00002", "目前出码处于关闭状态!");
+        }
+        if (strategyModel.getStgNumValue() == 2){
+            if (StringUtils.isBlank(strategyModel.getStgValue())){
+                throw new ServiceException("S00003", "错误,请重试!");
+            }else{
+                String[] str = strategyModel.getStgValue().split("-");
+                boolean flag = DateUtil.isBelong(str[0], str[1]);
+                if (!flag){
+                    throw new ServiceException("S00004", "目前不在出码时间范围内!");
+                }
+            }
+        }
+    }
+
+
+    /**
+     * @Description: check校验请求的订单金额是否属于通道金额范围内
+     * @param moneyType - 支持金额类型：1固定的，2单一范围，3多个范围
+     * @param moneyRange - 支持金额:money_type=1则50多个则以英文逗号风格，money_type=2则100-1000；money_type=3则100-1000,200-2000多个以英文逗号分割
+     * @return void
+     * @Author: yoko
+     * @Date 2021/7/13 10:11
+     */
+    public static void checkGewayMoneyRange(int moneyType, String moneyRange, String total_amount) throws Exception{
+        if (!StringUtils.isBlank(moneyRange)){
+            if (moneyType == 1){
+                String [] strArr = moneyRange.split(",");
+                for (String str : strArr){
+                    String resStr = StringUtil.getBigDecimalSubtractStr(total_amount, str);
+                    if (resStr.equals("0")){
+                        return;
+                    }
+                }
+            }else if (moneyType >= 2){
+                String [] strArr = moneyRange.split(",");
+                for (String str : strArr){
+                    String [] rule = str.split("-");
+                    double start = Double.parseDouble(rule[0]);
+                    double end = Double.parseDouble(rule[1]);
+                    double money = Double.parseDouble(total_amount);
+                    if (money >= start && money <= end){
+                        return;
+                    }
+                }
+            }
+            throw new ServiceException("M00001", "请按照规定输入金额!");
+        }
+    }
+
+
+
+    public static void main(String [] args) throws Exception{
         String str = "<h1 style=\"margin: 20px 0px;\">请手动输入 ￥<span id=\"copy_price\">0.01</span></h1>";
         int start = 0;
         int end = 0;
@@ -2020,6 +2117,13 @@ public class HodgepodgeMethod {
         System.out.println(start);
         System.out.println(end);
         System.out.println(str1);
+
+        int moneyType = 3;
+//        String moneyRange = "50,100,200";
+//        String moneyRange = "100-1000";
+        String moneyRange = "100-1000,2000-3000,5000-6000";
+        String total_amount = "6000.01";
+        checkGewayMoneyRange(moneyType, moneyRange, total_amount);
     }
 
 

@@ -1,10 +1,7 @@
 package com.hz.platform.master.util;
 
 import com.alibaba.fastjson.JSON;
-import com.hz.platform.master.core.common.utils.ASCIISort;
-import com.hz.platform.master.core.common.utils.DateUtil;
-import com.hz.platform.master.core.common.utils.HttpSendUtils;
-import com.hz.platform.master.core.common.utils.MD5Util;
+import com.hz.platform.master.core.common.utils.*;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -79,38 +76,40 @@ public class Test {
 //        }
 
 
-        // 木星支付
-        Map<String ,Object> sendDataMap = new HashMap<>();
-        sendDataMap.put("pay_memberid", "210736387");
-        sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
-        sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime());
-        sendDataMap.put("pay_bankcode", "932");
-        sendDataMap.put("pay_notifyurl", "http://www.baidu.com");
-        sendDataMap.put("pay_callbackurl", "http://www.qidian.com");
-        sendDataMap.put("pay_amount", "100.00");
+//        // 木星支付
+//        Map<String ,Object> sendDataMap = new HashMap<>();
+//        sendDataMap.put("pay_memberid", "210736387");
+//        sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
+//        sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime());
+//        sendDataMap.put("pay_bankcode", "938");
+//        sendDataMap.put("pay_notifyurl", "http://www.baidu.com");
+//        sendDataMap.put("pay_callbackurl", "http://www.qidian.com");
+//        sendDataMap.put("pay_amount", "200.00");
+//
+//
+//
+//        String mySign = ASCIISort.getKeySign(sendDataMap, "i43mmr6r68eabgh1wbtnpwxh6map8tsk", 2);
+//        log.info("--------buf--------mySign:" + mySign);
+//        sendDataMap.put("pay_type", "json");
+//        sendDataMap.put("pay_md5sign", mySign);
+//        String parameter = JSON.toJSONString(sendDataMap);
+//
+//        String resData = HttpSendUtils.doPostForm("https://www.dxyu.cn/Pay_Index.html", sendDataMap);
+//        log.info("--------resData:" + resData);
+//        Map<String, Object> resMap = new HashMap<>();
+//        if (!StringUtils.isBlank(resData)) {
+//            resMap = JSON.parseObject(resData, Map.class);
+//            if (resMap.get("data") != null) {
+//                if (!StringUtils.isBlank(resMap.get("data").toString())){
+//                    String qrCodeUrl = (String) resMap.get("data");
+//                    resData = "ok";
+//                }
+//
+//            }
+//        }
 
 
-
-        String mySign = ASCIISort.getKeySign(sendDataMap, "i43mmr6r68eabgh1wbtnpwxh6map8tsk", 2);
-        log.info("--------buf--------mySign:" + mySign);
-        sendDataMap.put("pay_type", "json");
-        sendDataMap.put("pay_md5sign", mySign);
-        String parameter = JSON.toJSONString(sendDataMap);
-
-        String resData = HttpSendUtils.doPostForm("https://www.dxyu.cn/Pay_Index.html", sendDataMap);
-        log.info("--------resData:" + resData);
-        Map<String, Object> resMap = new HashMap<>();
-        if (!StringUtils.isBlank(resData)) {
-            resMap = JSON.parseObject(resData, Map.class);
-            if (resMap.get("data") != null) {
-                if (!StringUtils.isBlank(resMap.get("data").toString())){
-                    String qrCodeUrl = (String) resMap.get("data");
-                    resData = "ok";
-                }
-
-            }
-        }
-
-
+        String str = StringUtil.getBigDecimalSubtractStr("100.00", "100");
+        log.info("flag:" + str);
     }
 }

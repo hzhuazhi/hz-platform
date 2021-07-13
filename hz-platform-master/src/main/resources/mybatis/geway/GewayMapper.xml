@@ -8,7 +8,8 @@
     <!-- 定义数据库基本列,只适用代替单表的*-->
     <sql id="Base_Column_List">
         a.id,a.account_num,a.pass_wd,a.geway_name,a.interface_ads,a.company_name,a.contacts,a.phone_num,a.pay_type,a.pay_id,
-        a.total_money,a.least_money,a.balance,a.secret_key,a.identify,a.notify_url,a.geway_type,a.role_id,a.is_enable,
+        a.total_money,a.least_money,a.balance,a.secret_key,a.identify,a.notify_url,a.geway_type,a.money_type,a.money_range,
+        a.role_id,a.is_enable,
         a.create_time,a.update_time,a.yn
     </sql>
 

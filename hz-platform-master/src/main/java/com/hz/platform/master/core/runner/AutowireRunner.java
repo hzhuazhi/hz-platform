@@ -140,6 +140,9 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskChannelProfitService taskChannelProfitService;
 
+    @Autowired
+    private StrategyService strategyService;
+
 
 
 
@@ -185,6 +188,7 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.channelProfitService = channelProfitService;
         ComponentUtil.taskGewayProfitService = taskGewayProfitService;
         ComponentUtil.taskChannelProfitService = taskChannelProfitService;
+        ComponentUtil.strategyService = strategyService;
 
         runThread = new RunThread();
         runThread.start();

@@ -216,6 +216,11 @@ public class PayGetController extends BaseController {
             }
 
 
+            // check校验请求的订单金额是否属于通道金额范围内
+            HodgepodgeMethod.checkGewayMoneyRange(gewayModel.getMoneyType(), gewayModel.getMoneyRange(), requestData.total_amount);
+
+
+
             // 校验sign签名
             String checkSign = "";
             if (!StringUtils.isBlank(requestData.trade_type)){

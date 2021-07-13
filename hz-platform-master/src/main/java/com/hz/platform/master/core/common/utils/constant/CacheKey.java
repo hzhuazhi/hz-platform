@@ -119,5 +119,9 @@ public interface CacheKey {
      */
     String LOCK_CHANNEL_PROFIT = "-17";
 
+    /**
+     * 策略数据
+     */
+    String STRATEGY = "-18";
 
 }

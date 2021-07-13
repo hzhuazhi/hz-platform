@@ -22,6 +22,7 @@ import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
+import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
@@ -149,6 +150,12 @@ public class OrderOutController extends BaseController {
                 }
             }
 
+
+            // 策略数据：出码开关
+            StrategyModel strategyQrCodeSwitchQuery = HodgepodgeMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.OUT_QR_CODE_SWITCH.getStgType());
+            StrategyModel strategyQrCodeSwitchModel = ComponentUtil.strategyService.getStrategyModel(strategyQrCodeSwitchQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+            HodgepodgeMethod.checkStrategyByQrCodeSwitch(strategyQrCodeSwitchModel);
+
             String trade_type = "";
             if (!StringUtils.isBlank(requestData.trade_type)){
                 trade_type = requestData.trade_type;
@@ -160,6 +167,11 @@ public class OrderOutController extends BaseController {
             channelModel = (ChannelModel) ComponentUtil.channelService.findByObject(channelModel);
             if (channelModel == null || channelModel.getId() <= 0){
                 throw new ServiceException("0012", "请填写正确的商家号!");
+            }
+
+            // 校验是否是白名单IP
+            if (!StringUtils.isBlank(channelModel.getWhiteListIp())){
+                HodgepodgeMethod.checkWhiteListIp(channelModel.getWhiteListIp(), ip);
             }
 
             // 判断余额是否大于订单金额
@@ -224,6 +236,9 @@ public class OrderOutController extends BaseController {
                 }
             }
 
+            // check校验请求的订单金额是否属于通道金额范围内
+            HodgepodgeMethod.checkGewayMoneyRange(gewayModel.getMoneyType(), gewayModel.getMoneyRange(), requestData.total_amount);
+
             // 校验sign签名
             String checkSign = "";
             if (!StringUtils.isBlank(requestData.trade_type)){
@@ -266,6 +281,21 @@ public class OrderOutController extends BaseController {
                 if (!StringUtils.isBlank(gewaytradetypeModel.getServiceCharge())){
                     serviceCharge = gewaytradetypeModel.getServiceCharge();
                 }
+            }
+
+
+            // check 订单+手续费是否小于余额
+            String totalMoney = "";
+            String resMoney = StringUtil.getMultiply(requestData.total_amount, serviceCharge);
+            String money = StringUtil.getBigDecimalAdd(resMoney, requestData.total_amount);
+            if (!StringUtils.isBlank(extraServiceCharge)){
+                totalMoney = StringUtil.getBigDecimalAdd(money, extraServiceCharge);
+            }
+
+            double d_balance = Double.parseDouble(channelModel.getBalance());
+            double d_orderMoney = Double.parseDouble(totalMoney);
+            if (d_balance < d_orderMoney){
+                throw new ServiceException("00188", "您的余额不足小于订单金额!" + "余额：" + d_balance + " 订单加手续费需要：" + totalMoney);
             }
 
 
@@ -339,6 +369,7 @@ public class OrderOutController extends BaseController {
                     if (flagLock){
                         // 组装扣减渠道余额
                         ChannelModel updateBalance = HodgepodgeMethod.assembleChannelBalance(channelModel.getId(), requestData.total_amount, serviceCharge, extraServiceCharge);
+
                         // 组装添加渠道扣减余额的流水
                         ChannelBalanceDeductModel channelBalanceDeductModel = HodgepodgeMethod.assembleChannelBalanceDeduct(0, channelModel.getId(), sgid, 2, updateBalance.getOrderMoney(),
                                 0, null, null, 2);
