@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -757,6 +758,34 @@ public class PayController extends BaseController {
 
                         }
                     }
+                }
+                log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("GF")){
+                // 高防支付
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("channel", gewayModel.getPayId());
+                sendDataMap.put("trade_type", payCode);
+                sendDataMap.put("total_amount", requestData.total_amount);
+                sendDataMap.put("out_trade_no", sgid);
+                sendDataMap.put("notify_url", gewayModel.getNotifyUrl());
+                sendDataMap.put("interface_ver", "4.0");
+                sendDataMap.put("return_url", requestData.return_url);
+                sendDataMap.put("noredirect", "1");
+
+                String mySign = "channel=" + sendDataMap.get("channel") + "&" + "trade_type=" + sendDataMap.get("trade_type") + "&" + "total_amount=" + sendDataMap.get("total_amount")
+                        + "&" + "out_trade_no=" + sendDataMap.get("out_trade_no") + "&" + "notify_url=" + sendDataMap.get("notify_url") + "&" + "key=" + gewayModel.getSecretKey();
+                mySign = MD5Util.encryption(mySign);
+
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resGfData = HttpUtil.doPostJson(gewayModel.getInterfaceAds(), parameter);
+                log.info("--------resGfData:" + resGfData);
+                if (!StringUtils.isBlank(resGfData) && resGfData.indexOf("code") <= -1) {
+                    byte[] decoded = Base64.getDecoder().decode(resGfData);
+                    String decodeStr = new String(decoded);
+                    qrCodeUrl = decodeStr;
+                    resData = "ok";
                 }
                 log.info("--------------resData:" + resData);
             }
