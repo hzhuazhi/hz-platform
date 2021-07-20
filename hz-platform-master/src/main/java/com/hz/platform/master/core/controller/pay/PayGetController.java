@@ -409,6 +409,43 @@ public class PayGetController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("JMX")){
+                // 金木星支付
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("mch_id", gewayModel.getPayId());
+                sendDataMap.put("pass_code", payCode);
+                sendDataMap.put("subject", "钻石");
+                sendDataMap.put("out_trade_no", sgid);
+                sendDataMap.put("money", requestData.total_amount);
+                sendDataMap.put("client_ip", "192.168.0.1");
+                sendDataMap.put("notify_url", gewayModel.getNotifyUrl());
+                sendDataMap.put("return_url", requestData.return_url);
+                sendDataMap.put("timestamp", DateUtil.getNowPlusTime());
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------buf--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resJmxData = HttpSendUtils.sentPost(gewayModel.getInterfaceAds(), parameter);
+                log.info("--------resJmxData:" + resJmxData);
+                Map<String, Object> resMap = new HashMap<>();
+                if (!StringUtils.isBlank(resJmxData)) {
+                    resMap = JSON.parseObject(resJmxData, Map.class);
+                    if (Integer.parseInt(resMap.get("code").toString()) == 0){
+                        if (resMap.get("data") != null) {
+                            if (!StringUtils.isBlank(resMap.get("data").toString())){
+                                Map<String, Object> resDataMap = new HashMap<>();
+                                resDataMap = JSON.parseObject(resMap.get("data").toString(), Map.class);
+                                qrCodeUrl = (String) resDataMap.get("pay_url");
+                                resData = "ok";
+                            }
+
+                        }
+                    }
+                }
+                log.info("--------------resData:" + resData);
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
