@@ -36,7 +36,7 @@ public class WPayHelper {
         String callback_url = "http://www.qidian.com";
         String notify_url = "httP://www.baidu.com";
         String out_trade_no = "CS" + String.valueOf(System.currentTimeMillis());
-        String total_fee = "500";
+        String total_fee = "100.00";
         String res = getPayUrl(api_url, api_key, callback_url, notify_url, out_trade_no, total_fee);
         System.out.println("res:" + res);
 
@@ -109,7 +109,8 @@ public class WPayHelper {
         paramMap.put("sign", sign);
         String resString = "";
         try{
-            resString = WPayHelper.simplePost(api_url, paramMap);
+//            resString = WPayHelper.simplePost(api_url, paramMap);
+            resString = HttpSendUtils.doPostForm(api_url, paramMap);
         }catch(Exception e){
             e.printStackTrace();
         }

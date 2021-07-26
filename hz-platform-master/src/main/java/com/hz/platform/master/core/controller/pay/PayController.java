@@ -804,7 +804,18 @@ public class PayController extends BaseController {
 //                qrCodeUrl = "http://www.baidu.com";
                 qrCodeUrl = URLDecoder.decode(qrCodeUrl, "UTF-8" );
                 if (!StringUtils.isBlank(requestData.noredirect)){
-                    resData = StringUtil.mergeCodeBase64(qrCodeUrl);
+                    if(!requestData.noredirect.equals("138")){
+                        // 不等于138则直接返回支付地址
+                        resData = StringUtil.mergeCodeBase64(qrCodeUrl);
+                    }else{
+                        // 等于138，返回json数据
+                        Map<String, String> payMap = new HashMap<>();
+                        payMap.put("code", "0");
+                        payMap.put("trade_no", sgid);
+                        payMap.put("pay_url", StringUtil.mergeCodeBase64(qrCodeUrl));
+                        payMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
+                        return JSON.toJSONString(payMap);
+                    }
                 }else {
                     response.sendRedirect(qrCodeUrl);
                     return null;
