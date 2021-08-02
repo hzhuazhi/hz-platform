@@ -28,6 +28,7 @@ import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.region.RegionModel;
+import com.hz.platform.master.core.model.strategy.StrategyData;
 import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.task.TaskAlipayNotifyModel;
 import com.hz.platform.master.core.model.withdraw.WithdrawModel;
@@ -2217,6 +2218,113 @@ public class HodgepodgeMethod {
         return resBean;
 
     }
+
+
+    /**
+     * @Description: 组装查询当日代收成功金额
+     * @param gewayId - 通道ID
+     * @return
+     * @Author: yoko
+     * @Date 2021/7/26 14:32
+    */
+    public static DataCoreModel assembleDataCoreQueryByGeway(long gewayId){
+        DataCoreModel resBean = new DataCoreModel();
+        resBean.setGewayId(gewayId);
+        resBean.setTradeStatus(1);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        return resBean;
+    }
+
+
+
+
+    /**
+     * @Description: 通过比例筛选出一条通道
+     * @param strategyList - 微派集合通道
+     * @return
+     * @author yoko
+     * @date 2020/11/25 17:08
+     */
+    public static String ratioGewayByWpay(List<StrategyData> strategyList){
+        int start = 0;
+        int end = 0;
+        for (int i = 0; i < strategyList.size(); i++){
+            start = end;
+            end += strategyList.get(i).getStgValueTwo();
+            strategyList.get(i).setStartRatio(start);
+            strategyList.get(i).setEndRatio(end);
+        }
+        int random = new Random().nextInt(end);
+        for (StrategyData strategyData : strategyList){
+            log.info("id:"+ strategyData.getStgKey() + ",ratio:" + strategyData.getStgValueTwo() + ",start:" + strategyData.getStartRatio() + ",end:" + strategyData.getEndRatio());
+            if (random >= strategyData.getStartRatio() && random < strategyData.getEndRatio()){
+                return strategyData.getStgValue();
+            }
+        }
+        return null;
+
+    }
+
+
+
+
+    /**
+     * @Description: 组装上游同步的数据-小肥龙支付-xfl
+     * @param requestModel - 上游同步的基本数据
+     * @param channelDataModel - 渠道请求的基本数据
+     * @param channelGewayModel - 渠道与通道关联关系
+     * @param total_amount - 总金额
+     * @param serviceCharge - 手续费
+     * @param actualMoney - 实际金额
+     * @param tradeStatus - 订单状态：1成功，2失败，3其它
+     * @param payAmount - 实际支付金额：用户实际支付的金额
+     * @param payActualMoney - 实际支付金额扣手续费后的金额
+     * @param moneyFitType - 订单金额是否与实际支付金额一致：1初始化，2少了，3多了，4一致
+     * @return DataCoreModel
+     * @author yoko
+     * @date 2020/3/25 14:08
+     */
+    public static DataCoreModel assembleDataCoreXfl(RequestXfl requestModel, ChannelDataModel channelDataModel, ChannelGewayModel channelGewayModel,
+                                                   String total_amount, String serviceCharge, String actualMoney, int tradeStatus, String payAmount,
+                                                   String payActualMoney, int moneyFitType, long channelGewayId, int profitType) throws Exception{
+        DataCoreModel resBean = new DataCoreModel();
+        resBean.setMyTradeNo(requestModel.mchOrderNo);
+        resBean.setTradeNo(requestModel.payOrderId);
+        resBean.setOutTradeNo(channelDataModel.getOutTradeNo());
+        resBean.setTotalAmount(total_amount);
+        resBean.setServiceCharge(serviceCharge);
+        resBean.setActualMoney(actualMoney);
+        resBean.setPayAmount(payAmount);
+        resBean.setPayActualMoney(payActualMoney);
+        resBean.setTradeStatus(tradeStatus);
+        String priceInfo = "";// 订单金额是否与实际金额相等
+        if (tradeStatus == 2){
+            priceInfo = "订单金额是否与实际金额不匹配";
+        }
+        resBean.setExtraReturnParam(payAmount + priceInfo);// 用户实际支付的金额
+        resBean.setTradeTime(DateUtil.getNowPlusTime());
+//        resBean.setSign(requestModel.sign);
+        resBean.setChannelId(channelDataModel.getChannelId());
+        resBean.setGewayId(channelDataModel.getGewayId());
+        resBean.setNotifyUrl(channelDataModel.getNotifyUrl());
+//        resBean.setNotifySuc();
+        if (!StringUtils.isBlank(channelDataModel.getExtraReturnParam())){
+            resBean.setXyExtraReturnParam(channelDataModel.getExtraReturnParam());
+        }
+        resBean.setDeductRatio(channelGewayModel.getDeductRatio());
+
+        resBean.setChannelGewayId(channelGewayId);
+        resBean.setProfitType(profitType);
+
+        resBean.setMoneyFitType(moneyFitType);
+        resBean.setCurday(DateUtil.getDayNumber(new Date()));
+        resBean.setCurhour(DateUtil.getHour(new Date()));
+        resBean.setCurminute(DateUtil.getCurminute(new Date()));
+        return resBean;
+
+    }
+
+
 
 
 

@@ -197,6 +197,7 @@ public class ServerConstant {
     public enum StrategyEnum{
         QR_CODE_SWITCH(1,""),
         OUT_QR_CODE_SWITCH(2,""),
+        W_PAY(3,""),
 
 
 

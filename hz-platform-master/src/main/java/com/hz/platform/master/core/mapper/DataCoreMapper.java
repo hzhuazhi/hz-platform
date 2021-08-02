@@ -1,6 +1,7 @@
 package com.hz.platform.master.core.mapper;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
+import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,4 +12,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface DataCoreMapper<T> extends BaseDao<T> {
+
+    /**
+     * @Description: 根据条件查询代收成功金额
+     * @param model
+     * @return 
+     * @Author: yoko
+     * @Date 2021/7/26 13:51 
+    */
+    public String getSumMoney(DataCoreModel model);
 }

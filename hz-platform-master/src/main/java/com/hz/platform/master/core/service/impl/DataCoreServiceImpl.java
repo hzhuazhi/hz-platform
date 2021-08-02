@@ -3,6 +3,7 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.DataCoreMapper;
+import com.hz.platform.master.core.model.datacore.DataCoreModel;
 import com.hz.platform.master.core.service.DataCoreService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class DataCoreServiceImpl<T> extends BaseServiceImpl<T> implements DataCo
 
     public BaseDao<T> getDao() {
         return dataCoreMapper;
+    }
+
+    @Override
+    public String getSumMoney(DataCoreModel model) {
+        return dataCoreMapper.getSumMoney(model);
     }
 }

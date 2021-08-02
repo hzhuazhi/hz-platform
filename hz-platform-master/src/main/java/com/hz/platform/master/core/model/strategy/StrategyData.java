@@ -22,6 +22,20 @@ public class StrategyData {
 
     private String stgValueFour;
 
+
+
+
+
+    /**
+     * 筛选比例：开始
+     */
+    private int startRatio;
+
+    /**
+     * 筛选比例结束
+     */
+    private int endRatio;
+
     public Long getId() {
         return id;
     }
@@ -76,5 +90,21 @@ public class StrategyData {
 
     public void setStgValueFour(String stgValueFour) {
         this.stgValueFour = stgValueFour;
+    }
+
+    public int getStartRatio() {
+        return startRatio;
+    }
+
+    public void setStartRatio(int startRatio) {
+        this.startRatio = startRatio;
+    }
+
+    public int getEndRatio() {
+        return endRatio;
+    }
+
+    public void setEndRatio(int endRatio) {
+        this.endRatio = endRatio;
     }
 }

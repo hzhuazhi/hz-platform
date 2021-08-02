@@ -346,4 +346,30 @@
         <include refid="Example_Where_Clause"/>
     </select>
 
+    <!-- 根据条件查询代收成功金额-->
+    <select id="getSumMoney" parameterType="Object" resultType="java.lang.String">
+        select ifnull(sum(convert(a.total_amount,decimal(19,2))), '0.00') as money from tb_hz_data_core a
+        where 1=1
+        <if test="channelId != null and channelId != '' " >
+            and a.channel_id = #{channelId}
+        </if>
+        <if test="gewayId != null and gewayId != '' " >
+            and a.geway_id = #{gewayId}
+        </if>
+        <if test="channelGewayId != null and channelGewayId != '' " >
+            and a.channel_geway_id = #{channelGewayId}
+        </if>
+        <if test="curday != null and curday != '' " >
+            and a.curday = #{curday}
+        </if>
+        <if test="curdayStart != null and curdayStart != '' and curdayEnd != null and curdayEnd != '' " >
+            and a.curday >= #{curdayStart} and a.curday &lt;= #{curdayEnd}
+        </if>
+        and a.yn = 0
+    </select>
+
+
+
+
+
 </mapper>

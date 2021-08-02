@@ -176,15 +176,15 @@ public class MD5Util {
         System.out.println(sb);
 
         // 校验sign签名
-        String channel = "10113";
+        String channel = "channel_1";
 //        String trade_type = "1005";
-        String trade_type = "100001";
-        String total_amount = "400.00";
+        String trade_type = "201";
+        String total_amount = "50.00";
         String out_trade_no = "C35202101080135";
 //        String out_trade_no = "20200615102453535754";
         String notify_url = "http://www.baidu.com/sb";
 //        String notify_url = "http://ds.di1h.cn/Pay_Gaofang_notifyurl.html";
-        String secretKey = "157f62a2be53b56ec76d4abf8d329153";
+        String secretKey = "sdfs1";
         String checkSign = "channel=" + channel + "&" + "trade_type=" + trade_type + "&" + "total_amount=" + total_amount
                 + "&" + "out_trade_no=" + out_trade_no + "&" + "notify_url=" + notify_url + "&" + "key=" + secretKey ;
         checkSign = MD5Util.encryption(checkSign);

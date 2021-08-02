@@ -22,6 +22,7 @@ import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
+import com.hz.platform.master.core.model.strategy.StrategyData;
 import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
@@ -37,10 +38,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLDecoder;
-import java.util.Base64;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @Description TODO
@@ -149,10 +147,11 @@ public class PayController extends BaseController {
 
 
 
-
+            String sign_trade_type = "";
             String trade_type = "";
             if (!StringUtils.isBlank(requestData.trade_type)){
                 trade_type = requestData.trade_type;
+                sign_trade_type = requestData.trade_type;
             }
 
 
@@ -174,6 +173,54 @@ public class PayController extends BaseController {
             // 根据交易类型查询通道
             GewaytradetypeModel gewaytradetypeModel = null;
             if (!StringUtils.isBlank(trade_type)){
+
+                // 策略数据：微派通道筛选
+                StrategyModel strategyWpayQuery = HodgepodgeMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.W_PAY.getStgType());
+                StrategyModel strategyWpayModel = ComponentUtil.strategyService.getStrategyModel(strategyWpayQuery, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_ZERO);
+                if (strategyWpayModel != null){
+                    if (!StringUtils.isBlank(strategyWpayModel.getStgValue())){
+                        if(trade_type.equals(strategyWpayModel.getStgValue())){
+                            // 说明是微派系列的，从多个通道中筛选
+
+                            // 剔除权重值为0的，并且成功金额超出范围的
+                            List<StrategyData> stgList = JSON.parseArray(strategyWpayModel.getStgBigValue(), StrategyData.class);
+                            List<StrategyData> stgDataList = new ArrayList<>();// 真正可以放量的集合
+                            for (StrategyData stg : stgList){
+                                if (stg.getStgValueTwo() != 0){
+                                    // 表示有权重
+                                    // 判断通道当日是否超出当日跑量限制
+                                    DataCoreModel dataCoreQuery = HodgepodgeMethod.assembleDataCoreQueryByGeway(stg.getStgKey());
+                                    String gewayMoney = ComponentUtil.dataCoreService.getSumMoney(dataCoreQuery);
+                                    if (gewayMoney.equals("0.00")){
+                                        // 当天还没有成功的
+                                        stgDataList.add(stg);
+                                    }else {
+                                        // 当天已有成功的：判断是否超过设定的上限
+                                        String limitMoney = stg.getStgValueFour();
+                                        boolean flag_gewayMoney = StringUtil.getBigDecimalSubtract(limitMoney, gewayMoney);
+                                        if (flag_gewayMoney){
+                                            // 没有超过限额
+                                            stgDataList.add(stg);
+                                        }
+
+                                    }
+                                }
+                            }
+
+                            if (stgDataList != null && stgDataList.size() > 0){
+                                // 通过权重，筛选一个微派系列的通道
+                                trade_type = HodgepodgeMethod.ratioGewayByWpay(stgDataList);
+                                requestData.trade_type = trade_type;
+                            }else {
+                                throw new ServiceException("S001", "请您稍后再试!");
+                            }
+
+                        }
+                    }
+                }
+
+
+                // 查询具体通道
                 GewaytradetypeModel gewaytradetypeQuery = new GewaytradetypeModel();
                 gewaytradetypeQuery.setMyTradeType(requestData.trade_type);
                 gewaytradetypeModel = (GewaytradetypeModel)ComponentUtil.gewaytradetypeService.findByObject(gewaytradetypeQuery);
@@ -239,8 +286,8 @@ public class PayController extends BaseController {
 
             // 校验sign签名
             String checkSign = "";
-            if (!StringUtils.isBlank(requestData.trade_type)){
-                checkSign = "channel=" + requestData.channel + "&" + "trade_type=" + requestData.trade_type + "&" + "total_amount=" + requestData.total_amount
+            if (!StringUtils.isBlank(sign_trade_type)){
+                checkSign = "channel=" + requestData.channel + "&" + "trade_type=" + sign_trade_type + "&" + "total_amount=" + requestData.total_amount
                         + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "notify_url=" + requestData.notify_url + "&" + "key=" + channelModel.getSecretKey();
             }else {
                 checkSign = "channel=" + requestData.channel + "&" + "total_amount=" + requestData.total_amount
@@ -788,6 +835,54 @@ public class PayController extends BaseController {
                     resData = "ok";
                 }
                 log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("XFL")){
+                // 小肥龙支付
+                String [] checkMoneyArr = requestData.total_amount.split("\\.");
+                if (!checkMoneyArr[1].equals("00")){
+                    throw new ServiceException("A0001", "请按照规定填写整数金额!");
+                }
+
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+                sendDataMap.put("mchId", gewayModel.getPayId());
+                sendDataMap.put("appId", "8df9fea55dd5459babe85c97b31ff591");
+                sendDataMap.put("productId", payCode);// 8029
+                sendDataMap.put("mchOrderNo", sgid);
+                String pay_amount = StringUtil.getMultiply(requestData.total_amount, "100.00");// 对方是以分为单位的
+                String [] pay_amountArr = pay_amount.split("\\.");
+                sendDataMap.put("amount", pay_amountArr[0]);
+
+                sendDataMap.put("currency", "cny");
+                sendDataMap.put("clientIp", "192.168.0.1");
+                sendDataMap.put("device", "ios10.3.1");
+                sendDataMap.put("notifyUrl", gewayModel.getNotifyUrl());
+                sendDataMap.put("returnUrl", requestData.return_url);
+                sendDataMap.put("subject", "打赏");
+                sendDataMap.put("body", "钻石");
+                sendDataMap.put("reqTime", DateUtil.getNowPlusTimeMill());
+                sendDataMap.put("version", "1.0");
+
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                sendDataMap.put("sign", mySign);
+
+
+                String resXflData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resXflData:" + resXflData);
+
+                Map<String, Object> resXflMap = new HashMap<>();
+                if (!StringUtils.isBlank(resXflData)) {
+                    resXflMap = JSON.parseObject(resXflData, Map.class);
+                    if (resXflMap.get("retCode").equals("0")) {
+                        qrCodeUrl = (String) resXflMap.get("payJumpUrl");
+                        resData = "ok";
+                    }
+                }
+
+
+                log.info("--------------resXflData:" + resXflData);
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
