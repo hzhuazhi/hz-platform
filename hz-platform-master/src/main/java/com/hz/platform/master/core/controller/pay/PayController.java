@@ -883,6 +883,57 @@ public class PayController extends BaseController {
 
 
                 log.info("--------------resXflData:" + resXflData);
+            }else if (gewayModel.getContacts().equals("SWF")){
+                // 思维付支付
+                String [] checkMoneyArr = requestData.total_amount.split("\\.");
+                if (!checkMoneyArr[1].equals("00")){
+                    throw new ServiceException("A0001", "请按照规定填写整数金额!");
+                }
+
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+                sendDataMap.put("memberid", gewayModel.getPayId());
+                sendDataMap.put("backurl", gewayModel.getNotifyUrl());
+                sendDataMap.put("webbackurl", requestData.return_url);
+                sendDataMap.put("clienturl", requestData.return_url);
+                sendDataMap.put("type", payCode);// 303
+                sendDataMap.put("body", "钻石");
+                String pay_amount = StringUtil.getMultiply(requestData.total_amount, "100.00");// 对方是以分为单位的
+                String [] pay_amountArr = pay_amount.split("\\.");
+                sendDataMap.put("amount", pay_amountArr[0]);
+                sendDataMap.put("ordernum", sgid);
+                sendDataMap.put("openid", "openid");
+                sendDataMap.put("appid", "appid");
+                sendDataMap.put("key", gewayModel.getSecretKey());
+                sendDataMap.put("code", "code");
+
+
+
+
+
+                String mySign = ASCIISort.getSignNoKey(sendDataMap, 1);
+                mySign = StringUtil.mergeCodeBase64(mySign);
+                log.info("--------swf--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+
+                sendDataMap.remove("key");
+
+
+                String resSwfData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resSwfData:" + resSwfData);
+
+                Map<String, Object> resSwfMap = new HashMap<>();
+                if (!StringUtils.isBlank(resSwfData)) {
+                    resSwfMap = JSON.parseObject(resSwfData, Map.class);
+                    if (resSwfMap.get("state").equals("1")) {
+                        qrCodeUrl = (String) resSwfMap.get("url");
+                        resData = "ok";
+                    }
+                }
+
+
+                log.info("--------------resSwfData:" + resSwfData);
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;

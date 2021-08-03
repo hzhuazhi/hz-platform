@@ -1,6 +1,7 @@
 package com.hz.platform.master.core.common.utils;
 
 import com.alibaba.fastjson.JSON;
+import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
@@ -513,22 +514,37 @@ public class HttpSendUtils {
 		HttpClient httpClient = null;
 		String responseString = "";
 		try {			
-			String sellerKey = postBody.get("seller_key");
-			String imsi = postBody.get("imsi");
-			String appName = postBody.get("app_name");
-			String fee = postBody.get("fee");
-			String outTradeNo = postBody.get("out_trade_no");
+			String memberid = postBody.get("memberid");
+			String backurl = postBody.get("backurl");
+			String webbackurl = postBody.get("webbackurl");
+			String clienturl = postBody.get("clienturl");
+			String type = postBody.get("type");
+			String body = postBody.get("body");
+
+			String amount = postBody.get("amount");
+			String ordernum = postBody.get("ordernum");
+			String openid = postBody.get("openid");
+			String appid = postBody.get("appid");
+			String code = postBody.get("code");
 			String sign = postBody.get("sign");
 			
 			httpClient = new DefaultHttpClient();
 			HttpPost post = new HttpPost(httpUrl);
 			
 			List <NameValuePair> nvps = new ArrayList <NameValuePair>();
-			nvps.add(new BasicNameValuePair("seller_key",sellerKey));
-			nvps.add(new BasicNameValuePair("imsi",imsi));
-			nvps.add(new BasicNameValuePair("app_name",appName));
-			nvps.add(new BasicNameValuePair("fee",fee));
-			nvps.add(new BasicNameValuePair("out_trade_no", outTradeNo));
+			nvps.add(new BasicNameValuePair("memberid",memberid));
+			nvps.add(new BasicNameValuePair("backurl",backurl));
+			nvps.add(new BasicNameValuePair("webbackurl",webbackurl));
+			nvps.add(new BasicNameValuePair("clienturl",clienturl));
+			nvps.add(new BasicNameValuePair("type", type));
+			nvps.add(new BasicNameValuePair("body", body));
+			nvps.add(new BasicNameValuePair("amount", amount));
+			nvps.add(new BasicNameValuePair("ordernum", ordernum));
+			nvps.add(new BasicNameValuePair("openid", openid));
+			nvps.add(new BasicNameValuePair("appid", appid));
+			nvps.add(new BasicNameValuePair("code", code));
+
+
 			nvps.add(new BasicNameValuePair("sign",sign));
 			post.setEntity(new UrlEncodedFormEntity(nvps,encoding));
 			
@@ -717,6 +733,94 @@ public class HttpSendUtils {
 	}
 
 
+
+
+	/**
+	 *
+	 * @param httpUrl  请求的url
+	 * @param param  form表单的参数（key,value形式）
+	 * @return
+	 */
+	public static String doPostFormData(String httpUrl, Map param) {
+
+		HttpURLConnection connection = null;
+		InputStream is = null;
+		OutputStream os = null;
+		BufferedReader br = null;
+		String result = null;
+		try {
+			URL url = new URL(httpUrl);
+			// 通过远程url连接对象打开连接
+			connection = (HttpURLConnection) url.openConnection();
+			// 设置连接请求方式
+			connection.setRequestMethod("POST");
+			// 设置连接主机服务器超时时间：15000毫秒
+			connection.setConnectTimeout(15000);
+			// 设置读取主机服务器返回数据超时时间：60000毫秒
+			connection.setReadTimeout(60000);
+
+			// 默认值为：false，当向远程服务器传送数据/写数据时，需要设置为true
+			connection.setDoOutput(true);
+			// 默认值为：true，当前向远程服务读取数据时，设置为true，该参数可有可无
+			connection.setDoInput(true);
+			// 设置传入参数的格式:请求参数应该是 name1=value1&name2=value2 的形式。
+			connection.setRequestProperty("Content-Type", "form-data");
+			// 设置鉴权信息：Authorization: Bearer da3efcbf-0845-4fe3-8aba-ee040be542c0
+			//connection.setRequestProperty("Authorization", "Bearer da3efcbf-0845-4fe3-8aba-ee040be542c0");
+			// 通过连接对象获取一个输出流
+			os = connection.getOutputStream();
+			// 通过输出流对象将参数写出去/传输出去,它是通过字节数组写出的(form表单形式的参数实质也是key,value值的拼接，类似于get请求参数的拼接)
+			os.write(createLinkString(param).getBytes());
+			// 通过连接对象获取一个输入流，向远程读取
+			if (connection.getResponseCode() == 200) {
+
+				is = connection.getInputStream();
+				// 对输入流对象进行包装:charset根据工作项目组的要求来设置
+				br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+
+				StringBuffer sbf = new StringBuffer();
+				String temp = null;
+				// 循环遍历一行一行读取数据
+				while ((temp = br.readLine()) != null) {
+					sbf.append(temp);
+					sbf.append("\r\n");
+				}
+				result = sbf.toString();
+			}
+		} catch (MalformedURLException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			// 关闭资源
+			if (null != br) {
+				try {
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (null != os) {
+				try {
+					os.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if (null != is) {
+				try {
+					is.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			// 断开与远程地址url的连接
+			connection.disconnect();
+		}
+		return result;
+	}
+
+
 	/**
 	 * 把数组所有元素排序，并按照“参数=参数值”的模式用“&”字符拼接成字符串
 	 * @param params 需要排序并参与字符拼接的参数组
@@ -742,6 +846,162 @@ public class HttpSendUtils {
 	}
 
 
+
+
+
+	/**
+	 * 向指定 URL 发送POST方法的请求
+	 * @param url
+	 *            发送请求的 URL
+	 * @param param
+	 *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+	 * @return 所代表远程资源的响应结果
+	 */
+	public static String sendPost(String url, String param) {
+		PrintWriter out = null;
+		BufferedReader in = null;
+		String result = "";
+		try {
+			URL realUrl = new URL(url);
+			// 打开和URL之间的连接
+			URLConnection conn = realUrl.openConnection();
+			// 设置通用的请求属性
+			conn.setRequestProperty("accept", "*/*");
+			conn.setRequestProperty("connection", "Keep-Alive");
+//			conn.setRequestProperty("user-agent",
+//					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+			// 发送POST请求必须设置如下两行
+			conn.setDoOutput(true);
+			conn.setDoInput(true);
+			// 获取URLConnection对象对应的输出流
+			out = new PrintWriter(conn.getOutputStream());
+			// 发送请求参数
+			out.print(param);
+			// flush输出流的缓冲
+			out.flush();
+			// 定义BufferedReader输入流来读取URL的响应
+			in = new BufferedReader(
+					new InputStreamReader(conn.getInputStream()));
+			String line;
+			while ((line = in.readLine()) != null) {
+				result += line;
+			}
+		} catch (Exception e) {
+			System.out.println("发送 POST 请求出现异常！"+e);
+			e.printStackTrace();
+		}
+		//使用finally块来关闭输出流、输入流
+		finally{
+			try{
+				if(out!=null){
+					out.close();
+				}
+				if(in!=null){
+					in.close();
+				}
+			}
+			catch(IOException ex){
+				ex.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+
+
+
+//	/**
+//	 * 向指定 URL 发送POST方法的请求
+//	 * @param url
+//	 *            发送请求的 URL
+//	 * @param param
+//	 *            请求参数，请求参数应该是 name1=value1&name2=value2 的形式。
+//	 * @return 所代表远程资源的响应结果
+//	 */
+//	public static String sendPostHttps(String url, String param) {
+//		PrintWriter out = null;
+//		BufferedReader in = null;
+//		String result = "";
+//		try {
+//			URL realUrl = new URL(url);
+//			// 打开和URL之间的连接
+//			URLConnection conn = realUrl.openConnection();
+//			// 设置通用的请求属性
+//			conn.setRequestProperty("accept", "*/*");
+//			conn.setRequestProperty("connection", "Keep-Alive");
+////			conn.setRequestProperty("user-agent",
+////					"Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+//			// 发送POST请求必须设置如下两行
+//			conn.setDoOutput(true);
+//			conn.setDoInput(true);
+//			// 获取URLConnection对象对应的输出流
+//			out = new PrintWriter(conn.getOutputStream());
+//			// 发送请求参数
+//			out.print(param);
+//			// flush输出流的缓冲
+//			out.flush();
+//			// 定义BufferedReader输入流来读取URL的响应
+//			in = new BufferedReader(
+//					new InputStreamReader(conn.getInputStream()));
+//			String line;
+//			while ((line = in.readLine()) != null) {
+//				result += line;
+//			}
+//		} catch (Exception e) {
+//			System.out.println("发送 POST 请求出现异常！"+e);
+//			e.printStackTrace();
+//		}
+//		//使用finally块来关闭输出流、输入流
+//		finally{
+//			try{
+//				if(out!=null){
+//					out.close();
+//				}
+//				if(in!=null){
+//					in.close();
+//				}
+//			}
+//			catch(IOException ex){
+//				ex.printStackTrace();
+//			}
+//		}
+//		return result;
+//
+//	}
+//
+//
+//
+//
+//	public static String doPostHttps(String url,Map<String,Object> map,String charset){
+//		HttpClient httpClient = null;
+//		HttpPost httpPost = null;
+//		String result = null;
+//		try{
+//			httpClient = new SSLClient();
+//			httpPost = new HttpPost(url);
+//			//设置参数
+//			List<NameValuePair> list = new ArrayList<NameValuePair>();
+//			Iterator iterator = map.entrySet().iterator();
+//			while(iterator.hasNext()){
+//				Entry<String,String> elem = (Entry<String, String>) iterator.next();
+//				list.add(new BasicNameValuePair(elem.getKey(),elem.getValue()));
+//			}
+//			if(list.size() > 0){
+//				UrlEncodedFormEntity entity = new UrlEncodedFormEntity(list,charset);
+//				httpPost.setEntity(entity);
+//			}
+//			HttpResponse response = httpClient.execute(httpPost);
+//			if(response != null){
+//				HttpEntity resEntity = response.getEntity();
+//				if(resEntity != null){
+//					result = EntityUtils.toString(resEntity,charset);
+//				}
+//			}
+//		}catch(Exception ex){
+//			ex.printStackTrace();
+//		}
+//		return result;
+//	}
 
 
 
