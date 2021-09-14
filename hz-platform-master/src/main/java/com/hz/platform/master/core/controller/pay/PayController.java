@@ -926,14 +926,52 @@ public class PayController extends BaseController {
                 Map<String, Object> resSwfMap = new HashMap<>();
                 if (!StringUtils.isBlank(resSwfData)) {
                     resSwfMap = JSON.parseObject(resSwfData, Map.class);
-                    if (resSwfMap.get("state").equals("1")) {
-                        qrCodeUrl = (String) resSwfMap.get("url");
-                        resData = "ok";
+                    boolean containsKey = resSwfMap.containsKey("state");
+                    if (containsKey) {
+                        if (resSwfMap.get("state").equals("1")) {
+                            qrCodeUrl = (String) resSwfMap.get("url");
+                            resData = "ok";
+                        }
                     }
                 }
 
 
                 log.info("--------------resSwfData:" + resSwfData);
+            }else if (gewayModel.getContacts().equals("HBT")){
+                // 花呗通支付
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+                sendDataMap.put("p1_merchantno", gewayModel.getPayId());
+                sendDataMap.put("p2_amount", requestData.total_amount);
+                sendDataMap.put("p3_orderno", sgid);
+                sendDataMap.put("p4_paytype", payCode);
+                sendDataMap.put("p5_reqtime", DateUtil.getNowLongTime());
+                sendDataMap.put("p6_goodsname", "钻石");
+                sendDataMap.put("p8_returnurl", requestData.return_url);
+                sendDataMap.put("p9_callbackurl", gewayModel.getNotifyUrl());
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------hbt--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resHbtData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resHbtData:" + resHbtData);
+
+                Map<String, Object> resHbtMap = new HashMap<>();
+                if (!StringUtils.isBlank(resHbtData)) {
+                    resHbtMap = JSON.parseObject(resHbtData, Map.class);
+                    boolean containsKey = resHbtMap.containsKey("rspcode");
+                    if (containsKey) {
+                        if (resHbtMap.get("rspcode").equals("A0")) {
+                            qrCodeUrl = (String) resHbtMap.get("data");
+                            resData = "ok";
+                        }
+                    }
+                }
+
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
