@@ -972,6 +972,49 @@ public class PayController extends BaseController {
                     }
                 }
 
+            }else if (gewayModel.getContacts().equals("YB")){
+                // 易宝支付
+
+                Map<String ,Object> sendDataMap = new HashMap<>();
+
+                sendDataMap.put("merId", gewayModel.getPayId());
+                sendDataMap.put("orderId", sgid);
+                sendDataMap.put("orderAmt", requestData.total_amount);
+                sendDataMap.put("channel", payCode);//通道列表请查看商户后台，或联系商务
+                //商品名称，utf-8编码
+                sendDataMap.put("desc","TOP-UP");
+                sendDataMap.put("ip", "192.168.0.1");//支付用户IP地址,用户支付时设备的IP地址
+                sendDataMap.put("notifyUrl", gewayModel.getNotifyUrl());//异步通知地址,异步接收支付结果通知的回调地址，通知url必须为外网可访问的url，不能携带参数。
+                sendDataMap.put("returnUrl", requestData.return_url);//同步通知地址,支付成功后跳转到的地址，不参与签名。
+                sendDataMap.put("nonceStr", String.valueOf(System.currentTimeMillis()));//随机字符串
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------yb--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resYbData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resYbData:" + resYbData);
+
+                Map<String, Object> resYbMap = new HashMap<>();
+                if (!StringUtils.isBlank(resYbData)) {
+                    resYbMap = JSON.parseObject(resYbData, Map.class);
+                    boolean containsKey = resYbMap.containsKey("code");
+                    if (containsKey) {
+                        if (Integer.parseInt(resYbMap.get("code").toString()) == 1) {
+                            if (resYbMap.get("data") != null) {
+                                if (!StringUtils.isBlank(resYbMap.get("data").toString())){
+                                    Map<String, Object> resYbDataMap = new HashMap<>();
+                                    resYbDataMap = JSON.parseObject(resYbMap.get("data").toString(), Map.class);
+                                    qrCodeUrl = (String) resYbDataMap.get("payurl");
+                                    resData = "ok";
+                                }
+                            }
+                        }
+                    }
+                }
+
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
