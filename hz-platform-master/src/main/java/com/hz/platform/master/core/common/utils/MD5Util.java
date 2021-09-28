@@ -252,9 +252,9 @@ public class MD5Util {
 
 
 
-        String wg_channel = "20119";
-        String wg_out_trade_no = "2021042511203177261691";
-        String wg_key = "17d34d698abe9759ad3284c09ade3542";
+        String wg_channel = "10102";
+        String wg_out_trade_no = "202109181031400164";
+        String wg_key = "21a840b135d04fcaeaf2073c123d5ecb";
         String wgCheckSign = "channel=" + wg_channel + "&" + "out_trade_no=" + wg_out_trade_no + "&" + "key=" + wg_key;
         wgCheckSign = MD5Util.encryption(wgCheckSign);
         System.out.println("wgCheckSign:" + wgCheckSign);

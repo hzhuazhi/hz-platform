@@ -124,4 +124,9 @@ public interface CacheKey {
      */
     String STRATEGY = "-18";
 
+    /**
+     * 查询代付订单网管是否过于频繁
+     */
+    String OUT_TRADE_NO_BY_OUT_ORDER = "-19";
+
 }

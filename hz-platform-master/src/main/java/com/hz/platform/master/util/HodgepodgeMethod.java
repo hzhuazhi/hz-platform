@@ -4,7 +4,10 @@ import com.alibaba.fastjson.JSON;
 import com.hz.platform.master.core.common.exception.ServiceException;
 import com.hz.platform.master.core.common.utils.BeanUtils;
 import com.hz.platform.master.core.common.utils.DateUtil;
+import com.hz.platform.master.core.common.utils.MD5Util;
 import com.hz.platform.master.core.common.utils.StringUtil;
+import com.hz.platform.master.core.common.utils.constant.CacheKey;
+import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
 import com.hz.platform.master.core.common.utils.constant.ServerConstant;
 import com.hz.platform.master.core.model.agent.AgentChannelGewayModel;
 import com.hz.platform.master.core.model.agent.AgentModel;
@@ -2495,6 +2498,134 @@ public class HodgepodgeMethod {
         resBean.setCurminute(DateUtil.getCurminute(new Date()));
         return resBean;
 
+    }
+
+
+    /**
+     * @Description: check是否频繁查询订单状态
+     * <p>
+     *     纪录查询代付订单号，要限制用户每次查询的时间间隔要间隔5秒。
+     *     如果存在值，表示在5秒内频繁查询返回false，
+     *     如果不存在值，表示5秒内此订单号没有出现频繁查询返回true
+     * </p>
+     * @param out_trade_no - 商家订单号
+     * @return
+     * @author yoko
+     * @date 2020/5/21 15:38
+     */
+    public static void checkFrequentlyByQueryOutOrder(String out_trade_no) throws Exception{
+        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.OUT_TRADE_NO_BY_OUT_ORDER, out_trade_no);
+        String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+        if (!StringUtils.isBlank(strCache)) {
+            throw new ServiceException("40005", "频繁操作,请稍后重试!");
+        }
+    }
+
+
+    /**
+     * @Description: check校验签名-代付查询订单状态
+     * @param requestPayOut - 请求的数据
+     * @param secretKey - 渠道的秘钥
+     * @return
+     * @Author: yoko
+     * @Date 2021/8/6 20:23
+     */
+    public static void checkSignByOutOrderStatus(RequestPayOut requestPayOut, String secretKey) throws Exception{
+        String checkSign = "";
+        checkSign = "channel=" + requestPayOut.channel + "&" + "out_trade_no=" + requestPayOut.out_trade_no + "&" + "key=" + secretKey;
+        checkSign = MD5Util.encryption(checkSign);
+        if (!requestPayOut.sign.equals(checkSign)){
+            throw new ServiceException("40005", "签名错误,请重试!");
+        }
+    }
+
+    /**
+     * @Description: 组装查询代付的查询方法
+     * @param id - 主键ID
+     * @param myTradeNo - 我方订单号
+     * @param outTradeNo - 商家订单号
+     * @param channelId - 渠道主键
+     * @return com.hz.platform.master.core.model.ChannelOutModel
+     * @Author: yoko
+     * @Date 2021/9/28 14:09
+     */
+    public static ChannelOutModel assembleChannelOutQuery(long id, String myTradeNo, String outTradeNo, long channelId){
+        ChannelOutModel resBean = new ChannelOutModel();
+        if (id > 0){
+            resBean.setId(id);
+        }
+        if (!StringUtils.isBlank(myTradeNo)){
+            resBean.setMyTradeNo(myTradeNo);
+        }
+        if (!StringUtils.isBlank(outTradeNo)){
+            resBean.setOutTradeNo(outTradeNo);
+        }
+        if (channelId > 0){
+            resBean.setChannelId(channelId);
+        }
+        return resBean;
+    }
+
+
+    /**
+     * @Description: redis：代付在查询订单状态时，保存被查询的订单号
+     * <p>
+     *     针对过于频繁操作同一个订单号
+     * </p>
+     * @param out_trade_no - 商家订单号
+     * @return void
+     * @author yoko
+     * @date 2020/10/10 15:44
+     */
+    public static void saveFrequentlyByQueryOutOrder(String out_trade_no){
+        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.OUT_TRADE_NO_BY_OUT_ORDER, out_trade_no);
+        ComponentUtil.redisService.set(strKeyCache, out_trade_no, 5L);
+    }
+
+
+
+
+    /**
+     * @Description: 组装查询代付网关的数据
+     * @param channelOutModel - 代付数据
+     * @param out_trade_no - 渠道订单号
+     * @return com.hz.platform.master.core.protocol.response.pay.ResponseDataCore
+     * @author yoko
+     * @date 2021/4/26 17:34
+     */
+    public static ResponseDataCore assembleResponseChannelOutResult(ChannelOutModel channelOutModel, String out_trade_no){
+        ResponseDataCore resBean = new ResponseDataCore();
+        if (channelOutModel != null && channelOutModel.getId() != null && channelOutModel.getId() > 0){
+            resBean.setTrade_no(channelOutModel.getMyTradeNo());
+            resBean.setOut_trade_no(channelOutModel.getOutTradeNo());
+            int tradeStatus = 0;
+            if (channelOutModel.getOrderStatus() == 4){
+                // 成功
+                tradeStatus = 1;
+            }else if (channelOutModel.getOrderStatus() == 1){
+                // 初始化
+                tradeStatus = 2;
+            }else {
+                // 失败/超时
+                tradeStatus = 3;
+            }
+
+            resBean.setTrade_status(tradeStatus);
+
+            if (channelOutModel.getSendStatus() == 3){
+                resBean.setSend_status(1);
+            }else {
+                resBean.setSend_status(2);
+            }
+            if (!StringUtils.isBlank(channelOutModel.getNotifyUrl())){
+                resBean.setNotify_url(channelOutModel.getNotifyUrl());
+            }
+            resBean.setTrade_time(channelOutModel.getCreateTime());
+        }else {
+            resBean.setOut_trade_no(out_trade_no);
+            resBean.setTrade_status(3);
+        }
+        return resBean;
     }
 
 

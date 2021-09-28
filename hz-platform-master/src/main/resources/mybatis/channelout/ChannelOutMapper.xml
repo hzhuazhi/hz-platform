@@ -31,6 +31,9 @@
             <if test="orderStatus != null and orderStatus != '' " >
                 and a.order_status = #{orderStatus}
             </if>
+            <if test="channelId != null and channelId != '' " >
+                and a.channel_id = #{channelId}
+            </if>
             <!--<if test="idList != null and idList.size()>0">-->
             <!--and a.did in-->
             <!--<foreach item="item" index="index" collection="idList" open="(" separator="," close=")">-->

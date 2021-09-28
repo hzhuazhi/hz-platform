@@ -18,6 +18,7 @@ import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDedu
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
+import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
@@ -26,6 +27,7 @@ import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
+import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
 import com.hz.platform.master.util.ComponentUtil;
 import com.hz.platform.master.util.HodgepodgeMethod;
 import org.apache.commons.lang.StringUtils;
@@ -424,6 +426,100 @@ public class OrderOutController extends BaseController {
             Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // #添加异常
             log.error(String.format("this OrderOutController.order() is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+            e.printStackTrace();
+            return JsonResult.failedResult(map.get("message"), map.get("code"));
+        }
+    }
+
+
+    /**
+     * @Description: 查询网关-代付
+     * @param response
+     * @return com.gd.chain.common.utils.JsonResult<java.lang.Object>
+     * @author yoko
+     * @date 2019/11/25 22:58
+     * local:http://localhost:8092/platform/out/orderStatus
+     * 请求的属性类:ProtocolInOrder
+     * 必填字段:{"channel":"10102","out_trade_no":"202109271728320866","sign":"30ac3a8fd96640508c4ce1022d3a9089"}
+     *
+     * {
+     *     "code": "0",
+     *     "message": "success",
+     *     "data": {
+     *         "trade_no": "SDDF202109271728320716",
+     *         "out_trade_no": "202109271728320866",
+     *         "trade_status": 1,
+     *         "send_status": 2,
+     *         "notify_url": null,
+     *         "trade_time": "2021-09-27 17:28:32"
+     *     }
+     * }
+     *
+     *
+     */
+    @RequestMapping(value = "/orderStatus", method = {RequestMethod.POST})
+    public JsonResult<Object> orderStatus(HttpServletRequest request, HttpServletResponse response,@RequestBody RequestPayOut requestData) throws Exception{
+        String ip = StringUtil.getIpAddress(request);
+        String data = "";
+        try{
+
+            if (requestData == null){
+                throw new ServiceException("40001", "协议数据不能为空!");
+            }
+
+            // check商铺号
+            if (StringUtils.isBlank(requestData.channel)){
+                throw new ServiceException("40002", "商家号不能为空!");
+            }
+
+            // check商家订单号
+            if (StringUtils.isBlank(requestData.out_trade_no)){
+                throw new ServiceException("40003", "订单号不能为空!");
+            }
+
+            // check签名
+            if (StringUtils.isBlank(requestData.sign)){
+                throw new ServiceException("40004", "秘钥不能为空!");
+            }
+
+            // check校验是否频繁查询
+            HodgepodgeMethod.checkFrequentlyByQueryOutOrder(requestData.out_trade_no);
+
+
+            // 获取渠道的信息
+            ChannelModel channelModel = new ChannelModel();
+            channelModel.setChannel(requestData.channel);
+            channelModel = (ChannelModel) ComponentUtil.channelService.findByObject(channelModel);
+            if (channelModel == null || channelModel.getId() <= 0){
+                throw new ServiceException("0010", "请填写正确的商家号!");
+            }
+
+            // 校验是否是白名单IP
+            if (!StringUtils.isBlank(channelModel.getWhiteListIp())){
+                HodgepodgeMethod.checkWhiteListIp(channelModel.getWhiteListIp(), ip);
+            }
+
+
+            // 校验sign签名
+            HodgepodgeMethod.checkSignByOutOrderStatus(requestData, channelModel.getSecretKey());
+
+            // 查询订单状态
+            ChannelOutModel channelOutQuery = HodgepodgeMethod.assembleChannelOutQuery(0,null,requestData.out_trade_no,
+                    channelModel.getId());
+            ChannelOutModel channelOutModel = (ChannelOutModel)ComponentUtil.channelOutService.findByObject(channelOutQuery);
+
+            // 组装要返回渠道的数据
+            ResponseDataCore responseDataCore = HodgepodgeMethod.assembleResponseChannelOutResult(channelOutModel, requestData.out_trade_no);
+
+            // redis 保存订单号，check频繁操作查询相同订单
+            HodgepodgeMethod.saveFrequentlyByQueryOutOrder(requestData.out_trade_no);
+
+            // 返回数据给客户端
+            return JsonResult.successResult(responseDataCore);
+        }catch (Exception e){
+            Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
+            // #添加异常
+            log.error(String.format("this OrderOutController.orderStatus() is error , the data=%s!", data));
             e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"));
         }
