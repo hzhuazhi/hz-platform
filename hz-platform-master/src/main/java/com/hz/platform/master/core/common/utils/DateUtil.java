@@ -3126,6 +3126,8 @@ public class DateUtil {
         System.out.println("sb2:" + sb2);
         String sb3 = getMaxDayOfThisMonth();
         System.out.println("sb3:" + sb3);
+		String sb4 = addDateMinute(720);
+		System.out.println("sb4:" + sb4);
 	}
 
 	/**

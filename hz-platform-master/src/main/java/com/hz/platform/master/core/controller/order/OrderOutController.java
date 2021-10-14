@@ -245,14 +245,14 @@ public class OrderOutController extends BaseController {
             String checkSign = "";
             if (!StringUtils.isBlank(requestData.trade_type)){
                 checkSign = "channel=" + requestData.channel + "&" + "trade_type=" + requestData.trade_type + "&" + "total_amount=" + requestData.total_amount
-                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
+                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name
                         + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
-                        + "key=" + channelModel.getSecretKey();
+                        + "&" + "key=" + channelModel.getSecretKey();
             }else {
                 checkSign = "channel=" + requestData.channel + "&" + "total_amount=" + requestData.total_amount
-                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name + "&"
+                        + "&" + "out_trade_no=" + requestData.out_trade_no + "&" + "bank_name=" + requestData.bank_name
                         + "&" + "bank_card=" + requestData.bank_card + "&" + "account_name=" + requestData.account_name
-                        + "key=" + channelModel.getSecretKey();
+                        + "&" + "key=" + channelModel.getSecretKey();
                 requestData.trade_type = gewaytradetypeModel.getMyTradeType();
             }
 
@@ -359,6 +359,35 @@ public class OrderOutController extends BaseController {
                         sendFlag = true;
                     }
                 }
+            }else if (gewayModel.getContacts().equals("CKSD")){
+                // 蛋糕杉德
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("money", requestData.total_amount);
+                sendDataMap.put("payType", payCode);
+                sendDataMap.put("outTradeNo", sgid);
+                sendDataMap.put("secretKey", channelModel.getSecretKey());
+                sendDataMap.put("notifyUrl", my_notify_url);
+                sendDataMap.put("inBankCard", requestData.bank_card);
+                sendDataMap.put("inBankName", requestData.bank_name);
+                sendDataMap.put("inAccountName", requestData.account_name);
+                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                sendDataMap.put("inBankProvince", requestData.bank_province);
+                sendDataMap.put("inBankCity", requestData.bank_city);
+                String parameter = JSON.toJSONString(sendDataMap);
+                parameter = StringUtil.mergeCodeBase64(parameter);
+                Map<String, String> sendMap = new HashMap<>();
+                sendMap.put("jsonData", parameter);
+                String sendData = JSON.toJSONString(sendMap);
+                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                Map<String, Object> resMap = new HashMap<>();
+                Map<String, Object> dataMap = new HashMap<>();
+                if (!StringUtils.isBlank(fineData)) {
+                    resMap = JSON.parseObject(fineData, Map.class);
+                    if (resMap.get("resultCode").equals("0")) {
+                        sendFlag = true;
+                    }
+                }
+                log.info("--------------resData:" + resData);
             }
 
             boolean flag = false;// 是否执行成功

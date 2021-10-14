@@ -1124,7 +1124,7 @@ public class HodgepodgeMethod {
         if (!StringUtils.isBlank(delayTime)){
             resBean.setDelayTime(delayTime);
         }else {
-            String delayTimeStr = DateUtil.addDateMinute(30);
+            String delayTimeStr = DateUtil.addDateMinute(720);
             resBean.setDelayTime(delayTimeStr);
         }
         if (!StringUtils.isBlank(lockTime)){
@@ -2623,7 +2623,7 @@ public class HodgepodgeMethod {
             resBean.setTrade_time(channelOutModel.getCreateTime());
         }else {
             resBean.setOut_trade_no(out_trade_no);
-            resBean.setTrade_status(3);
+            resBean.setTrade_status(4);
         }
         return resBean;
     }
