@@ -353,6 +353,22 @@ public class Test {
 
 
 
+        // 金服
+        Map<String ,String> sendDataMap = new HashMap<>();
+        sendDataMap.put("order_no", String.valueOf(System.currentTimeMillis()));
+        sendDataMap.put("amount", "50.00");
+        sendDataMap.put("bankCrad", "bankCrad_test");
+        sendDataMap.put("cardholderName", "cardholderName_test");
+        sendDataMap.put("companyCode","SSRJ1568345");
+        sendDataMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        String public_key = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAza9bUjv2K9wN7xTntbm8+WXYX5pV5QS2jRf1iO9wpTVYkC2kIk0B27Rvqrk7Rd7c3/Rl5PxaYdlmtl4a9m9blJmqhdRLV7e+YLcCyL5FhwtgQos5guxgAGbqcmU8w7rDXlxyFSbduC2qGDfDC+IxOCnySrXjUoBmn2KxVakmbuf58cfyzW+O/XnFHBp/p7RCTuMP96TVWeujN2j9Funkc7XbPp/IDW2HLBykKGMggcqWfKHe4TvBpZBtSLlOqQ3PSjf6hAfkBRclHwiO3Zg3RfSPL8eQurUQTfQAYJjadUje5B8C2K68mtBqSK1Sg4eRyBOaiRdJw5RrLM1g3P8tRwIDAQAB";
+        String mySign = SecurityUtil.sign(public_key, SecurityUtil.map2str(sendDataMap));
+        log.info("--------buf--------mySign:" + mySign);
+        sendDataMap.put("sign", mySign);
+        String parameter = JSON.toJSONString(sendDataMap);
+        String resData = HttpUtil.doPostJson("http://testgame.huanyuxingkong.cn:8183/cpg/alipayForPrivate/aliPay_bankCard", parameter);
+        log.info("--------resData:" + resData);
+
 
 
     }
