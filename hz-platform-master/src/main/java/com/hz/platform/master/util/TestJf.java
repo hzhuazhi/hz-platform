@@ -22,14 +22,14 @@ public class TestJf {
 
     public static void main(String [] args) throws Exception{
         String order_no = String.valueOf(System.currentTimeMillis());
-        String public_key = "MIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJx2ncJ/KQyCIqHWszq0/RypCbW8zYN5aChU8GC5sLaOCWcXkvTsFMZVgT43c2vTjBlSf59yl1JAvPxToMYmYkqcFnA1wbH1PsxSpYznW3xxdLL0RSwyd4Kc/G/GkRv2Myrsv14xNW16ktBMWNpvQ+b4rI7NFGm2gS9MN0/MAAFdAgMBAAECgYAyyFEF6q3REH/bFUtQ16N7ZOXw5ZmyfXov9Pmb+0j+x3UHz9/zvJg1k1UCc47zxVKoeV1QzCmPGdH898ur5JNr7wHDadQmfL9ealZ+jKAZs8NkdDDYCUUnG4NNQ5kCDJJp2DUjrN58WMsOMWmotlsnB2T07R4w0k09IMFiIBSRwQJBAOIO+dZvFvLMLZsFDS6ODkpdkNxCE09rc8qEQ/WdeZWrx26cg+tjo4597aiDeHxJdFwUXKqE4CJKYubJrLBc9jECQQCxL9wAkCMzYmsvrcZqPbn50zEqtg6xFjwvzBVAYcvhHnkcyKyu9O3Im+6b/QZiqpDQOb1w7qoB/4QHYRwm7fbtAkEA1wcNyVZkStHC87krX8RKfZxgxdKoUZxRSSrlBgYj+CWtD18b8NUXZ9wLK4bbHcY1Q70upBi+pn+BciwV8rCKkQJAWdSTy01IK2L4SKHneDF3OitSP/8xD6LgPLNRCuUKAkX6zRcIRWMzsoMrw7XSKO+kn4zGeJznYD/05fDb3vjCOQJAIacE22J+7pczP57cWiyuk6oYuyUFr3VokUHUKFEPr1n67xMRClaCtHVZ8y5WqGXoiyeqXecquN/dCcsnoCweSQ==";
+        String public_key = "ADCMIICdgIBADANBgkqhkiG9w0BAQEFAASCAmAwggJcAgEAAoGBAJx2ncJ/KQyCIqHWszq0/RypCbW8zYN5aChU8GC5sLaOCWcXkvTsFMZVgT43c2vTjBlSf59yl1JAvPxToMYmYkqcFnA1wbH1PsxSpYznW3xxdLL0RSwyd4Kc/G/GkRv2Myrsv14xNW16ktBMWNpvQ+b4rI7NFGm2gS9MN0/MAAFdAgMBAAECgYAyyFEF6q3REH/bFUtQ16N7ZOXw5ZmyfXov9Pmb+0j+x3UHz9/zvJg1k1UCc47zxVKoeV1QzCmPGdH898ur5JNr7wHDadQmfL9ealZ+jKAZs8NkdDDYCUUnG4NNQ5kCDJJp2DUjrN58WMsOMWmotlsnB2T07R4w0k09IMFiIBSRwQJBAOIO+dZvFvLMLZsFDS6ODkpdkNxCE09rc8qEQ/WdeZWrx26cg+tjo4597aiDeHxJdFwUXKqE4CJKYubJrLBc9jECQQCxL9wAkCMzYmsvrcZqPbn50zEqtg6xFjwvzBVAYcvhHnkcyKyu9O3Im+6b/QZiqpDQOb1w7qoB/4QHYRwm7fbtAkEA1wcNyVZkStHC87krX8RKfZxgxdKoUZxRSSrlBgYj+CWtD18b8NUXZ9wLK4bbHcY1Q70upBi+pn+BciwV8rCKkQJAWdSTy01IK2L4SKHneDF3OitSP/8xD6LgPLNRCuUKAkX6zRcIRWMzsoMrw7XSKO+kn4zGeJznYD/05fDb3vjCOQJAIacE22J+7pczP57cWiyuk6oYuyUFr3VokUHUKFEPr1n67xMRClaCtHVZ8y5WqGXoiyeqXecquN/dCcsnoCweSQ==";
         // 金服-拉单
         Map<String ,String> sendDataMap = new HashMap<>();
         sendDataMap.put("order_no", order_no);
         sendDataMap.put("amount", "50.00");
         sendDataMap.put("bankCrad", "bankCrad_test");
         sendDataMap.put("cardholderName", "cardholderName_test");
-        sendDataMap.put("companyCode","SSRJ1568345");
+        sendDataMap.put("companyCode","SSRJ15683451314");
         sendDataMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String sendData = SecurityUtil.map2str(sendDataMap);
         log.info("sendData:" + sendData);
@@ -47,7 +47,7 @@ public class TestJf {
 //        sendDataMap_query.put("order_no", order_no);
 //        sendDataMap_query.put("order_no", "1634717933885");
         sendDataMap_query.put("order_no", "1634717933885111");
-        sendDataMap_query.put("companyCode","SSRJ1568345");
+        sendDataMap_query.put("companyCode","SSRJ15683451314");
         sendDataMap_query.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String mySign_query = SecurityUtil.sign(public_key, SecurityUtil.map2str(sendDataMap_query));
         log.info("--------buf--------mySign_query:" + mySign_query);
@@ -61,7 +61,7 @@ public class TestJf {
 
         // 金服-查余额
         Map<String ,String> sendDataMap_balance = new HashMap<>();
-        sendDataMap_balance.put("companyCode","SSRJ1568345");
+        sendDataMap_balance.put("companyCode","SSRJ15683451314");
         sendDataMap_balance.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String mySign_balance = SecurityUtil.sign(public_key, SecurityUtil.map2str(sendDataMap_balance));
         log.info("--------buf--------mySign_balance:" + mySign_balance);
