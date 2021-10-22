@@ -388,6 +388,35 @@ public class OrderOutController extends BaseController {
                     }
                 }
                 log.info("--------------resData:" + resData);
+            }else if (gewayModel.getContacts().equals("CKJF")){
+                // 蛋糕杉德
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("money", requestData.total_amount);
+                sendDataMap.put("payType", payCode);
+                sendDataMap.put("outTradeNo", sgid);
+                sendDataMap.put("secretKey", channelModel.getSecretKey());
+                sendDataMap.put("notifyUrl", my_notify_url);
+                sendDataMap.put("inBankCard", requestData.bank_card);
+                sendDataMap.put("inBankName", requestData.bank_name);
+                sendDataMap.put("inAccountName", requestData.account_name);
+                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                sendDataMap.put("inBankProvince", requestData.bank_province);
+                sendDataMap.put("inBankCity", requestData.bank_city);
+                String parameter = JSON.toJSONString(sendDataMap);
+                parameter = StringUtil.mergeCodeBase64(parameter);
+                Map<String, String> sendMap = new HashMap<>();
+                sendMap.put("jsonData", parameter);
+                String sendData = JSON.toJSONString(sendMap);
+                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                Map<String, Object> resMap = new HashMap<>();
+                Map<String, Object> dataMap = new HashMap<>();
+                if (!StringUtils.isBlank(fineData)) {
+                    resMap = JSON.parseObject(fineData, Map.class);
+                    if (resMap.get("resultCode").equals("0")) {
+                        sendFlag = true;
+                    }
+                }
+                log.info("--------------resData:" + resData);
             }
 
             boolean flag = false;// 是否执行成功

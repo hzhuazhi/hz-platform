@@ -29,7 +29,7 @@ public class TestJf {
         sendDataMap.put("amount", "50.00");
         sendDataMap.put("bankCrad", "bankCrad_test");
         sendDataMap.put("cardholderName", "cardholderName_test");
-        sendDataMap.put("companyCode","SSRJ15683451314");
+        sendDataMap.put("companyCode","ASCSSRJ1568345111");
         sendDataMap.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String sendData = SecurityUtil.map2str(sendDataMap);
         log.info("sendData:" + sendData);
@@ -38,37 +38,37 @@ public class TestJf {
         sendDataMap.put("sign", mySign);
         String parameter = JSON.toJSONString(sendDataMap);
         log.info("请求数据_拉单:" + parameter);
-        String resData = HttpUtil.doPostJson("http://testgame.huanyuxingkong.cn:8183/cpg/alipayForPrivate/aliPay_bankCard", parameter);
+        String resData = HttpUtil.doPostJson("http://testgame111.huanyuxingkong.cn:8183/cpg/alipayForPrivate/aliPay_bankCard", parameter);
         log.info("----拉单----resData:" + resData);
 
 
         // 金服-查单
         Map<String ,String> sendDataMap_query = new HashMap<>();
 //        sendDataMap_query.put("order_no", order_no);
-//        sendDataMap_query.put("order_no", "1634717933885");
         sendDataMap_query.put("order_no", "1634717933885111");
-        sendDataMap_query.put("companyCode","SSRJ15683451314");
+//        sendDataMap_query.put("order_no", "1634717933885111");
+        sendDataMap_query.put("companyCode","ASCSSRJ1568345111");
         sendDataMap_query.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String mySign_query = SecurityUtil.sign(public_key, SecurityUtil.map2str(sendDataMap_query));
         log.info("--------buf--------mySign_query:" + mySign_query);
         sendDataMap_query.put("sign", mySign_query);
         String parameter_query = JSON.toJSONString(sendDataMap_query);
         log.info("请求数据_查单:" + parameter_query);
-        String resData_query = HttpUtil.doPostJson("http://testgame.huanyuxingkong.cn:8183/cpg/alipayForPrivate/queryOrder", parameter_query);
+        String resData_query = HttpUtil.doPostJson("http://testgame111.huanyuxingkong.cn:8183/cpg/alipayForPrivate/queryOrder", parameter_query);
         log.info("----查单----resData_query:" + resData_query);
 
 
 
         // 金服-查余额
         Map<String ,String> sendDataMap_balance = new HashMap<>();
-        sendDataMap_balance.put("companyCode","SSRJ15683451314");
+        sendDataMap_balance.put("companyCode","ASCSSRJ1568345111");
         sendDataMap_balance.put("timestamp", String.valueOf(System.currentTimeMillis()));
         String mySign_balance = SecurityUtil.sign(public_key, SecurityUtil.map2str(sendDataMap_balance));
         log.info("--------buf--------mySign_balance:" + mySign_balance);
         sendDataMap_balance.put("sign", mySign_balance);
         String parameter_balance = JSON.toJSONString(sendDataMap_balance);
         log.info("请求数据_查余额:" + parameter_balance);
-        String resData_balance = HttpUtil.doPostJson("http://testgame.huanyuxingkong.cn:8183/cpg/alipayForPrivate/queryBalance", parameter_balance);
+        String resData_balance = HttpUtil.doPostJson("http://testgame111.huanyuxingkong.cn:8183/cpg/alipayForPrivate/queryBalance", parameter_balance);
         log.info("----查余额----resData_balance:" + resData_balance);
 
 
