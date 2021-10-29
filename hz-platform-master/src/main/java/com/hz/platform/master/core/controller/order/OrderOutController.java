@@ -389,7 +389,7 @@ public class OrderOutController extends BaseController {
                 }
                 log.info("--------------resData:" + resData);
             }else if (gewayModel.getContacts().equals("CKJF")){
-                // 蛋糕杉德
+                // 蛋糕金服
                 Map<String ,Object> sendDataMap = new HashMap<>();
                 sendDataMap.put("money", requestData.total_amount);
                 sendDataMap.put("payType", payCode);

@@ -1015,6 +1015,43 @@ public class PayController extends BaseController {
                     }
                 }
 
+            }else if (gewayModel.getContacts().equals("MG")){
+                // 芒果支付
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("pay_memberid", gewayModel.getPayId());
+                sendDataMap.put("pay_orderid", sgid);
+                sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime()); // 提交时间- 时间格式：2016-12-26 18:18:18
+                sendDataMap.put("pay_bankcode", payCode);// 银行编码
+                sendDataMap.put("pay_notifyurl", gewayModel.getNotifyUrl());// 服务端通知 服务端返回地址.（POST返回数据）
+                sendDataMap.put("pay_callbackurl", requestData.return_url);// 页面跳转通知
+                sendDataMap.put("pay_amount", requestData.total_amount); // 订单金额
+
+
+
+
+                String mySign = ASCIISort.getKeySign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------mg--------mySign:" + mySign);
+                sendDataMap.put("pay_md5sign", mySign);
+                sendDataMap.put("content_type", "json");
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resMgData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resMgData:" + resMgData);
+
+                Map<String, Object> resMgMap = new HashMap<>();
+                if (!StringUtils.isBlank(resMgData)) {
+                    resMgMap = JSON.parseObject(resMgData, Map.class);
+                    boolean containsKey = resMgMap.containsKey("code");
+                    if (containsKey) {
+                        if (Integer.parseInt(resMgMap.get("code").toString()) == 200) {
+                            if (!StringUtils.isBlank(resMgMap.get("payurl").toString())){
+                                qrCodeUrl = (String) resMgMap.get("payurl");
+                                resData = "ok";
+                            }
+                        }
+                    }
+                }
+
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;
