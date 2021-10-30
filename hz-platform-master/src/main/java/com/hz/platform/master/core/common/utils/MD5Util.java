@@ -235,26 +235,26 @@ public class MD5Util {
 //        String df_account_name = "开户人";
 //        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
 
-        String df_channel = "channel_9";
-        String df_trade_type = "200002";
+        String df_channel = "20121";
+        String df_trade_type = "200001";
         String df_total_amount = "100.00";
-        String df_out_trade_no = "df_out_trade_no_1";
-        String df_bank_name = "建设银行";
-        String df_bank_card = "8888888888";
-        String df_account_name = "张三";
-        String df_key = "94d87e39f14dcc86f0ca5c40fbd458da";
+        String df_out_trade_no = "c089001958947";
+        String df_bank_name = "宁波银行";
+        String df_bank_card = "123456";
+        String df_account_name = "陈胜";
+        String df_key = "fc8548458sgcsed247d84cbce2474a41";
         String dfCheckSign = "channel=" + df_channel + "&" + "trade_type=" + df_trade_type + "&" + "total_amount=" + df_total_amount
-                + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name + "&"
+                + "&" + "out_trade_no=" + df_out_trade_no + "&" + "bank_name=" + df_bank_name
                 + "&" + "bank_card=" + df_bank_card + "&" + "account_name=" + df_account_name
-                + "key=" + df_key;
+                + "&" + "key=" + df_key;
         dfCheckSign = MD5Util.encryption(dfCheckSign);
         System.out.println("dfCheckSign:" + dfCheckSign);
 
 
 
-        String wg_channel = "10102";
-        String wg_out_trade_no = "202109181031400164";
-        String wg_key = "21a840b135d04fcaeaf2073c123d5ecb";
+        String wg_channel = "20121";
+        String wg_out_trade_no = "c089001958947";
+        String wg_key = "fc8548458sgcsed247d84cbce2474a41";
         String wgCheckSign = "channel=" + wg_channel + "&" + "out_trade_no=" + wg_out_trade_no + "&" + "key=" + wg_key;
         wgCheckSign = MD5Util.encryption(wgCheckSign);
         System.out.println("wgCheckSign:" + wgCheckSign);
