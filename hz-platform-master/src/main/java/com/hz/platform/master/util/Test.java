@@ -10,6 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 
 /**
  * @ClassName: Test
@@ -353,44 +354,133 @@ public class Test {
 
 
 
-        // 芒果支付
+//        // 芒果支付
+//        Map<String ,Object> sendDataMap = new HashMap<>();
+//        sendDataMap.put("pay_memberid", "10296");
+//        sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
+//        sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime()); // 提交时间- 时间格式：2016-12-26 18:18:18
+//        sendDataMap.put("pay_bankcode", "1008");// 银行编码
+//        sendDataMap.put("pay_notifyurl", "http://www.qidian.com");// 服务端通知 服务端返回地址.（POST返回数据）
+//        sendDataMap.put("pay_callbackurl", "http://www.baidu.com");// 页面跳转通知
+//        sendDataMap.put("pay_amount", "50.00"); // 订单金额
+//
+//
+//
+//        String mySign = ASCIISort.getKeySign(sendDataMap, "j2qjykyt2lz5hpkcmfek8eams4f99bi4", 2);
+//        log.info("--------buf--------mySign:" + mySign);
+//        sendDataMap.put("pay_md5sign", mySign);
+//        sendDataMap.put("content_type", "json");
+//
+//        String parameter = JSON.toJSONString(sendDataMap);
+//
+//        String resData = HttpSendUtils.doPostForm("http://api.qdxzdz.com/Pay_Index.html", sendDataMap);
+////        String resData = HttpUtil.doPostJson("http://api.qdxzdz.com/Pay_Index.html", parameter);
+//
+//        log.info("--------resData:" + resData);
+//        // {"code":1,"msg":"请求成功!","time":"1631608831","data":{"payurl":"https:\/\/openapi.alipay.com\/gateway.do?alipay_sdk=alipay-sdk-php-20161101&app_id=2021002141614154&biz_content=%7B%22out_trade_no%22%3A%221631608831352926837%22%2C%22total_amount%22%3A%2250.00%22%2C%22subject%22%3A%22S%E5%BD%A2%E5%B1%95%E6%9D%BF%E7%B3%BB%E5%88%97-%E5%BC%A7%E5%BD%A2S+%E5%BF%AB%E5%B9%95%E7%A7%80S%E5%BD%A2%E8%9B%87%E5%BD%A2%E5%B1%95%E6%9E%B6+%E8%BD%BB%E4%BE%BF%E7%94%BB%E9%9D%A2%E5%BF%AB%E5%B1%95%E7%A4%BA%E6%9E%B6+%E5%95%86%E5%9C%BA%E4%BF%83%E9%94%80%E5%B1%95%E5%85%B7%22%2C%22product_code%22%3A%22FAST_INSTANT_TRADE_PAY%22%7D&charset=UTF-8&format=json&method=alipay.trade.wap.pay&notify_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fnotify%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&return_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fbackurl%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&sign=decuRtyil5QddjoKUNhXmbIAj0lyKu0bWp%2B%2B%2Be6vEFEAF29Yt4WSZeVHNO2ZUz9JMsXA51SjGJ%2BVBDPqifLTLXD6NCYpU1ICWraKBoU9qJieXnC6ao6q3clxpFOmJTLixJPpcyn4%2Bl9%2BjXDGheOwb8lW0K%2F2I4KmwH5GwUvsMJkAREw%2BkNQi87NZp1fjrGgsM4c%2BqbdiuBoUSK9o5j52BxS7O0bjRvZtEFKhe8bL9lXZ4jrjkJLIPOdnDsjyW8v813Y2hE2Ea5hL9isGOrq7LuCmzE4NxpWwVy7uBjugK6YnYf3I8OvdaDImxiRidvduGPJQhDTjqhFN5%2B5dRkUlpQ%3D%3D&sign_type=RSA2&timestamp=2021-09-14+16%3A40%3A31&version=1.0","orderno":"1631608834702","sysorderno":"1631608831352926837"}}
+//
+//        Map<String, Object> resMap = new HashMap<>();
+//        resMap = JSON.parseObject(resData, Map.class);
+//        boolean containsKey = resMap.containsKey("code");
+//        if (containsKey) {
+//            if (Integer.parseInt(resMap.get("code").toString()) == 200) {
+//                if (!StringUtils.isBlank(resMap.get("payurl").toString())){
+//                    String qrCodeUrl = (String) resMap.get("payurl");
+//                    resData = "ok";
+//                    log.info("qrCodeUrl:" + qrCodeUrl);
+//                }
+//            }
+//        }
+
+
+
+//        // 麻袋支付
+//        Map<String ,Object> sendDataMap = new HashMap<>();
+//        sendDataMap.put("MerNo", "10296");
+//        sendDataMap.put("BillNo", String.valueOf(System.currentTimeMillis()));// 订单号
+//        sendDataMap.put("Amount", "50.00"); // 订单金额
+//        sendDataMap.put("pay_applydate", DateUtil.getNowLongTime()); // 提交时间- 时间格式：2016-12-26 18:18:18
+//        sendDataMap.put("pay_bankcode", "1008");// 银行编码
+//        sendDataMap.put("pay_notifyurl", "http://www.qidian.com");// 服务端通知 服务端返回地址.（POST返回数据）
+//        sendDataMap.put("pay_callbackurl", "http://www.baidu.com");// 页面跳转通知
+//
+//
+//
+//        String mySign = ASCIISort.getKeySign(sendDataMap, "j2qjykyt2lz5hpkcmfek8eams4f99bi4", 2);
+//        log.info("--------buf--------mySign:" + mySign);
+//        sendDataMap.put("pay_md5sign", mySign);
+//        sendDataMap.put("content_type", "json");
+//
+//        String parameter = JSON.toJSONString(sendDataMap);
+//
+//        String resData = HttpSendUtils.doPostForm("http://api.qdxzdz.com/Pay_Index.html", sendDataMap);
+////        String resData = HttpUtil.doPostJson("http://api.qdxzdz.com/Pay_Index.html", parameter);
+//
+//        log.info("--------resData:" + resData);
+//        // {"code":1,"msg":"请求成功!","time":"1631608831","data":{"payurl":"https:\/\/openapi.alipay.com\/gateway.do?alipay_sdk=alipay-sdk-php-20161101&app_id=2021002141614154&biz_content=%7B%22out_trade_no%22%3A%221631608831352926837%22%2C%22total_amount%22%3A%2250.00%22%2C%22subject%22%3A%22S%E5%BD%A2%E5%B1%95%E6%9D%BF%E7%B3%BB%E5%88%97-%E5%BC%A7%E5%BD%A2S+%E5%BF%AB%E5%B9%95%E7%A7%80S%E5%BD%A2%E8%9B%87%E5%BD%A2%E5%B1%95%E6%9E%B6+%E8%BD%BB%E4%BE%BF%E7%94%BB%E9%9D%A2%E5%BF%AB%E5%B1%95%E7%A4%BA%E6%9E%B6+%E5%95%86%E5%9C%BA%E4%BF%83%E9%94%80%E5%B1%95%E5%85%B7%22%2C%22product_code%22%3A%22FAST_INSTANT_TRADE_PAY%22%7D&charset=UTF-8&format=json&method=alipay.trade.wap.pay&notify_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fnotify%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&return_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fbackurl%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&sign=decuRtyil5QddjoKUNhXmbIAj0lyKu0bWp%2B%2B%2Be6vEFEAF29Yt4WSZeVHNO2ZUz9JMsXA51SjGJ%2BVBDPqifLTLXD6NCYpU1ICWraKBoU9qJieXnC6ao6q3clxpFOmJTLixJPpcyn4%2Bl9%2BjXDGheOwb8lW0K%2F2I4KmwH5GwUvsMJkAREw%2BkNQi87NZp1fjrGgsM4c%2BqbdiuBoUSK9o5j52BxS7O0bjRvZtEFKhe8bL9lXZ4jrjkJLIPOdnDsjyW8v813Y2hE2Ea5hL9isGOrq7LuCmzE4NxpWwVy7uBjugK6YnYf3I8OvdaDImxiRidvduGPJQhDTjqhFN5%2B5dRkUlpQ%3D%3D&sign_type=RSA2&timestamp=2021-09-14+16%3A40%3A31&version=1.0","orderno":"1631608834702","sysorderno":"1631608831352926837"}}
+//
+//        Map<String, Object> resMap = new HashMap<>();
+//        resMap = JSON.parseObject(resData, Map.class);
+//        boolean containsKey = resMap.containsKey("code");
+//        if (containsKey) {
+//            if (Integer.parseInt(resMap.get("code").toString()) == 200) {
+//                if (!StringUtils.isBlank(resMap.get("payurl").toString())){
+//                    String qrCodeUrl = (String) resMap.get("payurl");
+//                    resData = "ok";
+//                    log.info("qrCodeUrl:" + qrCodeUrl);
+//                }
+//            }
+//        }
+
+
+
+
+
+        // 东风支付
         Map<String ,Object> sendDataMap = new HashMap<>();
-        sendDataMap.put("pay_memberid", "10296");
-        sendDataMap.put("pay_orderid", String.valueOf(System.currentTimeMillis()));
-        sendDataMap.put("pay_applydate", DateUtil.getNowPlusTime()); // 提交时间- 时间格式：2016-12-26 18:18:18
-        sendDataMap.put("pay_bankcode", "1008");// 银行编码
-        sendDataMap.put("pay_notifyurl", "http://www.qidian.com");// 服务端通知 服务端返回地址.（POST返回数据）
-        sendDataMap.put("pay_callbackurl", "http://www.baidu.com");// 页面跳转通知
-        sendDataMap.put("pay_amount", "50.00"); // 订单金额
+        sendDataMap.put("mchId", "5555");// 商户号
+        sendDataMap.put("amount", "50.00"); // 支付金额/元
+        sendDataMap.put("bankCode", "5");// 微信扫码=2, 微信H5=3,支付宝=4,支付宝H5=5 网关代付=7 sdk支付宝=13
+        String a = String.valueOf(new Random().nextInt(9));
+        String b = String.valueOf(new Random().nextInt(9));
+        String c = String.valueOf(new Random().nextInt(9));
+        String d = String.valueOf(new Random().nextInt(9));
+        String e = String.valueOf(new Random().nextInt(9));
+        String f = String.valueOf(new Random().nextInt(9));
+        String g = String.valueOf(new Random().nextInt(9));
+        String temStr = "5" + g + "."+ f + a + ".2"+ b + c + ".2" + d + e;
+        sendDataMap.put("clientIp", temStr); // 主要防止 cc 恶意请求，以及匹配收款商户，不传则无法支付（不能传局域网 IP 不能是国外 IP，不能是服务器 IP）
+        sendDataMap.put("goodsName", "钻石");// 异步通知平台更新数据
+        sendDataMap.put("notiryUrl", "http://www.qidian.com");// 异步通知平台更新数据
+        sendDataMap.put("orderNo", String.valueOf(System.currentTimeMillis()));// 商户生成的订单编号
+        sendDataMap.put("payTime", DateUtil.getNowLongTime()); // 提交时间，格式：yyyyMMddHHmmss
+        sendDataMap.put("returnUrl", "http://www.baidu.com");// 同步通知 Url
 
 
 
-        String mySign = ASCIISort.getKeySign(sendDataMap, "j2qjykyt2lz5hpkcmfek8eams4f99bi4", 2);
+        String mySign = ASCIISort.getSign(sendDataMap,"f005635f08985e9f86141532919fb007", 2);
         log.info("--------buf--------mySign:" + mySign);
-        sendDataMap.put("pay_md5sign", mySign);
-        sendDataMap.put("content_type", "json");
+        sendDataMap.put("sign", mySign);
 
         String parameter = JSON.toJSONString(sendDataMap);
 
-        String resData = HttpSendUtils.doPostForm("http://api.qdxzdz.com/Pay_Index.html", sendDataMap);
-//        String resData = HttpUtil.doPostJson("http://api.qdxzdz.com/Pay_Index.html", parameter);
+        String resData = HttpSendUtils.doPostForm("http://103.195.50.217/gatewayjson", sendDataMap);
 
         log.info("--------resData:" + resData);
-        // {"code":1,"msg":"请求成功!","time":"1631608831","data":{"payurl":"https:\/\/openapi.alipay.com\/gateway.do?alipay_sdk=alipay-sdk-php-20161101&app_id=2021002141614154&biz_content=%7B%22out_trade_no%22%3A%221631608831352926837%22%2C%22total_amount%22%3A%2250.00%22%2C%22subject%22%3A%22S%E5%BD%A2%E5%B1%95%E6%9D%BF%E7%B3%BB%E5%88%97-%E5%BC%A7%E5%BD%A2S+%E5%BF%AB%E5%B9%95%E7%A7%80S%E5%BD%A2%E8%9B%87%E5%BD%A2%E5%B1%95%E6%9E%B6+%E8%BD%BB%E4%BE%BF%E7%94%BB%E9%9D%A2%E5%BF%AB%E5%B1%95%E7%A4%BA%E6%9E%B6+%E5%95%86%E5%9C%BA%E4%BF%83%E9%94%80%E5%B1%95%E5%85%B7%22%2C%22product_code%22%3A%22FAST_INSTANT_TRADE_PAY%22%7D&charset=UTF-8&format=json&method=alipay.trade.wap.pay&notify_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fnotify%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&return_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fbackurl%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&sign=decuRtyil5QddjoKUNhXmbIAj0lyKu0bWp%2B%2B%2Be6vEFEAF29Yt4WSZeVHNO2ZUz9JMsXA51SjGJ%2BVBDPqifLTLXD6NCYpU1ICWraKBoU9qJieXnC6ao6q3clxpFOmJTLixJPpcyn4%2Bl9%2BjXDGheOwb8lW0K%2F2I4KmwH5GwUvsMJkAREw%2BkNQi87NZp1fjrGgsM4c%2BqbdiuBoUSK9o5j52BxS7O0bjRvZtEFKhe8bL9lXZ4jrjkJLIPOdnDsjyW8v813Y2hE2Ea5hL9isGOrq7LuCmzE4NxpWwVy7uBjugK6YnYf3I8OvdaDImxiRidvduGPJQhDTjqhFN5%2B5dRkUlpQ%3D%3D&sign_type=RSA2&timestamp=2021-09-14+16%3A40%3A31&version=1.0","orderno":"1631608834702","sysorderno":"1631608831352926837"}}
+        // {"RState":"1","RMsg":null,"Data":"http://www.payalibaba.com/pay/89313141120327680"}
 
         Map<String, Object> resMap = new HashMap<>();
         resMap = JSON.parseObject(resData, Map.class);
-        boolean containsKey = resMap.containsKey("code");
+        boolean containsKey = resMap.containsKey("RState");
         if (containsKey) {
-            if (Integer.parseInt(resMap.get("code").toString()) == 200) {
-                if (!StringUtils.isBlank(resMap.get("payurl").toString())){
-                    String qrCodeUrl = (String) resMap.get("payurl");
+            if (resMap.get("RState").equals("1")) {
+                if (!StringUtils.isBlank(resMap.get("Data").toString())){
+                    String qrCodeUrl = (String) resMap.get("Data");
                     resData = "ok";
                     log.info("qrCodeUrl:" + qrCodeUrl);
                 }
             }
         }
-
 
 
     }

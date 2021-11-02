@@ -1052,6 +1052,52 @@ public class PayController extends BaseController {
                     }
                 }
 
+            }else if (gewayModel.getContacts().equals("DFZF")){
+                // 东风支付
+                Map<String ,Object> sendDataMap = new HashMap<>();
+                sendDataMap.put("mchId", gewayModel.getPayId());// 商户号
+                sendDataMap.put("amount", requestData.total_amount); // 支付金额/元
+                sendDataMap.put("bankCode", payCode);// 微信扫码=2, 微信H5=3,支付宝=4,支付宝H5=5 网关代付=7 sdk支付宝=13
+                String a = String.valueOf(new Random().nextInt(9));
+                String b = String.valueOf(new Random().nextInt(9));
+                String c = String.valueOf(new Random().nextInt(9));
+                String d = String.valueOf(new Random().nextInt(9));
+                String e = String.valueOf(new Random().nextInt(9));
+                String f = String.valueOf(new Random().nextInt(9));
+                String g = String.valueOf(new Random().nextInt(9));
+                String temStr = "5" + g + "."+ f + a + ".2"+ b + c + ".2" + d + e;
+                sendDataMap.put("clientIp", temStr); // 主要防止 cc 恶意请求，以及匹配收款商户，不传则无法支付（不能传局域网 IP 不能是国外 IP，不能是服务器 IP）
+                sendDataMap.put("goodsName", "钻石");// 异步通知平台更新数据
+                sendDataMap.put("notiryUrl", gewayModel.getNotifyUrl());// 异步通知平台更新数据
+                sendDataMap.put("orderNo", sgid);// 商户生成的订单编号
+                sendDataMap.put("payTime", DateUtil.getNowLongTime()); // 提交时间，格式：yyyyMMddHHmmss
+                sendDataMap.put("returnUrl", requestData.return_url);// 同步通知 Url
+
+
+
+
+                String mySign = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey(), 2);
+                log.info("--------dfzf--------mySign:" + mySign);
+                sendDataMap.put("sign", mySign);
+                String parameter = JSON.toJSONString(sendDataMap);
+
+                String resDfzfData = HttpSendUtils.doPostForm(gewayModel.getInterfaceAds(), sendDataMap);
+                log.info("--------resDfzfData:" + resDfzfData);
+
+                Map<String, Object> resDfzfMap = new HashMap<>();
+                if (!StringUtils.isBlank(resDfzfData)) {
+                    resDfzfMap = JSON.parseObject(resDfzfData, Map.class);
+                    boolean containsKey = resDfzfMap.containsKey("RState");
+                    if (containsKey) {
+                        if (resDfzfMap.get("RState").equals("1")) {
+                            if (!StringUtils.isBlank(resDfzfMap.get("Data").toString())){
+                                qrCodeUrl = (String) resDfzfMap.get("Data");
+                                resData = "ok";
+                            }
+                        }
+                    }
+                }
+
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;

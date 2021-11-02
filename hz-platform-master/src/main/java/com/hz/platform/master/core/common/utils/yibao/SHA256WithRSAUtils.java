@@ -62,7 +62,7 @@ public class SHA256WithRSAUtils {
     //密钥算法
     public static final String ALGORITHM_RSA = "RSA";
     //RSA 签名算法
-    public static final String ALGORITHM_RSA_SIGN = "SHA256WithRSA";
+    public static final String ALGORITHM_RSA_SIGN = "SHA1WithRSA";// SHA256WithRSA
     public static final int ALGORITHM_RSA_PRIVATE_KEY_LENGTH = 2048;
 
     private SHA256WithRSAUtils() {
@@ -180,6 +180,31 @@ public class SHA256WithRSAUtils {
             throw new RuntimeException("解密字符串[" + data + "]时遇到异常", e);
         }
     }
+
+
+    /**
+     * RSA算法使用私钥对数据生成数字签名
+     *
+     * @param data 待签名的明文字符串
+     * @param key  RSA私钥字符串
+     * @return RSA私钥签名的字符串
+     */
+    public static String buildRSASignByPrivateKey(String data, String key) {
+        try {
+            //通过PKCS#8编码的Key指令获得私钥对象
+            PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
+            KeyFactory keyFactory = KeyFactory.getInstance(ALGORITHM_RSA);
+            PrivateKey privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
+            Signature signature = Signature.getInstance(ALGORITHM_RSA_SIGN);
+            signature.initSign(privateKey);
+            signature.update(data.getBytes(CHARSET));
+            return signature.sign().toString();
+        } catch (Exception e) {
+            throw new RuntimeException("签名字符串[" + data + "]时遇到异常", e);
+        }
+    }
+
+
     /**
      * RSA算法使用私钥对数据生成数字签名
      *
@@ -187,7 +212,7 @@ public class SHA256WithRSAUtils {
      * @param key  RSA私钥字符串
      * @return RSA私钥签名后的经过Base64编码的字符串
      */
-    public static String buildRSASignByPrivateKey(String data, String key) {
+    public static String buildRSASignByPrivateKeyAndBase64(String data, String key) {
         try {
             //通过PKCS#8编码的Key指令获得私钥对象
             PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(Base64.getDecoder().decode(key));
