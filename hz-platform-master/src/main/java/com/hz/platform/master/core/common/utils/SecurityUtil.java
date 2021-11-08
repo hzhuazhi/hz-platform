@@ -128,7 +128,7 @@ public class SecurityUtil {
 
 	public static String sign(String priKey, String content) throws Exception {
 		PrivateKey privateKey = getPrivateKey(getRSAKeyFactory(), priKey);
-		return sign("SHA256withRSA", privateKey, content);
+		return sign("SHA1WithRSA", privateKey, content);// SHA256withRSA
 	}
 
 	public static KeyFactory getRSAKeyFactory() throws Exception {
