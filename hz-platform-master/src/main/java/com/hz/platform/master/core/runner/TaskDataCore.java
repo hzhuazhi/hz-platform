@@ -1,9 +1,7 @@
 package com.hz.platform.master.core.runner;
 
-import com.hz.platform.master.core.common.utils.BeanUtils;
-import com.hz.platform.master.core.common.utils.HttpSendUtils;
-import com.hz.platform.master.core.common.utils.MD5Util;
-import com.hz.platform.master.core.common.utils.StringUtil;
+import com.alibaba.fastjson.JSON;
+import com.hz.platform.master.core.common.utils.*;
 import com.hz.platform.master.core.common.utils.constant.CacheKey;
 import com.hz.platform.master.core.common.utils.constant.CachedKeyUtils;
 import com.hz.platform.master.core.common.utils.constant.ServerConstant;
@@ -26,7 +24,9 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Description task:通道回调的成功数据
@@ -186,23 +186,57 @@ public class TaskDataCore {
                                 + "&" + "key=" + channelModel.getSecretKey();
                         sign = MD5Util.encryption(sign);
                         String sendUrl = data.getNotifyUrl();// 需要发送给下游的接口
-                        String sendData = "?total_amount=" + data.getTotalAmount() + "&" + "pay_amount=" + data.getPayAmount() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + data.getTradeStatus()
-                                + "&" + "trade_no=" + data.getMyTradeNo() + "&" + "extra_return_param=" + data.getXyExtraReturnParam() + "&" + "sign=" + sign
-                                + "&" + "trade_time=" + System.currentTimeMillis();
-//                        String resp = HttpSendUtils.sendGet(sendUrl + URLEncoder.encode(sendData,"UTF-8"), null, null);
-                        log.info("sendUrl:" + sendUrl + sendData);
-                        String resp = HttpSendUtils.sendGet(sendUrl + sendData, null, null);
-//                        flag = resp.equals(notify_suc);
-                        if (resp.equals(notify_suc)){
-                            // 成功
-                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 0, 3,0,null);
-                        }else {
-                            // 失败
-                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 0, 2,0,null);
+                        String resp = "";// 返回的数据
+                        if (channelModel.getSendDataType() == 1){
+                            String sendData = "?total_amount=" + data.getTotalAmount() + "&" + "pay_amount=" + data.getPayAmount() + "&" + "out_trade_no=" + data.getOutTradeNo() + "&" + "trade_status=" + data.getTradeStatus()
+                                    + "&" + "trade_no=" + data.getMyTradeNo() + "&" + "extra_return_param=" + data.getXyExtraReturnParam() + "&" + "sign=" + sign
+                                    + "&" + "trade_time=" + System.currentTimeMillis();
+                            log.info("---order-in--get--sendUrl + sendData :" + sendUrl + sendData);
+                            resp = HttpSendUtils.sendGet(sendUrl + sendData, null, null);
+                        }else{
+                            Map<String, Object> sendData = new HashMap<>();
+                            sendData.put("total_amount", data.getTotalAmount());
+                            sendData.put("pay_amount", data.getPayAmount());
+                            sendData.put("out_trade_no", data.getOutTradeNo());
+                            sendData.put("trade_status", data.getTradeStatus());
+                            sendData.put("trade_no", data.getMyTradeNo());
+                            sendData.put("extra_return_param", data.getXyExtraReturnParam());
+                            sendData.put("sign", sign);
+                            sendData.put("trade_time", System.currentTimeMillis());
+
+                            if (channelModel.getSendDataType() == 2){
+                                // post/form
+                                log.info("---order-in--post/form--sendUrl + sendData :" + sendUrl + JSON.toJSONString(sendData));
+                                resp = HttpSendUtils.doPostForm(sendUrl, sendData);
+                            }else if (channelModel.getSendDataType() == 3){
+                                // post/json
+                                String parameter = JSON.toJSONString(sendData);
+                                log.info("---order-in--post/json--sendUrl + sendData :" + sendUrl + parameter);
+                                resp = HttpUtil.doPostJson(sendUrl, parameter);
+                            }
+                        }
+                        log.info("-----order-in-----out_trade_no:" + data.getOutTradeNo() + ",resp:" + resp);
+                        if (!StringUtils.isBlank(resp)){
+                            if (resp.equals(notify_suc)){
+                                // 成功
+                                // 组装更改运行状态的数据：更新成成功
+                                // 更新任务状态：更新成功的
+                                statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 3, 0, null);
+                            }else {
+                                // 组装更改运行状态的数据：更新成失败
+                                // 更新任务状态：更新失败的
+                                statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 2, 0, null);
+                            }
+                        }else{
+                            log.info("");
+                            // 组装更改运行状态的数据：更新成失败
+                            // 更新任务状态：更新失败的
+                            statusModel = TaskMethod.assembleTaskUpdateStatus(data.getId(), 0, 0, 2, 0, null);
                         }
 
                         // 更新状态
                         ComponentUtil.taskDataCoreService.updateStatus(statusModel);
+
 
 
                     }catch (Exception e){

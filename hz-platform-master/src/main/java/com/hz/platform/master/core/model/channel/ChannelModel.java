@@ -104,6 +104,11 @@ public class ChannelModel extends BasePage implements Serializable {
     private Integer isSynchro;
 
     /**
+     * 数据发送类型:1get，2post/form，3post/json
+     */
+    private Integer sendDataType;
+
+    /**
      * 提现类型：1默认在支付平台操作，2发送下发数据到蛋糕平台
      */
     private Integer withdrawType;
@@ -377,5 +382,13 @@ public class ChannelModel extends BasePage implements Serializable {
 
     public void setWhiteListIp(String whiteListIp) {
         this.whiteListIp = whiteListIp;
+    }
+
+    public Integer getSendDataType() {
+        return sendDataType;
+    }
+
+    public void setSendDataType(Integer sendDataType) {
+        this.sendDataType = sendDataType;
     }
 }

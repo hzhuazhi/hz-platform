@@ -267,7 +267,7 @@
     <!-- 获取渠道的扣款流水总和-->
     <select id="sumMoney" parameterType="Object" resultType="java.lang.String">
         select
-        ifnull(sum(a.money), '0.0000') as money
+        ifnull(sum(convert(a.money,decimal(19,4))), '0.0000') as money
         from tb_hz_channel_balance_deduct a
         where 1=1
         <if test="orderType != null and orderType != '' " >

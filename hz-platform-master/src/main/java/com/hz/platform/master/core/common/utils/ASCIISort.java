@@ -90,7 +90,6 @@ public class ASCIISort {
             StringBuilder sb = new StringBuilder();
             for (Map.Entry<String, Object> item : infoIds) {
                 if (item.getKey() != null || item.getKey() != "") {
-                    log.info("");
                     String key = item.getKey();
                     Object val = item.getValue();
                     if (!(val == "" || val == null)) {
