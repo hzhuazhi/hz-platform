@@ -152,6 +152,7 @@ public class OrderOutController extends BaseController {
                 }
             }
 
+            log.info("-----order-----out----all-data-json:" + JSON.toJSONString(requestData));
 
             // 策略数据：出码开关
             StrategyModel strategyQrCodeSwitchQuery = HodgepodgeMethod.assembleStrategyQuery(ServerConstant.StrategyEnum.OUT_QR_CODE_SWITCH.getStgType());
@@ -418,7 +419,7 @@ public class OrderOutController extends BaseController {
                 }
                 log.info("--------------resData:" + resData);
             }else if (gewayModel.getContacts().equals("CKHC")){
-                // 蛋糕金服
+                // 蛋糕汇潮
                 Map<String ,Object> sendDataMap = new HashMap<>();
                 sendDataMap.put("money", requestData.total_amount);
                 sendDataMap.put("payType", payCode);

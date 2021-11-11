@@ -7,6 +7,7 @@ import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.ContentType;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
@@ -1088,6 +1089,69 @@ public class HttpSendUtils {
 			}
 			// 断开与远程地址url的连接
 			connection.disconnect();
+		}
+		return result;
+	}
+
+
+
+
+
+
+	/**
+	 * 使用HTTP POST 发送文本-----sp要求HTTP头中Content-Type要设置为application/json
+	 *
+	 * @param url
+	 *            发送的地址
+	 * @param param
+	 *            发送的内容
+	 * @return 返回HTTP SERVER的处理结果,如果返回null,发送失败
+	 */
+	public static String sendPostJsonAndHeader(String url, String param, String bearer, String token) {
+		PrintWriter out = null;
+		BufferedReader in = null;
+		String result = "";
+		try {
+			URL realUrl = new URL(url);
+			URLConnection conn = realUrl.openConnection();
+//			conn.setRequestProperty("accept", "*/*");
+//			conn.setRequestProperty("connection", "Keep-Alive");
+//			conn.setRequestProperty("user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+			conn.setRequestProperty("Content-Type","application/json");
+			conn.setRequestProperty("Authorization", bearer + " " + token);
+			conn.setDefaultUseCaches(false);
+			conn.setDoOutput(true);
+//            conn.setDoInput(true);
+			out = new PrintWriter(new OutputStreamWriter(conn.getOutputStream(),"utf-8"));
+			out.print(param);
+			out.flush();
+			StringBuffer d = new StringBuffer();
+			String responseLine = "";
+			DataInputStream downdatais = new DataInputStream(
+					new BufferedInputStream(conn.getInputStream()));
+			BufferedReader bf = new BufferedReader(new InputStreamReader(
+					downdatais));
+			while ((responseLine = bf.readLine()) != null) {
+				d.append(new String(responseLine.getBytes(), "UTF-8") + "\n");//
+			}
+			bf.close();
+			downdatais.close();
+			result=d.toString();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		finally{
+			try{
+				if(out!=null){
+					out.close();
+				}
+				if(in!=null){
+					in.close();
+				}
+			}
+			catch(IOException ex){
+				ex.printStackTrace();
+			}
 		}
 		return result;
 	}
