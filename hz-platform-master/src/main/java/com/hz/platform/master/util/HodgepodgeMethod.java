@@ -19,6 +19,7 @@ import com.hz.platform.master.core.model.bufpay.BufpayModel;
 import com.hz.platform.master.core.model.channel.ChannelModel;
 import com.hz.platform.master.core.model.channel.ChannelProfitModel;
 import com.hz.platform.master.core.model.channelbalancededuct.ChannelBalanceDeductModel;
+import com.hz.platform.master.core.model.channelchange.ChannelChangeModel;
 import com.hz.platform.master.core.model.channeldata.ChannelDataModel;
 import com.hz.platform.master.core.model.channelgeway.ChannelGewayModel;
 import com.hz.platform.master.core.model.channelout.ChannelOutModel;
@@ -28,6 +29,7 @@ import com.hz.platform.master.core.model.datacoreout.DataCoreOutModel;
 import com.hz.platform.master.core.model.geway.GewayModel;
 import com.hz.platform.master.core.model.geway.GewayProfitModel;
 import com.hz.platform.master.core.model.geway.GewaytradetypeModel;
+import com.hz.platform.master.core.model.preparerecharge.PrepareRechargeModel;
 import com.hz.platform.master.core.model.receivingaccount.ReceivingAccountModel;
 import com.hz.platform.master.core.model.receivingaccountdata.ReceivingAccountDataModel;
 import com.hz.platform.master.core.model.region.RegionModel;
@@ -2798,6 +2800,61 @@ public class HodgepodgeMethod {
         resBean.setCurhour(DateUtil.getHour(new Date()));
         resBean.setCurminute(DateUtil.getCurminute(new Date()));
         return resBean;
+
+    }
+
+
+    /**
+    * @Description: 通过代付预备充值信息组装渠道金额变更的数据
+    * @param prepareRechargeModel
+    * @return: ChannelChangeModel
+    * @author: yoko
+    * @date: 2021/11/18 15:32
+    * @version 1.0.0
+    */
+    public static ChannelChangeModel assembleChannelChangeAdd(PrepareRechargeModel prepareRechargeModel){
+        ChannelChangeModel resBean = new ChannelChangeModel();
+        if (prepareRechargeModel != null && prepareRechargeModel.getId() != null && prepareRechargeModel.getId() > 0){
+            if (!StringUtils.isBlank(prepareRechargeModel.getAlias())){
+                resBean.setAlias(prepareRechargeModel.getAlias());
+            }
+            if (prepareRechargeModel.getChannelId() != null && prepareRechargeModel.getChannelId() > 0){
+                resBean.setChannelId(prepareRechargeModel.getChannelId());
+            }else {
+                return null;
+            }
+            if (!StringUtils.isBlank(prepareRechargeModel.getMyTradeNo())){
+                resBean.setMyTradeNo(prepareRechargeModel.getMyTradeNo());
+            }
+            if (!StringUtils.isBlank(prepareRechargeModel.getMoney())){
+                resBean.setMoney(prepareRechargeModel.getMoney());
+            }else {
+                return null;
+            }
+            if (prepareRechargeModel.getChangeType() != null && prepareRechargeModel.getChangeType() > 0){
+                resBean.setChangeType(prepareRechargeModel.getChangeType());
+            }else {
+                return null;
+            }
+            if (prepareRechargeModel.getIsShow() != null && prepareRechargeModel.getIsShow() > 0){
+                resBean.setIsShow(prepareRechargeModel.getIsShow());
+            }else {
+                return null;
+            }
+            if (!StringUtils.isBlank(prepareRechargeModel.getDataExplain())){
+                resBean.setDataExplain(prepareRechargeModel.getDataExplain());
+            }
+            if (!StringUtils.isBlank(prepareRechargeModel.getRemark())){
+                resBean.setRemark(prepareRechargeModel.getRemark());
+            }
+
+            resBean.setCurday(DateUtil.getDayNumber(new Date()));
+            resBean.setCurhour(DateUtil.getHour(new Date()));
+            resBean.setCurminute(DateUtil.getCurminute(new Date()));
+            return resBean;
+        }else {
+            return null;
+        }
 
     }
 

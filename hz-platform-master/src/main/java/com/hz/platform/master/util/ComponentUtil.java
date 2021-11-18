@@ -47,5 +47,7 @@ public class ComponentUtil {
     public static TaskGewayProfitService taskGewayProfitService;
     public static TaskChannelProfitService taskChannelProfitService;
     public static StrategyService strategyService;
+    public static PrepareRechargeService prepareRechargeService;
+    public static TaskPrepareRechargeService taskPrepareRechargeService;
 
 }

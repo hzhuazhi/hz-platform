@@ -129,4 +129,9 @@ public interface CacheKey {
      */
     String OUT_TRADE_NO_BY_OUT_ORDER = "-19";
 
+    /**
+     * task跑代付预备充值，锁住这条任务流水
+     */
+    String LOCK_PREPARE_RECHARGE = "-20";
+
 }
