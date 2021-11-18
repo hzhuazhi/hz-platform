@@ -2859,6 +2859,23 @@ public class HodgepodgeMethod {
     }
 
 
+    /**
+     * @Description: 组装根据渠道ID，渠道订单号查询代付订单信息
+     * @param channelId - 渠道住建ID
+     * @param outTradeNo - 渠道订单号
+     * @return: com.hz.platform.master.core.model.channelout.ChannelOutModel
+     * @author: yoko
+     * @date: 2021/11/19 0:59
+     * @version 1.0.0
+     */
+    public static ChannelOutModel assembleChannelOutQueryByOutTradeNo(long channelId, String outTradeNo){
+        ChannelOutModel resBean = new ChannelOutModel();
+        resBean.setChannelId(channelId);
+        resBean.setOutTradeNo(outTradeNo);
+        return resBean;
+    }
+
+
 
     public static void main(String [] args) throws Exception{
 //        String str = "<h1 style=\"margin: 20px 0px;\">请手动输入 ￥<span id=\"copy_price\">0.01</span></h1>";

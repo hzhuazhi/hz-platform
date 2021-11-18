@@ -177,6 +177,13 @@ public class OrderOutController extends BaseController {
                 HodgepodgeMethod.checkWhiteListIp(channelModel.getWhiteListIp(), ip);
             }
 
+            // check 查询订单是否有重复的
+            ChannelOutModel channelOutQuery = HodgepodgeMethod.assembleChannelOutQueryByOutTradeNo(channelModel.getId(), requestData.out_trade_no);
+            ChannelOutModel channelOutModel_query = (ChannelOutModel) ComponentUtil.channelOutService.findByObject(channelOutQuery);
+            if(channelOutModel_query != null && channelOutModel_query.getId() != null){
+                throw new ServiceException("OT011", "订单号:" + requestData.out_trade_no + ",重复单号,请您换一个订单号!");
+            }
+
             // 判断余额是否大于订单金额
             HodgepodgeMethod.checkMoney(channelModel.getBalance(), requestData.total_amount);
 
