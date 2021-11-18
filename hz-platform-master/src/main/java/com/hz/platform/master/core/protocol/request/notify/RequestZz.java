@@ -14,9 +14,9 @@ public class RequestZz implements Serializable {
 
     }
 
-    public String code;// 状态码，0000为成功，其他为失败。
-    public String msg;// 返回信息
-    public ZzData data;
+    public String Code;// 状态码，0000为成功，其他为失败。
+    public String Msg;// 返回信息
+    public ZzData Data;
 
 
     public class ZzData{
@@ -81,27 +81,5 @@ public class RequestZz implements Serializable {
     }
 
 
-    public String getCode() {
-        return code;
-    }
 
-    public void setCode(String code) {
-        this.code = code;
-    }
-
-    public String getMsg() {
-        return msg;
-    }
-
-    public void setMsg(String msg) {
-        this.msg = msg;
-    }
-
-    public ZzData getData() {
-        return data;
-    }
-
-    public void setData(ZzData data) {
-        this.data = data;
-    }
 }

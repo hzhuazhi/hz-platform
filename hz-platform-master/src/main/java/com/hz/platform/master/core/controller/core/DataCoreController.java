@@ -2325,10 +2325,10 @@ public class DataCoreController extends BaseController {
      * local:http://localhost:8092/platform/data/zzIn
      * http://localhost:8092/platform/data/zzIn
      *
-     * {"code":"0000","msg":"msg1","Data":{"orderNo":"orderNo1","trade_dateTime":"trade_dateTime1","fee":"10000","money":"20000","trade_type":"trade_type1","transactionNumber":"transactionNumber1"}}
+     * {"Code":"0000","Msg":"msg1","Data":{"orderNo":"orderNo1","trade_dateTime":"trade_dateTime1","fee":"10000","money":"20000","trade_type":"trade_type1","transactionNumber":"transactionNumber1"}}
      */
     @RequestMapping(value = "/zzIn", method = {RequestMethod.POST})
-    public String zzIn(HttpServletRequest request, HttpServletResponse response, RequestZz requestModel) throws Exception{
+    public String zzIn(HttpServletRequest request, HttpServletResponse response,@RequestBody RequestZz requestModel) throws Exception{
         String ip = StringUtil.getIpAddress(request);
         String data = "";
 //        RequestFine requestModel = new RequestFine();
@@ -2336,30 +2336,30 @@ public class DataCoreController extends BaseController {
             if (requestModel == null){
                 return "no";
             }
-            if (requestModel.data.orderNo == null){
+            if (requestModel.Data.orderNo == null){
                 return "no";
             }
-            if (requestModel.data.transactionNumber == null){
+            if (requestModel.Data.transactionNumber == null){
                 return "no";
             }
-            if (requestModel.data.fee == null){
+            if (requestModel.Data.fee == null){
                 return "no";
             }
-            if (!requestModel.code.equals("0000")){
-                return "SUCCESS";// 只收取成功数据
+            if (!requestModel.Code.equals("0000")){
+                return "success";// 只收取成功数据
             }
 
 
-            log.info("---------------zzzf:orderNo:" + requestModel.data.orderNo + ",transactionNumber:" + requestModel.data.transactionNumber);
+            log.info("---------------zzzf:orderNo:" + requestModel.Data.orderNo + ",transactionNumber:" + requestModel.Data.transactionNumber);
             String resStr = JSON.toJSONString(requestModel);
             log.info("zzzf-----------all-----data:" + resStr);
-            String total_amount_ = StringUtil.getBigDecimalDivide(requestModel.data.fee, "100.00");
-            String pay_amount_ = StringUtil.getBigDecimalDivide(requestModel.data.money, "100.00");
+            String total_amount_ = StringUtil.getBigDecimalDivide(requestModel.Data.fee, "100.00");
+            String pay_amount_ = StringUtil.getBigDecimalDivide(requestModel.Data.money, "100.00");
             String total_amount = total_amount_;
             String pay_amount = pay_amount_;
             // 查询此数据属于哪个订单
             ChannelDataModel channelDataModel = new ChannelDataModel();
-            channelDataModel.setMyTradeNo(requestModel.data.orderNo);
+            channelDataModel.setMyTradeNo(requestModel.Data.orderNo);
             channelDataModel = (ChannelDataModel) ComponentUtil.channelDataService.findByObject(channelDataModel);
             if (channelDataModel == null){
                 return "no";
@@ -2432,7 +2432,7 @@ public class DataCoreController extends BaseController {
 //            }
             // 更新状态
             ReceivingAccountDataModel receivingAccountDataModel = new ReceivingAccountDataModel();
-            receivingAccountDataModel.setMyTradeNo(requestModel.data.orderNo);
+            receivingAccountDataModel.setMyTradeNo(requestModel.Data.orderNo);
             receivingAccountDataModel.setIsOk(2);
             ComponentUtil.receivingAccountDataService.update(receivingAccountDataModel);
             //组装上游数据
@@ -2440,7 +2440,7 @@ public class DataCoreController extends BaseController {
                     pay_amount, payActualMoney, moneyFitType, channelDataModel.getChannelGewayId(), channelDataModel.getProfitType());
             int num = ComponentUtil.dataCoreService.add(dataCoreModel);
             if (num > 0){
-                return "SUCCESS";
+                return "success";
             }else {
                 return "no";
             }

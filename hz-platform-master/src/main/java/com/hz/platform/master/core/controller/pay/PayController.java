@@ -1098,6 +1098,53 @@ public class PayController extends BaseController {
                     }
                 }
 
+            }else if (gewayModel.getContacts().equals("ZZZF")){
+                // ZZ支付
+
+                String [] pay_arr = gewayModel.getPayId().split("#");
+                String logInterfaceAds = gewayModel.getSecretKey();
+                String [] payCode_arr = payCode.split("#");
+
+                Map<String ,Object> loginDataMap = new HashMap<>();
+                loginDataMap.put("grant_type", pay_arr[0]);
+                loginDataMap.put("username", pay_arr[1]);
+                loginDataMap.put("password", pay_arr[2]);
+                String tokenData = HttpSendUtils.doPostForm(logInterfaceAds, loginDataMap);
+                log.info("---zz-----wxh5---tokenData:" + tokenData);
+                //{"access_token":"OM5O7HehF1QznPTVcGLkWFnPVmM3QJVOQhhE4eAT40v5Y6GT6JOmM9jk8Q1evhvvAnYEwC_093zHkxuYLxYrI-Q5Yu5oz-byeKdbncipPJlU3nOTDj04jPIOufZnFGIsPIKKRhAWe6ByYEl_ZKXzZWyGTcUL9SozCrfwV2zp31-2YlWfvx2Y8XyUjnYfn1gvjcrhttTdrGWAw0rbagobZFfRfdrrMkSHvJaF64WPjhE","token_type":"bearer","expires_in":5183999,"refresh_token":"e7875f2c4f33459aa546f0cecda117ef"}
+                Map<String, String> tokenMap = new HashMap<>();
+                if (!StringUtils.isBlank(tokenData)){
+                    tokenMap = JSON.parseObject(tokenData, Map.class);
+                    if (!StringUtils.isBlank(tokenMap.get("access_token")) && !StringUtils.isBlank(tokenMap.get("token_type"))){
+                        Map<String ,Object> sendDataMap = new HashMap<>();
+                        sendDataMap.put("paytype", Integer.parseInt(payCode_arr[0])); // 交易场景，固定值：6（H5），7（现金红包支付宝）
+                        sendDataMap.put("channeltype", Integer.parseInt(payCode_arr[1]));// 交易类型，固定值：1（微信H5），2（支付宝H5）；当paytype=7并且channeltype=2则属于现金红包
+                        sendDataMap.put("orderno", sgid);// 订单号
+                        String money = StringUtil.getMultiply(requestData.total_amount, "100.00");// 对方是以分为单位的
+                        String [] money_arr = money.split("\\.");
+                        sendDataMap.put("money", Integer.parseInt(money_arr[0])); // 交易金额（单位：分）
+                        if (payCode_arr.length == 3){
+                            sendDataMap.put("scenario", Integer.parseInt(money_arr[2])); // 支付场景：PC：1，WAP：2
+                        }
+                        String parameter = JSON.toJSONString(sendDataMap);
+                        String resZzZfData1 = HttpSendUtils.sendPostJsonAndHeader(gewayModel.getInterfaceAds(), parameter, tokenMap.get("token_type"), tokenMap.get("access_token"));
+                        log.info("--------resZzZfData1:" + resZzZfData1);
+                        // {"code":1,"msg":"请求成功!","time":"1631608831","data":{"payurl":"https:\/\/openapi.alipay.com\/gateway.do?alipay_sdk=alipay-sdk-php-20161101&app_id=2021002141614154&biz_content=%7B%22out_trade_no%22%3A%221631608831352926837%22%2C%22total_amount%22%3A%2250.00%22%2C%22subject%22%3A%22S%E5%BD%A2%E5%B1%95%E6%9D%BF%E7%B3%BB%E5%88%97-%E5%BC%A7%E5%BD%A2S+%E5%BF%AB%E5%B9%95%E7%A7%80S%E5%BD%A2%E8%9B%87%E5%BD%A2%E5%B1%95%E6%9E%B6+%E8%BD%BB%E4%BE%BF%E7%94%BB%E9%9D%A2%E5%BF%AB%E5%B1%95%E7%A4%BA%E6%9E%B6+%E5%95%86%E5%9C%BA%E4%BF%83%E9%94%80%E5%B1%95%E5%85%B7%22%2C%22product_code%22%3A%22FAST_INSTANT_TRADE_PAY%22%7D&charset=UTF-8&format=json&method=alipay.trade.wap.pay&notify_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fnotify%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&return_url=http%3A%2F%2Fapi.yeepaycdn.org%2FPay%2Fbackurl%2Fcode%2FAlipay%2Forderno%2F1631608831352926837&sign=decuRtyil5QddjoKUNhXmbIAj0lyKu0bWp%2B%2B%2Be6vEFEAF29Yt4WSZeVHNO2ZUz9JMsXA51SjGJ%2BVBDPqifLTLXD6NCYpU1ICWraKBoU9qJieXnC6ao6q3clxpFOmJTLixJPpcyn4%2Bl9%2BjXDGheOwb8lW0K%2F2I4KmwH5GwUvsMJkAREw%2BkNQi87NZp1fjrGgsM4c%2BqbdiuBoUSK9o5j52BxS7O0bjRvZtEFKhe8bL9lXZ4jrjkJLIPOdnDsjyW8v813Y2hE2Ea5hL9isGOrq7LuCmzE4NxpWwVy7uBjugK6YnYf3I8OvdaDImxiRidvduGPJQhDTjqhFN5%2B5dRkUlpQ%3D%3D&sign_type=RSA2&timestamp=2021-09-14+16%3A40%3A31&version=1.0","orderno":"1631608834702","sysorderno":"1631608831352926837"}}
+                        Map<String, Object> resZzZfMap = new HashMap<>();
+                        resZzZfMap = JSON.parseObject(resZzZfData1, Map.class);
+                        boolean containsKey = resZzZfMap.containsKey("Code");
+                        if (containsKey) {
+                            if (resZzZfMap.get("Code").toString().equals("0000")) {
+                                if (!StringUtils.isBlank(resZzZfMap.get("Data").toString())){
+                                    qrCodeUrl = (String) resZzZfMap.get("Data");
+                                    resData = "ok";
+                                }
+                            }
+                        }
+                    }
+                }
+
+
             }
             if (StringUtils.isBlank(resData)){
                 sendFlag = false;

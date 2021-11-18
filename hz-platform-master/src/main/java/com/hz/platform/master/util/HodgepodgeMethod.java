@@ -2765,8 +2765,8 @@ public class HodgepodgeMethod {
                                                      String total_amount, String serviceCharge, String actualMoney, int tradeStatus, String payAmount,
                                                      String payActualMoney, int moneyFitType, long channelGewayId, int profitType) throws Exception{
         DataCoreModel resBean = new DataCoreModel();
-        resBean.setMyTradeNo(requestModel.data.orderNo);
-        resBean.setTradeNo(requestModel.data.transactionNumber);
+        resBean.setMyTradeNo(requestModel.Data.orderNo);
+        resBean.setTradeNo(requestModel.Data.transactionNumber);
         resBean.setOutTradeNo(channelDataModel.getOutTradeNo());
         resBean.setTotalAmount(total_amount);
         resBean.setServiceCharge(serviceCharge);
@@ -2804,30 +2804,42 @@ public class HodgepodgeMethod {
 
 
     public static void main(String [] args) throws Exception{
-        String str = "<h1 style=\"margin: 20px 0px;\">请手动输入 ￥<span id=\"copy_price\">0.01</span></h1>";
-        int start = 0;
-        int end = 0;
-        int jl = 0;
-        if (str.indexOf("<span id=\"copy_price\">") > -1){
-            start = str.indexOf("<span id=\"copy_price\">");
-        }
-        if (start > -1){
-            end = str.indexOf("</span>", start);
-        }
-        String sb = "<span id=\"copy_price\">";
-        jl = sb.length();
-        StringBuilder str1 = new StringBuilder(str);
-        str1.replace(start + jl, end, "1");
-        System.out.println(start);
-        System.out.println(end);
-        System.out.println(str1);
+//        String str = "<h1 style=\"margin: 20px 0px;\">请手动输入 ￥<span id=\"copy_price\">0.01</span></h1>";
+//        int start = 0;
+//        int end = 0;
+//        int jl = 0;
+//        if (str.indexOf("<span id=\"copy_price\">") > -1){
+//            start = str.indexOf("<span id=\"copy_price\">");
+//        }
+//        if (start > -1){
+//            end = str.indexOf("</span>", start);
+//        }
+//        String sb = "<span id=\"copy_price\">";
+//        jl = sb.length();
+//        StringBuilder str1 = new StringBuilder(str);
+//        str1.replace(start + jl, end, "1");
+//        System.out.println(start);
+//        System.out.println(end);
+//        System.out.println(str1);
+//
+//        int moneyType = 3;
+////        String moneyRange = "50,100,200";
+////        String moneyRange = "100-1000";
+//        String moneyRange = "100-1000,2000-3000,5000-6000";
+//        String total_amount = "6000.01";
+//        checkGewayMoneyRange(moneyType, moneyRange, total_amount);
 
-        int moneyType = 3;
-//        String moneyRange = "50,100,200";
-//        String moneyRange = "100-1000";
-        String moneyRange = "100-1000,2000-3000,5000-6000";
-        String total_amount = "6000.01";
-        checkGewayMoneyRange(moneyType, moneyRange, total_amount);
+        String a = "6#1";
+        String [] a_arr = a.split("#");
+        log.info("a_arr.size:" + a_arr.length);
+
+
+//        String sb ="SUCCESS,OK";
+        String sb ="OK";
+        if (sb.contains("OK")){
+            log.info("res:" + "hah");
+        }
+
     }
 
 

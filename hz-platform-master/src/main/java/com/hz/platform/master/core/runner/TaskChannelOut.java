@@ -147,7 +147,8 @@ public class TaskChannelOut {
                         }
                         log.info("-----order-out-----out_trade_no:" + data.getOutTradeNo() + ",resp:" + resp);
                         if (!StringUtils.isBlank(resp)){
-                            if (resp.equals(notify_suc)){
+//                            if (resp.equals(notify_suc)){
+                            if (notify_suc.contains(resp)){
                                 // 成功
                                 // 组装更改运行状态的数据：更新成成功
                                 // 更新任务状态：更新成功的
