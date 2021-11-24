@@ -315,200 +315,223 @@ public class OrderOutController extends BaseController {
             String nowTime = DateUtil.getNowPlusTime();
             String resData = "";
             String qrCodeUrl = "";
-            //组装拼接
-            if (gewayModel.getContacts().equals("CK")){
-                // 蛋糕
-                Map<String ,Object> sendDataMap = new HashMap<>();
-                sendDataMap.put("money", requestData.total_amount);
-                sendDataMap.put("payType", payCode);
-                sendDataMap.put("outTradeNo", sgid);
-                sendDataMap.put("secretKey", channelModel.getSecretKey());
-                sendDataMap.put("notifyUrl", my_notify_url);
-                sendDataMap.put("inBankCard", requestData.bank_card);
-                sendDataMap.put("inBankName", requestData.bank_name);
-                sendDataMap.put("inAccountName", requestData.account_name);
-                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
-                sendDataMap.put("inBankProvince", requestData.bank_province);
-                sendDataMap.put("inBankCity", requestData.bank_city);
-                String parameter = JSON.toJSONString(sendDataMap);
-                parameter = StringUtil.mergeCodeBase64(parameter);
-                Map<String, String> sendMap = new HashMap<>();
-                sendMap.put("jsonData", parameter);
-                String sendData = JSON.toJSONString(sendMap);
-                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
-                Map<String, Object> resMap = new HashMap<>();
-                Map<String, Object> dataMap = new HashMap<>();
-                if (!StringUtils.isBlank(fineData)) {
-                    resMap = JSON.parseObject(fineData, Map.class);
-                    if (resMap.get("resultCode").equals("0")) {
-                        sendFlag = true;
-                    }
-                }
-                log.info("--------------resData:" + resData);
-            }else if(gewayModel.getContacts().equals("HF")){
-                Map<String ,Object> sendDataMap = new HashMap<>();
-                sendDataMap.put("uid", gewayModel.getPayId());
-                sendDataMap.put("addtime", String.valueOf(System.currentTimeMillis()));
-                sendDataMap.put("out_trade_id", sgid);
-                sendDataMap.put("amount", requestData.total_amount);
-                sendDataMap.put("bankcode", "unionpay");
-                sendDataMap.put("bankuser", requestData.account_name);
-                sendDataMap.put("bankname", requestData.bank_name);
-                sendDataMap.put("bankno", requestData.bank_card);
-                sendDataMap.put("notifyurl", my_notify_url);
-                String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey(), 2);
-                sendDataMap.put("sign", sb);
-                String sendData = JSON.toJSONString(sendDataMap);
-                String resultData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
-                Map<String, Object> resMap = new HashMap<>();
-                if (!StringUtils.isBlank(resultData)) {
-                    resMap = JSON.parseObject(resultData, Map.class);
-                    if (Integer.parseInt(resMap.get("code").toString()) == 1) {
-                        sendFlag = true;
-                    }
-                }
-            }else if (gewayModel.getContacts().equals("CKSD")){
-                // 蛋糕杉德
-                Map<String ,Object> sendDataMap = new HashMap<>();
-                sendDataMap.put("money", requestData.total_amount);
-                sendDataMap.put("payType", payCode);
-                sendDataMap.put("outTradeNo", sgid);
-                sendDataMap.put("secretKey", channelModel.getSecretKey());
-                sendDataMap.put("notifyUrl", my_notify_url);
-                sendDataMap.put("inBankCard", requestData.bank_card);
-                sendDataMap.put("inBankName", requestData.bank_name);
-                sendDataMap.put("inAccountName", requestData.account_name);
-                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
-                sendDataMap.put("inBankProvince", requestData.bank_province);
-                sendDataMap.put("inBankCity", requestData.bank_city);
-                String parameter = JSON.toJSONString(sendDataMap);
-                parameter = StringUtil.mergeCodeBase64(parameter);
-                Map<String, String> sendMap = new HashMap<>();
-                sendMap.put("jsonData", parameter);
-                String sendData = JSON.toJSONString(sendMap);
-                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
-                Map<String, Object> resMap = new HashMap<>();
-                Map<String, Object> dataMap = new HashMap<>();
-                if (!StringUtils.isBlank(fineData)) {
-                    resMap = JSON.parseObject(fineData, Map.class);
-                    if (resMap.get("resultCode").equals("0")) {
-                        sendFlag = true;
-                    }
-                }
-                log.info("--------------resData:" + resData);
-            }else if (gewayModel.getContacts().equals("CKJF")){
-                // 蛋糕金服
-                Map<String ,Object> sendDataMap = new HashMap<>();
-                sendDataMap.put("money", requestData.total_amount);
-                sendDataMap.put("payType", payCode);
-                sendDataMap.put("outTradeNo", sgid);
-                sendDataMap.put("secretKey", channelModel.getSecretKey());
-                sendDataMap.put("notifyUrl", my_notify_url);
-                sendDataMap.put("inBankCard", requestData.bank_card);
-                sendDataMap.put("inBankName", requestData.bank_name);
-                sendDataMap.put("inAccountName", requestData.account_name);
-                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
-                sendDataMap.put("inBankProvince", requestData.bank_province);
-                sendDataMap.put("inBankCity", requestData.bank_city);
-                String parameter = JSON.toJSONString(sendDataMap);
-                parameter = StringUtil.mergeCodeBase64(parameter);
-                Map<String, String> sendMap = new HashMap<>();
-                sendMap.put("jsonData", parameter);
-                String sendData = JSON.toJSONString(sendMap);
-                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
-                Map<String, Object> resMap = new HashMap<>();
-                Map<String, Object> dataMap = new HashMap<>();
-                if (!StringUtils.isBlank(fineData)) {
-                    resMap = JSON.parseObject(fineData, Map.class);
-                    if (resMap.get("resultCode").equals("0")) {
-                        sendFlag = true;
-                    }
-                }
-                log.info("--------------resData:" + resData);
-            }else if (gewayModel.getContacts().equals("CKHC")){
-                // 蛋糕汇潮
-                Map<String ,Object> sendDataMap = new HashMap<>();
-                sendDataMap.put("money", requestData.total_amount);
-                sendDataMap.put("payType", payCode);
-                sendDataMap.put("outTradeNo", sgid);
-                sendDataMap.put("secretKey", channelModel.getSecretKey());
-                sendDataMap.put("notifyUrl", my_notify_url);
-                sendDataMap.put("inBankCard", requestData.bank_card);
-                sendDataMap.put("inBankName", requestData.bank_name);
-                sendDataMap.put("inAccountName", requestData.account_name);
-                sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
-                sendDataMap.put("inBankProvince", requestData.bank_province);
-                sendDataMap.put("inBankCity", requestData.bank_city);
-                String parameter = JSON.toJSONString(sendDataMap);
-                parameter = StringUtil.mergeCodeBase64(parameter);
-                Map<String, String> sendMap = new HashMap<>();
-                sendMap.put("jsonData", parameter);
-                String sendData = JSON.toJSONString(sendMap);
-                String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
-                Map<String, Object> resMap = new HashMap<>();
-                Map<String, Object> dataMap = new HashMap<>();
-                if (!StringUtils.isBlank(fineData)) {
-                    resMap = JSON.parseObject(fineData, Map.class);
-                    if (resMap.get("resultCode").equals("0")) {
-                        sendFlag = true;
-                    }
-                }
-                log.info("--------------resData:" + resData);
-            }
 
-            boolean flag = false;// 是否执行成功
-            if (sendFlag){
-                int count = 0;
-                while (1==1){
-                    // 锁住要执行的渠道ID
-                    String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_TASK_WORK_TYPE_CHANNEL, channelModel.getId());
-                    boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
-                    if (flagLock){
-                        // 组装扣减渠道余额
-                        ChannelModel updateBalance = HodgepodgeMethod.assembleChannelBalance(channelModel.getId(), requestData.total_amount, serviceCharge, extraServiceCharge);
 
-                        // 组装添加渠道扣减余额的流水
-                        ChannelBalanceDeductModel channelBalanceDeductModel = HodgepodgeMethod.assembleChannelBalanceDeduct(0, channelModel.getId(), sgid, 2, updateBalance.getOrderMoney(),
-                                0, null, null, 2);
-                        // 组装渠道请求的代付订单信息
-                        ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
-                                channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, updateBalance.getOrderMoney(),
-                                updateBalance.getServiceChargeMoney(), sendFlag);
-                        try {
-                            // 正式处理逻辑
-                            flag = ComponentUtil.channelOutService.handleChannelOut(updateBalance, channelBalanceDeductModel, channelOutModel);
-                            if (flag){
+            // start
+            // 组装扣减渠道余额
+            ChannelModel updateBalance = HodgepodgeMethod.assembleChannelBalance(channelModel.getId(), requestData.total_amount, serviceCharge, extraServiceCharge);
+
+            // 组装添加渠道扣减余额的流水
+            ChannelBalanceDeductModel channelBalanceDeductModel = HodgepodgeMethod.assembleChannelBalanceDeduct(0, channelModel.getId(), sgid, 2, updateBalance.getOrderMoney(),
+                    0, null, null, 2);
+
+            // 组装渠道请求的代付订单信息
+            ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
+                    channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, updateBalance.getOrderMoney(),
+                    updateBalance.getServiceChargeMoney(), sendFlag);
+
+            // 插入代付订单
+            int num_add = ComponentUtil.channelOutService.add(channelOutModel);
+            if (num_add > 0){
+                //组装拼接
+                if (gewayModel.getContacts().equals("CK")){
+                    // 蛋糕
+                    Map<String ,Object> sendDataMap = new HashMap<>();
+                    sendDataMap.put("money", requestData.total_amount);
+                    sendDataMap.put("payType", payCode);
+                    sendDataMap.put("outTradeNo", sgid);
+                    sendDataMap.put("secretKey", channelModel.getSecretKey());
+                    sendDataMap.put("notifyUrl", my_notify_url);
+                    sendDataMap.put("inBankCard", requestData.bank_card);
+                    sendDataMap.put("inBankName", requestData.bank_name);
+                    sendDataMap.put("inAccountName", requestData.account_name);
+                    sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                    sendDataMap.put("inBankProvince", requestData.bank_province);
+                    sendDataMap.put("inBankCity", requestData.bank_city);
+                    String parameter = JSON.toJSONString(sendDataMap);
+                    parameter = StringUtil.mergeCodeBase64(parameter);
+                    Map<String, String> sendMap = new HashMap<>();
+                    sendMap.put("jsonData", parameter);
+                    String sendData = JSON.toJSONString(sendMap);
+                    String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                    Map<String, Object> resMap = new HashMap<>();
+                    Map<String, Object> dataMap = new HashMap<>();
+                    if (!StringUtils.isBlank(fineData)) {
+                        resMap = JSON.parseObject(fineData, Map.class);
+                        if (resMap.get("resultCode").equals("0")) {
+                            sendFlag = true;
+                        }
+                    }
+                    log.info("--------order--out--dg--resData:" + fineData);
+                }else if(gewayModel.getContacts().equals("HF")){
+                    Map<String ,Object> sendDataMap = new HashMap<>();
+                    sendDataMap.put("uid", gewayModel.getPayId());
+                    sendDataMap.put("addtime", String.valueOf(System.currentTimeMillis()));
+                    sendDataMap.put("out_trade_id", sgid);
+                    sendDataMap.put("amount", requestData.total_amount);
+                    sendDataMap.put("bankcode", "unionpay");
+                    sendDataMap.put("bankuser", requestData.account_name);
+                    sendDataMap.put("bankname", requestData.bank_name);
+                    sendDataMap.put("bankno", requestData.bank_card);
+                    sendDataMap.put("notifyurl", my_notify_url);
+                    String sb = ASCIISort.getSign(sendDataMap, gewayModel.getSecretKey(), 2);
+                    sendDataMap.put("sign", sb);
+                    String sendData = JSON.toJSONString(sendDataMap);
+                    String resultData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                    Map<String, Object> resMap = new HashMap<>();
+                    if (!StringUtils.isBlank(resultData)) {
+                        resMap = JSON.parseObject(resultData, Map.class);
+                        if (Integer.parseInt(resMap.get("code").toString()) == 1) {
+                            sendFlag = true;
+                        }
+                    }
+                }else if (gewayModel.getContacts().equals("CKSD")){
+                    // 蛋糕杉德
+                    Map<String ,Object> sendDataMap = new HashMap<>();
+                    sendDataMap.put("money", requestData.total_amount);
+                    sendDataMap.put("payType", payCode);
+                    sendDataMap.put("outTradeNo", sgid);
+                    sendDataMap.put("secretKey", channelModel.getSecretKey());
+                    sendDataMap.put("notifyUrl", my_notify_url);
+                    sendDataMap.put("inBankCard", requestData.bank_card);
+                    sendDataMap.put("inBankName", requestData.bank_name);
+                    sendDataMap.put("inAccountName", requestData.account_name);
+                    sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                    sendDataMap.put("inBankProvince", requestData.bank_province);
+                    sendDataMap.put("inBankCity", requestData.bank_city);
+                    String parameter = JSON.toJSONString(sendDataMap);
+                    parameter = StringUtil.mergeCodeBase64(parameter);
+                    Map<String, String> sendMap = new HashMap<>();
+                    sendMap.put("jsonData", parameter);
+                    String sendData = JSON.toJSONString(sendMap);
+                    String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                    Map<String, Object> resMap = new HashMap<>();
+                    Map<String, Object> dataMap = new HashMap<>();
+                    if (!StringUtils.isBlank(fineData)) {
+                        resMap = JSON.parseObject(fineData, Map.class);
+                        if (resMap.get("resultCode").equals("0")) {
+                            sendFlag = true;
+                        }
+                    }
+                    log.info("--------order--out--sd--resData:" + fineData);
+                }else if (gewayModel.getContacts().equals("CKJF")){
+                    // 蛋糕金服
+                    Map<String ,Object> sendDataMap = new HashMap<>();
+                    sendDataMap.put("money", requestData.total_amount);
+                    sendDataMap.put("payType", payCode);
+                    sendDataMap.put("outTradeNo", sgid);
+                    sendDataMap.put("secretKey", channelModel.getSecretKey());
+                    sendDataMap.put("notifyUrl", my_notify_url);
+                    sendDataMap.put("inBankCard", requestData.bank_card);
+                    sendDataMap.put("inBankName", requestData.bank_name);
+                    sendDataMap.put("inAccountName", requestData.account_name);
+                    sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                    sendDataMap.put("inBankProvince", requestData.bank_province);
+                    sendDataMap.put("inBankCity", requestData.bank_city);
+                    String parameter = JSON.toJSONString(sendDataMap);
+                    parameter = StringUtil.mergeCodeBase64(parameter);
+                    Map<String, String> sendMap = new HashMap<>();
+                    sendMap.put("jsonData", parameter);
+                    String sendData = JSON.toJSONString(sendMap);
+                    String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                    Map<String, Object> resMap = new HashMap<>();
+                    Map<String, Object> dataMap = new HashMap<>();
+                    if (!StringUtils.isBlank(fineData)) {
+                        resMap = JSON.parseObject(fineData, Map.class);
+                        if (resMap.get("resultCode").equals("0")) {
+                            sendFlag = true;
+                        }
+                    }
+                    log.info("--------order--out--jf--resData:" + fineData);
+                }else if (gewayModel.getContacts().equals("CKHC")){
+                    // 蛋糕汇潮
+                    Map<String ,Object> sendDataMap = new HashMap<>();
+                    sendDataMap.put("money", requestData.total_amount);
+                    sendDataMap.put("payType", payCode);
+                    sendDataMap.put("outTradeNo", sgid);
+                    sendDataMap.put("secretKey", channelModel.getSecretKey());
+                    sendDataMap.put("notifyUrl", my_notify_url);
+                    sendDataMap.put("inBankCard", requestData.bank_card);
+                    sendDataMap.put("inBankName", requestData.bank_name);
+                    sendDataMap.put("inAccountName", requestData.account_name);
+                    sendDataMap.put("inBankSubbranch", requestData.bank_subbranch);
+                    sendDataMap.put("inBankProvince", requestData.bank_province);
+                    sendDataMap.put("inBankCity", requestData.bank_city);
+                    String parameter = JSON.toJSONString(sendDataMap);
+                    parameter = StringUtil.mergeCodeBase64(parameter);
+                    Map<String, String> sendMap = new HashMap<>();
+                    sendMap.put("jsonData", parameter);
+                    String sendData = JSON.toJSONString(sendMap);
+                    String fineData = HttpSendUtils.sendPostAppJson(gewayModel.getInterfaceAds(), sendData);
+                    Map<String, Object> resMap = new HashMap<>();
+                    Map<String, Object> dataMap = new HashMap<>();
+                    if (!StringUtils.isBlank(fineData)) {
+                        resMap = JSON.parseObject(fineData, Map.class);
+                        if (resMap.get("resultCode").equals("0")) {
+                            sendFlag = true;
+                        }
+                    }
+                    log.info("--------order--out--hc--resData:" + fineData);
+                }
+
+
+
+
+                boolean flag = false;// 是否执行成功
+                if (sendFlag){
+                    ChannelOutModel upChannelOutModel = HodgepodgeMethod.assembleUpChannelOutStatus(channelOutModel.getMyTradeNo(), 1);
+                    int count = 0;
+                    while (1==1){
+                        // 锁住要执行的渠道ID
+                        String lockKey = CachedKeyUtils.getCacheKey(CacheKey.LOCK_TASK_WORK_TYPE_CHANNEL, channelModel.getId());
+                        boolean flagLock = ComponentUtil.redisIdService.lock(lockKey);
+                        if (flagLock){
+                            try {
+                                // 正式处理逻辑
+                                flag = ComponentUtil.channelOutService.handleChannelOutMoney(updateBalance, channelBalanceDeductModel, upChannelOutModel);
+                                if (flag){
+                                    // 解锁
+                                    ComponentUtil.redisIdService.delLock(lockKey);
+                                    break;
+                                }
+                            }catch (Exception e){
                                 // 解锁
                                 ComponentUtil.redisIdService.delLock(lockKey);
+                                log.error(String.format("this handleChannelOutMoney is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
+                                e.printStackTrace();
                                 break;
                             }
-                        }catch (Exception e){
+
+                        }else {
+                            count ++;
+                        }
+                        if (count >= 10){
                             // 解锁
                             ComponentUtil.redisIdService.delLock(lockKey);
-                            log.error(String.format("this handleChannelOut is error , the cgid=%s and sgid=%s and all data=%s!", cgid, sgid, data));
-                            e.printStackTrace();
                             break;
                         }
-
-                    }else {
-                        count ++;
-                    }
-                    if (count >= 10){
-                        // 解锁
-                        ComponentUtil.redisIdService.delLock(lockKey);
-                        break;
                     }
                 }
-            }else {
-                // 请求蛋糕平台失败：纪录请求的纪录，并且请求状态是失败状态
-                ChannelOutModel channelOutModel = HodgepodgeMethod.assembleChannelOutData(requestData, sgid, channelModel.getId(), gewayModel.getId(),
-                        channelGewayModel.getId(), channelGewayModel.getProfitType(), nowTime, my_notify_url, serviceCharge, null,null, sendFlag);
-                ComponentUtil.channelOutService.add(channelOutModel);
-            }
 
-            if (!flag){
+                if (!flag){
+                    return JsonResult.failedResult("拉单失败,请稍后再试", "5001");
+                }
+
+
+
+
+
+
+            }else {
                 return JsonResult.failedResult("拉单失败,请稍后再试", "5001");
             }
+            // end
+
+
+
+
+
+
 
 
             // 返回数据给客户端

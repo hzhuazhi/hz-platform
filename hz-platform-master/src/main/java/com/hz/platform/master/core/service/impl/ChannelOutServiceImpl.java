@@ -58,6 +58,24 @@ public class ChannelOutServiceImpl<T> extends BaseServiceImpl<T> implements Chan
         }
     }
 
+
+    @Override
+    @Transactional(rollbackFor=Exception.class)
+    public boolean handleChannelOutMoney(ChannelModel channelModel, ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception {
+        int num1 = channelMapper.updateBalance(channelModel);
+        int num2 = channelBalanceDeductMapper.add(channelBalanceDeductModel);
+        int num3 = channelOutMapper.updateOrderStatusByOrderNo(channelOutModel);
+//        int num4 =
+
+        if (num1 > 0 && num2 > 0 && num3 > 0){
+            return true;
+        }else{
+            throw new ServiceException("handleChannelOutMoney", "三个执行更新SQL其中有一个或者多个响应行为0");
+        }
+    }
+
+
+
     @Override
     public int updateOrderStatusByOrderNo(ChannelOutModel model) {
         return channelOutMapper.updateOrderStatusByOrderNo(model);

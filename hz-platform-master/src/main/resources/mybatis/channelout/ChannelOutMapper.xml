@@ -445,6 +445,9 @@
             <if test="failInfo != null and failInfo != '' " >
                 a.fail_info = #{failInfo},
             </if>
+            <if test="sendOk != null and sendOk != '' " >
+                a.send_ok = #{sendOk},
+            </if>
             <if test="checkStatus != null and checkStatus != '' " >
                 a.check_status = #{checkStatus},
             </if>

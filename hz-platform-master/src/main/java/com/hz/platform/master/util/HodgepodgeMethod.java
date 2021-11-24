@@ -1126,7 +1126,7 @@ public class HodgepodgeMethod {
         if (!StringUtils.isBlank(delayTime)){
             resBean.setDelayTime(delayTime);
         }else {
-            String delayTimeStr = DateUtil.addDateMinute(720);
+            String delayTimeStr = DateUtil.addDateMinute(1440);
             resBean.setDelayTime(delayTimeStr);
         }
         if (!StringUtils.isBlank(lockTime)){
@@ -2872,6 +2872,23 @@ public class HodgepodgeMethod {
         ChannelOutModel resBean = new ChannelOutModel();
         resBean.setChannelId(channelId);
         resBean.setOutTradeNo(outTradeNo);
+        return resBean;
+    }
+
+
+    /**
+    * @Description: 组装更新代付订单请求状态
+    * @param orderNo - 我方订单号
+     * @param sendOk - 请求是否成功：1成功，2失败
+    * @return:
+    * @author: yoko
+    * @date: 2021/11/25 2:47
+    * @version 1.0.0
+    */
+    public static ChannelOutModel assembleUpChannelOutStatus(String orderNo, int sendOk){
+        ChannelOutModel resBean = new ChannelOutModel();
+        resBean.setMyTradeNo(orderNo);
+        resBean.setSendOk(sendOk);
         return resBean;
     }
 

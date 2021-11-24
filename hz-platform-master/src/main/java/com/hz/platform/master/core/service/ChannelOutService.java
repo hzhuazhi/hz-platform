@@ -39,4 +39,22 @@ public interface ChannelOutService<T> extends BaseService<T> {
      */
     public int updateOrderStatusByOrderNo(ChannelOutModel model);
 
+
+
+    /**
+     * @Description: 处理订单余额以及流水
+     * <p>
+     *     1.扣减渠道余额。
+     *     2.添加渠道扣减余额的流水。
+     *     3.更新订单的请求状态。
+     * </p>
+     * @param channelModel - 渠道更新余额
+     * @param channelBalanceDeductModel - 渠道扣减余额流水
+     * @param channelOutModel - 要更新的代付订单的请求状态
+     * @return
+     * @author yoko
+     * @date 2020/6/12 22:49
+     */
+    public boolean handleChannelOutMoney(ChannelModel channelModel, ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception;
+
 }
