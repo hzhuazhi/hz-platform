@@ -41,6 +41,7 @@ import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
 import com.hz.platform.master.core.protocol.request.notify.*;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
+import com.hz.platform.master.core.protocol.response.channel.ResponseChannel;
 import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -2889,6 +2890,102 @@ public class HodgepodgeMethod {
         ChannelOutModel resBean = new ChannelOutModel();
         resBean.setMyTradeNo(orderNo);
         resBean.setSendOk(sendOk);
+        return resBean;
+    }
+
+
+
+
+    /**
+     * @Description: check是否频繁查询渠道余额
+     * <p>
+     *     纪录查询余额，要限制用户每次查询的时间间隔要间隔5秒。
+     *     如果存在值，表示在5秒内频繁查询返回false，
+     *     如果不存在值，表示5秒内此渠道没有出现频繁查询返回true
+     * </p>
+     * @param channel - 商家渠道号
+     * @return
+     * @author yoko
+     * @date 2020/5/21 15:38
+     */
+    public static void checkFrequentlyByQueryBalance(String channel) throws Exception{
+        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.CHANNEL_INFO, channel);
+        String strCache = (String) ComponentUtil.redisService.get(strKeyCache);
+        if (!StringUtils.isBlank(strCache)) {
+            throw new ServiceException("50005", "频繁操作,请稍后重试!");
+        }
+    }
+
+
+    /**
+     * @Description: redis：渠道在查询余额时，保存被查询的渠道号
+     * <p>
+     *     针对过于频繁操作查询余额
+     * </p>
+     * @param channel - 商家渠道号
+     * @return void
+     * @author yoko
+     * @date 2020/10/10 15:44
+     */
+    public static void saveFrequentlyByQueryBalance(String channel){
+        String strKeyCache = CachedKeyUtils.getCacheKey(CacheKey.CHANNEL_INFO, channel);
+        ComponentUtil.redisService.set(strKeyCache, channel, 5L);
+    }
+
+
+    /**
+     * @Description: check校验签名-查询渠道余额
+     * @param requestPayOut - 请求的数据
+     * @param secretKey - 渠道的秘钥
+     * @return
+     * @Author: yoko
+     * @Date 2021/8/6 20:23
+     */
+    public static void checkSignByChannel(RequestPayOut requestPayOut, String secretKey) throws Exception{
+        String checkSign = "";
+        checkSign = "channel=" + requestPayOut.channel + "&" + "ctime=" + requestPayOut.ctime + "&" + "key=" + secretKey;
+        checkSign = MD5Util.encryption(checkSign);
+        if (!requestPayOut.sign.equals(checkSign)){
+            throw new ServiceException("50005", "签名错误,请重试!");
+        }
+    }
+
+
+    /**
+     * @Description: check校验请求时间
+     * @param ctime - 请求时间
+     * @return
+     * @Author: yoko
+     * @Date 2021/8/6 20:23
+     */
+    public static void checkCtime(long ctime) throws Exception{
+        int dff_num = DateUtil.dateSubtractBySystemTimeLong(ctime);
+        if (dff_num < 0 || dff_num > 2){
+            throw new ServiceException("50006", "请求失效,请重试!");
+        }
+    }
+
+
+
+    /**
+     * @Description: 组装查询渠道余额的数据
+     * @param channelModel - 渠道数据
+     * @return com.hz.platform.master.core.protocol.response.pay.ResponseDataCore
+     * @author yoko
+     * @date 2021/4/26 17:34
+     */
+    public static ResponseChannel assembleResponseChannelResult(ChannelModel channelModel){
+        ResponseChannel resBean = new ResponseChannel();
+        if(!StringUtils.isBlank(channelModel.getBalance())){
+            resBean.channel_balance = channelModel.getBalance();
+        }else {
+            resBean.channel_balance = "0.0000";
+        }
+        if (!StringUtils.isBlank(channelModel.getLockMoney())){
+            resBean.channel_lock_money = channelModel.getLockMoney();
+        }else {
+            resBean.channel_lock_money = "0.0000";
+        }
         return resBean;
     }
 

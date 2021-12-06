@@ -134,4 +134,9 @@ public interface CacheKey {
      */
     String LOCK_PREPARE_RECHARGE = "-20";
 
+    /**
+     * 查询渠道余额时是否过于频繁
+     */
+    String CHANNEL_INFO = "-21";
+
 }

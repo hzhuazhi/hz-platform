@@ -55,7 +55,7 @@ import java.util.Map;
 @RequestMapping("/platform/out")
 public class OrderOutController extends BaseController {
 
-    private static Logger log = LoggerFactory.getLogger(PayController.class);
+    private static Logger log = LoggerFactory.getLogger(OrderOutController.class);
 
     /**
      * 5分钟.
@@ -585,6 +585,8 @@ public class OrderOutController extends BaseController {
                 throw new ServiceException("40001", "协议数据不能为空!");
             }
 
+            log.info("-----order-----out--orderStatus--all-data-json:" + JSON.toJSONString(requestData));
+
             // check商铺号
             if (StringUtils.isBlank(requestData.channel)){
                 throw new ServiceException("40002", "商家号不能为空!");
@@ -637,11 +639,12 @@ public class OrderOutController extends BaseController {
         }catch (Exception e){
             Map<String,String> map = ExceptionMethod.getException(e, ServerConstant.PUBLIC_CONSTANT.SIZE_VALUE_TWO);
             // #添加异常
-            log.error(String.format("this OrderOutController.orderStatus() is error , the data=%s!", data));
+            log.error(String.format("this OrderOutController.orderStatus() is error , the data=%s!", JSON.toJSONString(requestData)));
             e.printStackTrace();
             return JsonResult.failedResult(map.get("message"), map.get("code"));
         }
     }
+
 
 
 

@@ -3090,6 +3090,37 @@ public class DateUtil {
 
 
 
+	/**
+	 * @Description: TODO(系统当前时间减特定的时间相差多少分钟)
+	 * @author df
+	 * @param time
+	 * @create 22:13 2018/12/6
+	 **/
+	public static int dateSubtractBySystemTimeLong(long time){
+		int num = 0;
+		SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
+		try{
+			Date d1 = format.parse(format.format(new Date()));
+			Date d2 = format.parse(String.valueOf(time));
+			long diff = d1.getTime() - d2.getTime();//这样得到的差值是微秒级别
+			long days = diff / (1000 * 60 * 60 * 24);
+			long hours = (diff-days*(1000 * 60 * 60 * 24))/(1000* 60 * 60);
+			long minutes = (diff-days*(1000 * 60 * 60 * 24)-hours*(1000* 60 * 60))/(1000* 60);
+			if (days > 0 ){
+				minutes += days*24*60;
+			}
+			if (hours > 0){
+				minutes += hours*60;
+			}
+			num = (int) minutes;
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		return num;
+	}
+
+
+
 	public static void main(String[] args) throws Exception{
 //		try{
 //			String str = timeStamp();
@@ -3128,6 +3159,10 @@ public class DateUtil {
         System.out.println("sb3:" + sb3);
 		String sb4 = addDateMinute(720);
 		System.out.println("sb4:" + sb4);
+
+		long time = 20211206143011L;
+		int s = dateSubtractBySystemTimeLong(time);
+		System.out.println("s:" + s);
 	}
 
 	/**

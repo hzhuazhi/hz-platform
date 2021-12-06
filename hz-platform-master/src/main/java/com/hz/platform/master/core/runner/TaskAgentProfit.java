@@ -74,6 +74,8 @@ public class TaskAgentProfit {
 
                         // 更新状态
                         ComponentUtil.taskAgentProfitService.updateStatus(statusModel);
+                        // 解锁代理
+                        ComponentUtil.redisIdService.delLock(lockKey_agent);
                         // 解锁
                         ComponentUtil.redisIdService.delLock(lockKey);
                     }
