@@ -128,6 +128,11 @@ public class OrderOutController extends BaseController {
 //                }
                 if (StringUtils.isBlank(requestData.total_amount)){
                     throw new ServiceException("0004", "请填写订单金额!");
+                }else{
+                    // 金额是否有效
+                    if (requestData.total_amount.indexOf("-") > -1){
+                        throw new ServiceException("00041", "错误,请重试!");
+                    }
                 }
                 if (StringUtils.isBlank(requestData.out_trade_no)){
                     throw new ServiceException("0005", "请填写商家订单号!");

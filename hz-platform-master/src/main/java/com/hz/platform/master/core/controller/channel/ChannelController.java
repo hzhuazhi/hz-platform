@@ -91,7 +91,7 @@ public class ChannelController  extends BaseController {
 
             // check访问时间
             if (requestData.ctime == null || requestData.ctime <= 0){
-                throw new ServiceException("50003", "访问时间不能为空!");
+                throw new ServiceException("50003", "请求时间不能为空!");
             }
 
             // check签名

@@ -1570,6 +1570,23 @@ public class StringUtil {
 		return  Double.parseDouble(df.format(min + ((max - min) * new Random().nextDouble())));
 	}
 
+
+	/**
+	 * @Description: 金额验证
+	 * <p>
+	 *     正则表达式：验证金额并且金额后面只能有小数点2位
+	 * </p>
+	 * @param str
+	 * @return
+	 * @author yoko
+	 * @date 2020/6/12 11:24
+	 */
+	public static boolean isNumberByMoney(String str){
+		Pattern pattern=Pattern.compile("^(([1-9]{1}\\d*)|([0]{1}))(\\.(\\d){2})?$"); // 判断小数点后2位的数字的正则表达式
+		Matcher match=pattern.matcher(str);
+		return match.matches();
+	}
+
 	public static void main(String [] args){
 		BigDecimal x = new BigDecimal(5.243);
 		BigDecimal y = new BigDecimal(2.244);
