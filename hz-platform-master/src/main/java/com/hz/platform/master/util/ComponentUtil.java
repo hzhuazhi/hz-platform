@@ -49,5 +49,8 @@ public class ComponentUtil {
     public static StrategyService strategyService;
     public static PrepareRechargeService prepareRechargeService;
     public static TaskPrepareRechargeService taskPrepareRechargeService;
+    public static StatisticsAgentService statisticsAgentService;
+    public static StatisticsOutChannelService statisticsOutChannelService;
+    public static WithdrawService withdrawService;
 
 }

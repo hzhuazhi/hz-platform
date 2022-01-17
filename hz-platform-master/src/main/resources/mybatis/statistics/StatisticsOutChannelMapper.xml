@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.platform.master.core.mapper.StatisticsOutChannelMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.channel_id,a.total_money,a.balance,a.lock_money,a.total_amount,a.actual_money,a.withdraw_ing_money,
+        a.withdraw_suc_money,a.withdraw_fail_money,a.add_money,a.reduce_money,
+        a.curday,a.curhour,a.curminute,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="channelId != null and channelId != '' " >
+                and a.channel_id = #{channelId}
+            </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
+            and a.yn = 0
+
+        </trim>
+    </sql>
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+
+    <!-- 显示所有数据 -->
+    <select id="findAll" resultType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_statistics_out_channel a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+    <!-- 查询列表 -->
+    <select id="findByCondition" parameterType="Object" resultType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_statistics_out_channel a
+        <include refid="Example_Where_Clause"/>
+        ORDER BY a.create_time DESC
+    </select>
+
+    <!-- 根据条件查询信息-->
+    <select id="findByObject" parameterType="Object" resultType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_statistics_out_channel a
+        <include refid="Example_Where_Clause"/>
+        limit 1
+    </select>
+
+    <!-- 根据id查询信息-->
+    <select id="findById" parameterType="java.lang.Long" resultType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel">
+        select
+        <include refid="Base_Column_List" />
+        from tb_hz_statistics_out_channel a
+        <include refid="Example_Where_Clause_id"/>
+    </select>
+
+
+    <!-- 添加基本信息 -->
+    <insert id="add" parameterType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel" >
+        <!--<selectKey resultType="java.lang.Long" order="AFTER" keyProperty="id">-->
+        <!--SELECT LAST_INSERT_ID() as id-->
+        <!--</selectKey>-->
+        insert into tb_hz_statistics_out_channel
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="channelId != null and channelId != '' " >
+                channel_id,
+            </if>
+            <if test="totalMoney != null and totalMoney != '' " >
+                total_money,
+            </if>
+            <if test="balance != null and balance != '' " >
+                balance,
+            </if>
+            <if test="lockMoney != null and lockMoney != '' " >
+                lock_money,
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                total_amount,
+            </if>
+            <if test="actualMoney != null and actualMoney != '' " >
+                actual_money,
+            </if>
+            <if test="withdrawIngMoney != null and withdrawIngMoney != '' " >
+                withdraw_ing_money,
+            </if>
+            <if test="withdrawSucMoney != null and withdrawSucMoney != '' " >
+                withdraw_suc_money,
+            </if>
+            <if test="withdrawFailMoney != null and withdrawFailMoney != '' " >
+                withdraw_fail_money,
+            </if>
+            <if test="addMoney != null and addMoney != '' " >
+                add_money,
+            </if>
+            <if test="reduceMoney != null and reduceMoney != '' " >
+                reduce_money,
+            </if>
+            <if test="curday != null and curday != '' " >
+                curday,
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                curhour,
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                curminute,
+            </if>
+            create_time,
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides="," >
+            <if test="channelId != null and channelId != '' " >
+                <![CDATA[  #{channelId}, ]]>
+            </if>
+            <if test="totalMoney != null and totalMoney != '' " >
+                <![CDATA[  #{totalMoney}, ]]>
+            </if>
+            <if test="balance != null and balance != '' " >
+                <![CDATA[  #{balance}, ]]>
+            </if>
+            <if test="lockMoney != null and lockMoney != '' " >
+                <![CDATA[  #{lockMoney}, ]]>
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                <![CDATA[  #{totalAmount}, ]]>
+            </if>
+            <if test="actualMoney != null and actualMoney != '' " >
+                <![CDATA[  #{actualMoney}, ]]>
+            </if>
+            <if test="withdrawIngMoney != null and withdrawIngMoney != '' " >
+                <![CDATA[  #{withdrawIngMoney}, ]]>
+            </if>
+            <if test="withdrawSucMoney != null and withdrawSucMoney != '' " >
+                <![CDATA[  #{withdrawSucMoney}, ]]>
+            </if>
+            <if test="withdrawFailMoney != null and withdrawFailMoney != '' " >
+                <![CDATA[  #{withdrawFailMoney}, ]]>
+            </if>
+            <if test="addMoney != null and addMoney != '' " >
+                <![CDATA[  #{addMoney}, ]]>
+            </if>
+            <if test="reduceMoney != null and reduceMoney != '' " >
+                <![CDATA[  #{reduceMoney}, ]]>
+            </if>
+            <if test="curday != null and curday != '' " >
+                <![CDATA[  #{curday}, ]]>
+            </if>
+            <if test="curhour != null and curhour != '' " >
+                <![CDATA[  #{curhour}, ]]>
+            </if>
+            <if test="curminute != null and curminute != '' " >
+                <![CDATA[  #{curminute}, ]]>
+            </if>
+            NOW(),
+        </trim>
+    </insert>
+
+    <!-- 更新基本信息 -->
+    <update id="update" parameterType="com.hz.platform.master.core.model.statistics.StatisticsOutChannelModel">
+        UPDATE tb_hz_statistics_out_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="channelId != null and channelId != '' " >
+                a.channel_id = #{channelId},
+            </if>
+            <if test="totalMoney != null and totalMoney != '' " >
+                a.total_money = #{totalMoney},
+            </if>
+            <if test="balance != null and balance != '' " >
+                a.balance = #{balance},
+            </if>
+            <if test="lockMoney != null and lockMoney != '' " >
+                a.lock_money = #{lockMoney},
+            </if>
+            <if test="totalAmount != null and totalAmount != '' " >
+                a.total_amount = #{totalAmount},
+            </if>
+            <if test="actualMoney != null and actualMoney != '' " >
+                a.actual_money = #{actualMoney},
+            </if>
+            <if test="withdrawIngMoney != null and withdrawIngMoney != '' " >
+                a.withdraw_ing_money = #{withdrawIngMoney},
+            </if>
+            <if test="withdrawSucMoney != null and withdrawSucMoney != '' " >
+                a.withdraw_suc_money = #{withdrawSucMoney},
+            </if>
+            <if test="withdrawFailMoney != null and withdrawFailMoney != '' " >
+                a.withdraw_fail_money = #{withdrawFailMoney},
+            </if>
+            <if test="addMoney != null and addMoney != '' " >
+                a.add_money = #{addMoney},
+            </if>
+            <if test="reduceMoney != null and reduceMoney != '' " >
+                a.reduce_money = #{reduceMoney},
+            </if>
+            a.update_time = NOW(),
+        </trim>
+        where 1=1
+        and a.id = #{id}
+        and a.yn = 0
+    </update>
+
+    <!-- 主要作用1.逻辑删除，2更新状态 -->
+    <update id="manyOperation" parameterType="Object">
+        update tb_hz_statistics_out_channel a
+        <trim prefix="set" suffixOverrides=",">
+            <if test="yn != 0 and yn >0 " >
+                a.yn = #{yn},
+            </if>
+        </trim>
+        <include refid="Example_Where_Clause_id"/>
+    </update>
+
+
+
+</mapper>

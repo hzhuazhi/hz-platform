@@ -3,6 +3,7 @@ package com.hz.platform.master.core.service.impl;
 import com.hz.platform.master.core.common.dao.BaseDao;
 import com.hz.platform.master.core.common.service.impl.BaseServiceImpl;
 import com.hz.platform.master.core.mapper.ChannelChangeMapper;
+import com.hz.platform.master.core.model.channelchange.ChannelChangeModel;
 import com.hz.platform.master.core.service.ChannelChangeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,5 +29,10 @@ public class ChannelChangeServiceImpl<T> extends BaseServiceImpl<T> implements C
 
     public BaseDao<T> getDao() {
         return channelChangeMapper;
+    }
+
+    @Override
+    public ChannelChangeModel getDayMoney(ChannelChangeModel model) {
+        return channelChangeMapper.getDayMoney(model);
     }
 }

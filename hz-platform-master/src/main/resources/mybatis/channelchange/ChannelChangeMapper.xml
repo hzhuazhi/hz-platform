@@ -30,6 +30,9 @@
             <if test="isShow != null and isShow != '' " >
                 and a.is_show = #{isShow}
             </if>
+            <if test="curday != null and curday != '' " >
+                and a.curday = #{curday}
+            </if>
             and a.yn = 0
         </trim>
     </sql>
@@ -277,6 +280,15 @@
         where 1=1
         <include refid="Example_Where_Clause_id"/>
     </update>
+
+
+    <!-- 根据条件获取渠道加减金额-->
+    <select id="getDayMoney" parameterType="Object" resultType="com.hz.platform.master.core.model.channelchange.ChannelChangeModel">
+        select
+        ifnull(sum(convert(a.money,decimal(19,4))), '0.0000') as money
+        from tb_hz_channel_change a
+        <include refid="Example_Where_Clause"/>
+    </select>
 
 
 </mapper>

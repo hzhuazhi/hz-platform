@@ -1,6 +1,7 @@
 package com.hz.platform.master.core.mapper;
 
 import com.hz.platform.master.core.common.dao.BaseDao;
+import com.hz.platform.master.core.model.channelchange.ChannelChangeModel;
 import org.apache.ibatis.annotations.Mapper;
 
 /**
@@ -11,4 +12,13 @@ import org.apache.ibatis.annotations.Mapper;
  */
 @Mapper
 public interface ChannelChangeMapper<T> extends BaseDao<T> {
+
+    /**
+     * @Description:根据条件获取渠道加减金额
+     * @param model
+     * @author: yoko
+     * @date: 2021/12/31 17:41
+     * @version 1.0.0
+     */
+    public ChannelChangeModel getDayMoney(ChannelChangeModel model);
 }

@@ -27,6 +27,9 @@
             <if test="outTradeNo != null and outTradeNo != '' " >
                 and a.out_trade_no = #{outTradeNo}
             </if>
+            <if test="agentId != null and agentId != '' " >
+                and a.agent_id = #{agentId}
+            </if>
             <if test="curday != null and curday != '' " >
                 and a.curday = #{curday}
             </if>
@@ -300,6 +303,16 @@
             )
         </foreach>
     </insert>
+
+
+    <!-- 根据条件获取当天跑量金额，实际金额 -->
+    <select id="totalDayMoney" parameterType="Object" resultType="com.hz.platform.master.core.model.agent.AgentProfitModel">
+        select
+        ifnull(sum(convert(a.total_amount,decimal(19,4))), '0.0000') as total_amount,
+        ifnull(sum(convert(a.profit,decimal(19,4))), '0.0000') as profit
+        from tb_hz_agent_profit a
+        <include refid="Example_Where_Clause"/>
+    </select>
 
 
 

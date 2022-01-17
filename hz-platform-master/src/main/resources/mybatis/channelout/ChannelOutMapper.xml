@@ -462,6 +462,15 @@
     </update>
 
 
+    <!-- 根据条件获取当天跑量金额，实际金额 -->
+    <select id="totalDayMoney" parameterType="Object" resultType="com.hz.platform.master.core.model.channelout.ChannelOutModel">
+        select
+        ifnull(sum(convert(a.total_amount,decimal(19,4))), '0.0000') as total_amount,
+        ifnull(sum(convert(a.actual_money,decimal(19,4))), '0.0000') as actual_money
+        from tb_hz_channel_out a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
 
 
 </mapper>

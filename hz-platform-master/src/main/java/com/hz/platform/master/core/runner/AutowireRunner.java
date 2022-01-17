@@ -149,6 +149,15 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private TaskPrepareRechargeService taskPrepareRechargeService;
 
+    @Autowired
+    private StatisticsAgentService statisticsAgentService;
+
+    @Autowired
+    private StatisticsOutChannelService statisticsOutChannelService;
+
+    @Autowired
+    private WithdrawService withdrawService;
+
 
 
 
@@ -197,6 +206,9 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.strategyService = strategyService;
         ComponentUtil.prepareRechargeService = prepareRechargeService;
         ComponentUtil.taskPrepareRechargeService = taskPrepareRechargeService;
+        ComponentUtil.statisticsAgentService = statisticsAgentService;
+        ComponentUtil.statisticsOutChannelService = statisticsOutChannelService;
+        ComponentUtil.withdrawService = withdrawService;
 
         runThread = new RunThread();
         runThread.start();

@@ -23,4 +23,14 @@ public interface AgentProfitMapper<T> extends BaseDao<T> {
      * @date 2020/11/10 14:31
      */
     public int addBatchAgentProfit(List<AgentProfitModel> list);
+
+
+    /**
+     * @Description:根据条件获取当天代理相关订单金额，收益金额
+     * @param model
+     * @author: yoko
+     * @date: 2021/12/31 16:12
+     * @version 1.0.0
+     */
+    public AgentProfitModel totalDayMoney(AgentProfitModel model);
 }

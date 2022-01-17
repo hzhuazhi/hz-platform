@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hz.platform.master.core.mapper.WithdrawMapper">
+
+
+
+
+    <!-- 定义数据库基本列,只适用代替单表的*-->
+    <sql id="Base_Column_List">
+        a.id,a.order_no,a.link_id,a.money,a.service_charge,a.bank_id,a.withdraw_status,a.withdraw_explain,a.role_id,
+        a.remark,a.run_num,a.run_status,a.send_num,a.send_status,
+        a.create_time,a.update_time,a.yn
+    </sql>
+
+    <!-- 查询条件 -->
+    <sql id="Example_Where_Clause">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            <if test="linkId != null and linkId != '' " >
+                and a.link_id = #{linkId}
+            </if>
+            <if test="withdrawStatus != null and withdrawStatus != '' " >
+                and a.withdraw_status = #{withdrawStatus}
+            </if>
+            <if test="roleId != null and roleId != '' " >
+                and a.role_id = #{roleId}
+            </if>
+            <if test="startCreateTime != null and startCreateTime != '' and endCreateTime != null and endCreateTime != '' " >
+                and a.create_time >= #{startCreateTime} and a.create_time &lt;= #{endCreateTime}
+            </if>
+            and a.yn = 0
+        </trim>
+    </sql>
+
+
+    <!-- 查询条件_id -->
+    <sql id="Example_Where_Clause_id">
+        where 1=1
+        <trim  suffixOverrides="," >
+            <if test="id != null and id != '' " >
+                and a.id = #{id}
+            </if>
+            and a.yn =  0
+        </trim>
+    </sql>
+
+    <!-- 排序条件 -->
+    <sql id="Example_Order_By">
+        order by a.create_time desc
+    </sql>
+
+
+    <!-- 根据条件获取提现信息 -->
+    <select id="getWithdrawMoney" resultType="com.hz.platform.master.core.model.withdraw.WithdrawModel">
+        select
+        ifnull(sum(convert(a.money,decimal(19,4))), '0.0000') as money
+        from tb_hz_withdraw a
+        <include refid="Example_Where_Clause"/>
+    </select>
+
+
+
+</mapper>

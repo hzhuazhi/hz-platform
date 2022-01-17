@@ -37,4 +37,9 @@ public class AgentProfitServiceImpl<T> extends BaseServiceImpl<T> implements Age
     public int addBatchAgentProfit(List<AgentProfitModel> list) {
         return agentProfitMapper.addBatchAgentProfit(list);
     }
+
+    @Override
+    public AgentProfitModel totalDayMoney(AgentProfitModel model) {
+        return agentProfitMapper.totalDayMoney(model);
+    }
 }

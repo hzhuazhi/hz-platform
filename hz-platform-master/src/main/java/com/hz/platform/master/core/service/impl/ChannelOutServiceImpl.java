@@ -74,6 +74,10 @@ public class ChannelOutServiceImpl<T> extends BaseServiceImpl<T> implements Chan
         }
     }
 
+    @Override
+    public ChannelOutModel totalDayMoney(ChannelOutModel model) {
+        return channelOutMapper.totalDayMoney(model);
+    }
 
 
     @Override

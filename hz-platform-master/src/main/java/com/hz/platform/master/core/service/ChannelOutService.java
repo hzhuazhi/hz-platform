@@ -57,4 +57,14 @@ public interface ChannelOutService<T> extends BaseService<T> {
      */
     public boolean handleChannelOutMoney(ChannelModel channelModel, ChannelBalanceDeductModel channelBalanceDeductModel, ChannelOutModel channelOutModel) throws Exception;
 
+
+    /**
+     * @Description:根据条件获取当天跑量金额，实际金额
+     * @param model
+     * @author: yoko
+     * @date: 2021/12/31 16:12
+     * @version 1.0.0
+     */
+    public ChannelOutModel totalDayMoney(ChannelOutModel model);
+
 }

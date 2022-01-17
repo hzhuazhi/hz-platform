@@ -120,6 +120,10 @@ public class WithdrawModel extends BasePage implements Serializable {
      */
     private Integer yn;
 
+
+    private String startCreateTime;
+    private String endCreateTime;
+
     public Long getId() {
         return id;
     }
@@ -279,5 +283,21 @@ public class WithdrawModel extends BasePage implements Serializable {
 
     public void setBankName(String bankName) {
         this.bankName = bankName;
+    }
+
+    public String getStartCreateTime() {
+        return startCreateTime;
+    }
+
+    public void setStartCreateTime(String startCreateTime) {
+        this.startCreateTime = startCreateTime;
+    }
+
+    public String getEndCreateTime() {
+        return endCreateTime;
+    }
+
+    public void setEndCreateTime(String endCreateTime) {
+        this.endCreateTime = endCreateTime;
     }
 }
