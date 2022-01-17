@@ -139,4 +139,11 @@ public interface CacheKey {
      */
     String CHANNEL_INFO = "-21";
 
+
+    /**
+     * 锁住渠道
+     * <p>在操作代付订单的时候锁住渠道</p>
+     */
+    String CHANNEL_ORDER_OUT = "-22";
+
 }
