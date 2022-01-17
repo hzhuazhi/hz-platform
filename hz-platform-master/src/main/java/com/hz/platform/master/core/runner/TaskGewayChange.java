@@ -52,7 +52,7 @@ public class TaskGewayChange {
      * @date 2019/12/6 20:25
      */
 //    @Scheduled(fixedDelay = 1000) // 每1秒执行
-    @Scheduled(fixedDelay = 10000) // 每10秒执行
+//    @Scheduled(fixedDelay = 10000) // 每10秒执行&拆出
     public void changeMoney() throws Exception{
 //        log.info("----------------------------------TaskGewayChange.changeMoney()----start");
         // 获取未跑的数据

@@ -50,7 +50,7 @@ public class TaskGewayProfit {
      * @author yoko
      * @date 2019/12/6 20:25
      */
-    @Scheduled(fixedDelay = 5000) // 每5秒执行
+//    @Scheduled(fixedDelay = 5000) // 每5秒执行&拆出
     public void handleProfit() throws Exception{
 //        log.info("----------------------------------TaskGewayProfit.handleProfit()----start");
         // 获取订单补单数据

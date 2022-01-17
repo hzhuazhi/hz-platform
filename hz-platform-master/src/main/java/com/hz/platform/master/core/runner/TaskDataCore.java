@@ -64,7 +64,7 @@ public class TaskDataCore {
      * @date 2019/12/6 20:25
      */
 //    @Scheduled(cron = "1 * * * * ?")
-    @Scheduled(fixedDelay = 3000) // 每3秒执行
+//    @Scheduled(fixedDelay = 3000) // 每3秒执行&拆出
     public void handle() throws Exception{
 //        log.info("----------------------------------TaskDataCore.handle()----start");
 
@@ -155,7 +155,7 @@ public class TaskDataCore {
      * @date 2019/12/27 21:30
      */
 //    @Scheduled(cron = "1 * * * * ?")
-    @Scheduled(fixedDelay = 1000) // 每秒执行
+//    @Scheduled(fixedDelay = 1000) // 每秒执行&拆出
     public void notifyData(){
         // 查询要跑的数据
         StatusModel statusQuery = TaskMethod.assembleTaskStatusQuery(limitNum, 0, 1, 0, 2, 0,1,0,null);
