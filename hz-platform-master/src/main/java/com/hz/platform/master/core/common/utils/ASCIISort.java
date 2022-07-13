@@ -162,6 +162,62 @@ public class ASCIISort {
     }
 
 
+
+
+    /**
+     * 生成签名
+     * @param map
+     * @param changeType - 大小写类型转换：1小写，2大写
+     * @return
+     */
+    public static String getKeySignTwo(Map<String, Object> map, String secretKey, int changeType) {
+        String result = "";
+        try {
+            List<Map.Entry<String, Object>> infoIds = new ArrayList<Map.Entry<String, Object>>(map.entrySet());
+            // 对所有传入参数按照字段名的 ASCII 码从小到大排序（字典序）
+            Collections.sort(infoIds, new Comparator<Map.Entry<String, Object>>() {
+
+                public int compare(Map.Entry<String, Object> o1, Map.Entry<String, Object> o2) {
+                    return (o1.getKey()).toString().compareTo(o2.getKey());
+                }
+            });
+
+            // 构造签名键值对的格式
+            StringBuilder sb = new StringBuilder();
+            for (Map.Entry<String, Object> item : infoIds) {
+                if (item.getKey() != null || item.getKey() != "") {
+                    String key = item.getKey();
+                    Object val = item.getValue();
+                    if (!(val == "" || val == null)) {
+                        sb.append(key + "=" + val + "&");
+                    }
+                }
+
+            }
+            result = sb.toString() + "key=" + secretKey;
+//            String str = sb.toString().substring(0, sb.toString().length() - 1);
+            log.info("result:" + result);
+            //进行MD5加密
+            result = DigestUtils.md5Hex(result);
+
+
+            if (changeType == 1){
+                result = DigestUtils.md5Hex(result).toLowerCase();
+            }else if (changeType == 2){
+                result = DigestUtils.md5Hex(result).toUpperCase();
+            }
+        } catch (Exception e) {
+            return null;
+        }
+        return result;
+    }
+
+
+
+
+
+
+
     public static void main(String [] args){
         String url = "https://gopay.huafuwg.com/pay/Apply/newone";
         String key ="Svz35Ge7MrneRpBvbPN5u2Nhx0zoisU7";

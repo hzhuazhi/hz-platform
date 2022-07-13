@@ -1,5 +1,7 @@
 package com.hz.platform.master.core.common.utils;
 
+import io.netty.util.internal.ObjectUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.cglib.beans.BeanCopier;
 
 import java.beans.BeanInfo;
@@ -132,5 +134,28 @@ public class BeanUtils {
         T instance = t.newInstance();
         org.apache.commons.beanutils.BeanUtils.populate(instance, map);
         return instance;
+    }
+
+    /**
+     * <p>对参数map进行升序排序用&拼接</p>
+     * @param map
+     * @return
+     */
+    public static String createParam(Map<String, Object> map) {
+        try {
+            if (map == null || map.isEmpty())
+                return null;
+            Object[] key = map.keySet().toArray();
+            Arrays.sort(key);
+            StringBuffer res = new StringBuffer(128);
+            for (int i = 0; i < key.length; i++)
+                if (!StringUtils.isBlank(map.get(key[i]).toString()))
+                    res.append(key[i] + "=" + map.get(key[i]) + "&");
+            String rStr = res.substring(0, res.length() - 1);
+            return rStr;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
