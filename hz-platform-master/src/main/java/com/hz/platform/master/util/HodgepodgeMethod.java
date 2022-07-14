@@ -38,11 +38,14 @@ import com.hz.platform.master.core.model.strategy.StrategyModel;
 import com.hz.platform.master.core.model.task.TaskAlipayNotifyModel;
 import com.hz.platform.master.core.model.withdraw.WithdrawModel;
 import com.hz.platform.master.core.model.zfbapp.ZfbAppModel;
+import com.hz.platform.master.core.model.zhongbang.ZbWhitelistModel;
 import com.hz.platform.master.core.protocol.request.notify.*;
 import com.hz.platform.master.core.protocol.request.pay.RequestPay;
 import com.hz.platform.master.core.protocol.request.pay.RequestPayOut;
+import com.hz.platform.master.core.protocol.request.whitelist.RequestWhitelist;
 import com.hz.platform.master.core.protocol.response.channel.ResponseChannel;
 import com.hz.platform.master.core.protocol.response.pay.ResponseDataCore;
+import com.hz.platform.master.core.protocol.response.whitelist.ResponseWhitelist;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -2988,6 +2991,122 @@ public class HodgepodgeMethod {
         }
         return resBean;
     }
+
+
+    /**
+     * @Description: check众邦白名单添加的数据
+     * @param requestModel
+     * @return
+     * @author yoko
+     * @date 2020/05/14 15:57
+     */
+    public static void checkRequestWhitelistData(RequestWhitelist requestModel) throws Exception{
+        // 1.校验所有数据
+        if (requestModel == null ){
+            throw new ServiceException("ZB00001", "错误,请重试!");
+        }
+        if (StringUtils.isBlank(requestModel.userSerialNo)){
+            throw new ServiceException("ZB00002", "白名单流水序号不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.userName)){
+            throw new ServiceException("ZB00003", "用户姓名不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.cardNum)){
+            throw new ServiceException("ZB00004", "身份证号不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.cardImgFront)){
+            throw new ServiceException("ZB00005", "身份证正面照片URL不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.cardImgBack)){
+            throw new ServiceException("ZB00006", "身份证反面照片URL不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.phoneNum)){
+            throw new ServiceException("ZB00007", "手机号不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.bankCard)){
+            throw new ServiceException("ZB00008", "银行卡号不能为空!");
+        }
+        if (StringUtils.isBlank(requestModel.notifyUrl)){
+            throw new ServiceException("ZB00009", "数据同步地址不能为空!");
+        }
+//        if (StringUtils.isBlank(requestModel.sign)){
+//            throw new ServiceException("ZB00010", "签名不能为空!");
+//        }else{
+//            // 校验签名
+//            boolean flag = checkZbWhitelist(requestModel);
+//            if (!flag){
+//                throw new ServiceException("ZB00011", "签名错误!");
+//            }
+//        }
+        if (StringUtils.isBlank(requestModel.channel)){
+            throw new ServiceException("ZB00012", "商家号不能为空!");
+        }
+    }
+
+
+    /**
+     * @Description:check校验众邦白名单的签名值
+     * @param requestModel
+     * @author: yoko
+     * @date: 2022/7/7 15:04
+     * @version 1.0.0
+     */
+    public static boolean checkZbWhitelist(RequestWhitelist requestModel){
+        // 校验sign签名
+        String checkSign = "";
+        checkSign = "userName=" + requestModel.userName + "&" + "cardNum=" + requestModel.cardNum + "&" + "cardImgFront=" + requestModel.cardImgFront
+                + "&" + "cardImgBack=" + requestModel.cardImgBack + "&" + "phoneNum=" + requestModel.phoneNum
+                + "&" + "bankCard=" + requestModel.bankCard;
+
+        checkSign = MD5Util.encryption(checkSign);
+        if (!requestModel.sign.equals(checkSign)){
+            return false;
+        }else {
+            return true;
+        }
+    }
+
+
+    /**
+     * @Description: 组装要添加的众邦白名单数据
+     * @param requestModel
+     * @author: yoko
+     * @date: 2022/7/7 16:01
+     * @version 1.0.0
+     */
+    public static ZbWhitelistModel assembleZbWhitelistAdd(RequestWhitelist requestModel, long channelId) throws Exception{
+        ZbWhitelistModel resBean = new ZbWhitelistModel();
+        resBean = BeanUtils.copy(requestModel, ZbWhitelistModel.class);
+        resBean.setChannelId(channelId);
+        resBean.setTrxId(DateUtil.getNowPlusTimeMill());
+        resBean.setSerialNo(String.valueOf(System.currentTimeMillis()));
+        return resBean;
+    }
+
+
+    /**
+    * @Description: 组装更新众邦白名单添加返回的结果信息
+    * @param requestData
+    * @return: ZbWhitelistModel
+    * @author: yoko
+    * @date: 2022/7/14 14:07
+    * @version 1.0.0
+    */
+    public static ZbWhitelistModel assembleZbWhitelistUpdate(ResponseWhitelist requestData){
+        ZbWhitelistModel resBean = new ZbWhitelistModel();
+        resBean.setSerialNo(requestData.user_serial_no);
+        resBean.setOrderStatus(requestData.order_status);
+        if (!StringUtils.isBlank(requestData.res_code)){
+            resBean.setResCode(requestData.res_code);
+        }
+        if (!StringUtils.isBlank(requestData.res_explain)){
+            resBean.setResExplain(requestData.res_explain);
+        }
+        return resBean;
+    }
+
+
+
 
 
 

@@ -146,4 +146,9 @@ public interface CacheKey {
      */
     String CHANNEL_ORDER_OUT = "-22";
 
+    /**
+     * LOCK-众邦白名单结果同步
+     */
+    String LOCK_ZHONG_BANG_WHITELIST_NOTIFY = "-23";
+
 }

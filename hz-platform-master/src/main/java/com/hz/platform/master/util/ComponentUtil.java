@@ -53,4 +53,7 @@ public class ComponentUtil {
     public static StatisticsOutChannelService statisticsOutChannelService;
     public static WithdrawService withdrawService;
 
+    public static ZbWhitelistService zbWhitelistService;
+    public static TaskZbWhitelistService taskZbWhitelistService;
+
 }

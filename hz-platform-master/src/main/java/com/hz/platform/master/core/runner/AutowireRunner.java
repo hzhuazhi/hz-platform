@@ -161,6 +161,12 @@ public class AutowireRunner implements ApplicationRunner {
     @Autowired
     private WithdrawService withdrawService;
 
+    @Autowired
+    private ZbWhitelistService zbWhitelistService;
+
+    @Autowired
+    private TaskZbWhitelistService taskZbWhitelistService;
+
 
 
 
@@ -212,6 +218,9 @@ public class AutowireRunner implements ApplicationRunner {
         ComponentUtil.statisticsAgentService = statisticsAgentService;
         ComponentUtil.statisticsOutChannelService = statisticsOutChannelService;
         ComponentUtil.withdrawService = withdrawService;
+
+        ComponentUtil.zbWhitelistService = zbWhitelistService;
+        ComponentUtil.taskZbWhitelistService = taskZbWhitelistService;
 
         runThread = new RunThread();
         runThread.start();
